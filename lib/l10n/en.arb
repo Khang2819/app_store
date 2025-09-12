@@ -1,0 +1,15 @@
+{
+  "@@locale": "en",
+  "onboardingTitle1": "Welcome to ShopApp",
+  "onboardingDesc1": "Explore thousands of quality products",
+  "onboardingTitle2": "Easy Search",
+  "onboardingDesc2": "Filter, search and view product details",
+  "onboardingTitle3": "Safe Shopping",
+  "onboardingDesc3": "Fast and secure payment",
+  "appTitle": "Shopping App",
+  "login": "Login",
+  "register": "Register",
+  "searchProduct": "Search for product...",
+  "addToCart": "Add to Cart",
+  "orderNow": "Order Now"
+}

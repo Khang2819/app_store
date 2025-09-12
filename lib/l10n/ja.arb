@@ -1,0 +1,16 @@
+{
+  "@@locale": "ja",
+  "onboardingTitle1": "ShopAppへようこそ",
+  "onboardingDesc1": "何千もの高品質な商品を探索",
+  "onboardingTitle2": "簡単検索",
+  "onboardingDesc2": "フィルター、検索、商品の詳細を確認",
+  "onboardingTitle3": "安全なショッピング",
+  "onboardingDesc3": "迅速かつ安全な支払い",
+  "appTitle": "ショッピングアプリ",
+  "login": "ログイン",
+  "register": "登録",
+  "searchProduct": "商品を検索...",
+  "addToCart": "カートに追加",
+  "orderNow": "今すぐ注文"
+  
+}

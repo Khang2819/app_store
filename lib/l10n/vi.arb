@@ -1,0 +1,16 @@
+{
+  "@@locale": "vi",
+  "onboardingTitle1": "Chào mừng đến ShopApp",
+  "onboardingDesc1": "Khám phá hàng ngàn sản phẩm chất lượng",
+  "onboardingTitle2": "Tìm kiếm dễ dàng",
+  "onboardingDesc2": "Lọc, tìm kiếm và xem chi tiết sản phẩm",
+  "onboardingTitle3": "Mua sắm an toàn",
+  "onboardingDesc3": "Thanh toán nhanh chóng, bảo mật tuyệt đối",
+  "appTitle": "Ứng dụng bán hàng",
+  "login": "Đăng nhập",
+  "register": "Đăng ký",
+  "searchProduct": "Tìm kiếm sản phẩm...",
+  "addToCart": "Thêm vào giỏ",
+  "orderNow": "Đặt hàng"
+  
+}
