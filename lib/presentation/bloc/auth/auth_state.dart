@@ -1,5 +1,7 @@
 import 'package:equatable/equatable.dart';
 
+import '../../../core/utils.dart';
+
 class AuthState extends Equatable {
   final String name;
   final String email;
@@ -35,11 +37,11 @@ class AuthState extends Equatable {
     String? confirmPassword,
     bool? isLoading,
     bool? isSuccess,
-    String? nameError,
-    String? emailError,
-    String? passwordError,
-    String? confirmPasswordError,
-    String? generalError,
+    ValueWrapper<String?>? nameError,
+    ValueWrapper<String?>? emailError,
+    ValueWrapper<String?>? passwordError,
+    ValueWrapper<String?>? confirmPasswordError,
+    ValueWrapper<String?>? generalError,
   }) {
     return AuthState(
       name: name ?? this.name,
@@ -48,11 +50,16 @@ class AuthState extends Equatable {
       confirmPassword: confirmPassword ?? this.confirmPassword,
       isLoading: isLoading ?? this.isLoading,
       isSuccess: isSuccess ?? this.isSuccess,
-      nameError: nameError,
-      emailError: emailError,
-      passwordError: passwordError,
-      confirmPasswordError: confirmPasswordError,
-      generalError: generalError,
+      nameError: nameError != null ? nameError.value : this.nameError,
+      emailError: emailError != null ? emailError.value : this.emailError,
+      passwordError:
+          passwordError != null ? passwordError.value : this.passwordError,
+      confirmPasswordError:
+          confirmPasswordError != null
+              ? confirmPasswordError.value
+              : this.confirmPasswordError,
+      generalError:
+          generalError != null ? generalError.value : this.generalError,
     );
   }
 

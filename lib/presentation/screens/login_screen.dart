@@ -24,6 +24,11 @@ class LoginScreen extends StatelessWidget {
         child: SingleChildScrollView(
           padding: EdgeInsets.all(24),
           child: BlocConsumer<AuthBloc, AuthState>(
+            listenWhen: (previous, current) {
+              // Chỉ lắng nghe khi trạng thái isLoading hoặc isSuccess thay đổi
+              return previous.isLoading != current.isLoading ||
+                  previous.isSuccess != current.isSuccess;
+            },
             listener: (context, state) {
               if (state.isLoading) {
                 // show loading
@@ -47,7 +52,7 @@ class LoginScreen extends StatelessWidget {
                 children: [
                   const SizedBox(height: 50),
                   SvgPicture.asset(AppVector.logo, width: 150, height: 150),
-                  const SizedBox(height: 20),
+                  const SizedBox(height: 40),
                   Textfile(
                     labelText: "Email",
                     icon: Icon(Icons.email),
@@ -82,7 +87,7 @@ class LoginScreen extends StatelessWidget {
                   ElevatedButton(
                     onPressed: () {
                       context.read<AuthBloc>().add(
-                        LoginSubmitted(
+                        LoginWithEmailEvent(
                           email: emailController.text,
                           password: passwordController.text,
                         ),
@@ -93,7 +98,7 @@ class LoginScreen extends StatelessWidget {
                   const SizedBox(height: 20),
                   TextButton(
                     onPressed: () {
-                      context.push('/register');
+                      context.go('/register');
                     },
                     child: Text(language.register),
                   ),

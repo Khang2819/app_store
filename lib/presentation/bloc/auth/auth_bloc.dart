@@ -2,6 +2,7 @@ import 'package:bloc_app/presentation/bloc/auth/auth_even.dart';
 import 'package:bloc_app/presentation/bloc/auth/auth_state.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 
+import '../../../core/utils.dart';
 import '../../../core/validators.dart';
 import '../../../data/repositories/auth_login.dart';
 
@@ -9,8 +10,8 @@ class AuthBloc extends Bloc<AuthEvent, AuthState> {
   final AuthRepository authRepository;
 
   AuthBloc(this.authRepository) : super(const AuthState()) {
-    on<LoginSubmitted>(_onLoginSubmitted);
-    on<Register>(_onRegister);
+    on<LoginWithEmailEvent>(_onLoginSubmitted);
+    on<RegisterWithEmailEvent>(_onRegister);
     on<ClearAuthStatus>((event, emit) {
       emit(state.copyWith(isSuccess: false, generalError: null));
     });
@@ -19,8 +20,7 @@ class AuthBloc extends Bloc<AuthEvent, AuthState> {
       emit(
         state.copyWith(
           email: event.email,
-          emailError: null,
-          generalError: null,
+          emailError: const ValueWrapper(null),
           isSuccess: false,
         ),
       );
@@ -29,8 +29,7 @@ class AuthBloc extends Bloc<AuthEvent, AuthState> {
       emit(
         state.copyWith(
           password: event.password,
-          passwordError: null,
-          generalError: null,
+          passwordError: const ValueWrapper(null),
           isSuccess: false,
         ),
       );
@@ -39,8 +38,7 @@ class AuthBloc extends Bloc<AuthEvent, AuthState> {
       emit(
         state.copyWith(
           name: event.name,
-          nameError: null,
-          generalError: null,
+          nameError: const ValueWrapper(null),
           isSuccess: false,
         ),
       );
@@ -49,8 +47,7 @@ class AuthBloc extends Bloc<AuthEvent, AuthState> {
       emit(
         state.copyWith(
           confirmPassword: event.confirmPassword,
-          confirmPasswordError: null,
-          generalError: null,
+          confirmPasswordError: const ValueWrapper(null),
           isSuccess: false,
         ),
       );
@@ -58,7 +55,7 @@ class AuthBloc extends Bloc<AuthEvent, AuthState> {
   }
 
   Future<void> _onLoginSubmitted(
-    LoginSubmitted event,
+    LoginWithEmailEvent event,
     Emitter<AuthState> emit,
   ) async {
     final emailError = Validators.validateEmail(event.email);
@@ -67,8 +64,9 @@ class AuthBloc extends Bloc<AuthEvent, AuthState> {
     if (emailError != null || passwordError != null) {
       emit(
         state.copyWith(
-          emailError: emailError,
-          passwordError: passwordError,
+          emailError: emailError != null ? ValueWrapper(emailError) : null,
+          passwordError:
+              passwordError != null ? ValueWrapper(passwordError) : null,
           isSuccess: false,
         ),
       );
@@ -77,20 +75,26 @@ class AuthBloc extends Bloc<AuthEvent, AuthState> {
 
     emit(state.copyWith(isLoading: true, generalError: null));
     try {
-      await authRepository.signInWithEmail(event.email, event.password);
+      await authRepository.signInWithEmail(
+        email: event.email,
+        password: event.password,
+      );
       emit(state.copyWith(isLoading: false, isSuccess: true));
     } catch (e) {
       emit(
         state.copyWith(
           isLoading: false,
-          generalError: e.toString(),
+          generalError: ValueWrapper(e.toString()),
           isSuccess: false,
         ),
       );
     }
   }
 
-  Future<void> _onRegister(Register event, Emitter<AuthState> emit) async {
+  Future<void> _onRegister(
+    RegisterWithEmailEvent event,
+    Emitter<AuthState> emit,
+  ) async {
     final nameError = Validators.validateName(event.name);
     final emailError = Validators.validateEmail(event.email);
     final passwordError = Validators.validatePassword(event.password);
@@ -105,30 +109,36 @@ class AuthBloc extends Bloc<AuthEvent, AuthState> {
         confirmPasswordError != null) {
       emit(
         state.copyWith(
-          nameError: nameError,
-          emailError: emailError,
-          passwordError: passwordError,
-          confirmPasswordError: confirmPasswordError,
-          generalError: null,
+          // Bọc các giá trị lỗi trong ValueWrapper
+          nameError: ValueWrapper(nameError),
+          emailError: ValueWrapper(emailError),
+          passwordError: ValueWrapper(passwordError),
+          confirmPasswordError: ValueWrapper(confirmPasswordError),
+          generalError: const ValueWrapper(null),
           isSuccess: false,
         ),
       );
       return;
     }
-    emit(state.copyWith(isLoading: true, generalError: null));
+
+    // Khi bắt đầu loading, cũng nên xóa lỗi chung nếu có
+    emit(
+      state.copyWith(isLoading: true, generalError: const ValueWrapper(null)),
+    );
     try {
       await authRepository.signUpWithEmail(
-        event.name,
-        event.email,
-        event.password,
+        name: event.name,
+        email: event.email,
+        password: event.password,
       );
       emit(state.copyWith(isLoading: false, isSuccess: true));
     } catch (e) {
       emit(
         state.copyWith(
           isLoading: false,
-          generalError: e.toString(),
-          isSuccess: false, // show message chi tiết hơn
+          // Bọc lỗi chung trong ValueWrapper
+          generalError: ValueWrapper(e.toString()),
+          isSuccess: false,
         ),
       );
     }

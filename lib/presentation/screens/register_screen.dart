@@ -26,7 +26,7 @@ class RegisterScreen extends StatelessWidget {
         leading: IconButton(
           icon: const Icon(Icons.arrow_back, color: Colors.black),
           onPressed: () {
-            context.pop();
+            context.go("/login");
           },
         ),
         title: const Text("Register"),
@@ -118,7 +118,7 @@ class RegisterScreen extends StatelessWidget {
                   ElevatedButton(
                     onPressed: () {
                       context.read<AuthBloc>().add(
-                        Register(
+                        RegisterWithEmailEvent(
                           name: nameController.text,
                           email: emailController.text,
                           password: passwordController.text,
