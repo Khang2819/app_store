@@ -5,6 +5,7 @@ import 'package:flutter_svg/svg.dart';
 import 'package:go_router/go_router.dart';
 
 import '../../assets/app_vector.dart';
+import '../../core/snackbar_utils.dart';
 import '../../l10n/app_localizations.dart';
 import '../bloc/auth/auth_bloc.dart';
 import '../bloc/auth/auth_even.dart';
@@ -27,7 +28,8 @@ class LoginScreen extends StatelessWidget {
             listenWhen: (previous, current) {
               // Chỉ lắng nghe khi trạng thái isLoading hoặc isSuccess thay đổi
               return previous.isLoading != current.isLoading ||
-                  previous.isSuccess != current.isSuccess;
+                  previous.isSuccess != current.isSuccess ||
+                  previous.generalError != current.generalError;
             },
             listener: (context, state) {
               if (state.isLoading) {
@@ -38,12 +40,20 @@ class LoginScreen extends StatelessWidget {
                   builder:
                       (_) => const Center(child: CircularProgressIndicator()),
                 );
-              } else if (state.isSuccess) {
-                Navigator.of(context).pop(); // đóng loading
-                ScaffoldMessenger.of(context).showSnackBar(
-                  const SnackBar(content: Text("Đăng nhập thành công!")),
-                );
-                //
+              } else {
+                if (Navigator.of(context).canPop()) {
+                  Navigator.of(context).pop();
+                }
+
+                // Nếu có lỗi, hiển thị SnackBar lỗi
+                if (state.generalError != null) {
+                  SnackbarUtils.showError(context, state.generalError!);
+                }
+                // Nếu đăng nhập thành công
+                else if (state.isSuccess) {
+                  SnackbarUtils.showSuccess(context, 'Đăng nhập thành công!');
+                  context.go('/home');
+                }
               }
             },
             builder: (context, state) {
