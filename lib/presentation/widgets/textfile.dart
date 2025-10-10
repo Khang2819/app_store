@@ -41,6 +41,10 @@ class _TextfileState extends State<Textfile> {
         border: OutlineInputBorder(borderRadius: BorderRadius.circular(12)),
         filled: true,
         fillColor: Colors.grey[100],
+        contentPadding: const EdgeInsets.symmetric(
+          vertical: 16,
+          horizontal: 16,
+        ),
         suffixIcon:
             widget.isPassword
                 ? IconButton(
