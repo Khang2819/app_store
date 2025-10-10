@@ -30,7 +30,7 @@ class AppLocalizationsVi extends AppLocalizations {
   String get appTitle => 'Ứng dụng bán hàng';
 
   @override
-  String get login => 'Đăng nhập';
+  String get login => 'Đăng Nhập';
 
   @override
   String get register => 'Đăng ký';

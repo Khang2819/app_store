@@ -1,3 +1,4 @@
+import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:go_router/go_router.dart';
 
@@ -11,54 +12,68 @@ import '../presentation/screens/slpash.dart';
 
 class AppRouter {
   static final AuthRepository _authRepository = AuthRepository();
+
   static final GoRouter router = GoRouter(
     initialLocation: '/splash',
-    // redirect: (BuildContext context, GoRouterState state) {
-    //   final authState = context.read<AuthBloc>().state;
-    //   final isLoggingIn =
-    //       state.matchedLocation == '/login' ||
-    //       state.matchedLocation == '/register';
-    //   if (authState is AuthInitial) {
-    //     return '/splash';
-    //   }
-    //   if (authState is AuthUnauthenticated && !isLoggingIn) {
-    //     return '/login';
-    //   }
-
-    //   if (authState is AuthAuthenticated && isLoggingIn) {
-    //     return '/home';
-    //   }
-    // },
     routes: [
-      GoRoute(
-        path: '/splash',
-        builder: (context, state) => const SplashScreen(),
-      ),
-      GoRoute(
+      _buildRoute(path: '/splash', child: const SplashScreen()),
+      _buildRoute(
         path: '/login',
-        builder:
-            (context, state) => BlocProvider(
-              create: (_) => AuthBloc(_authRepository),
-              child: LoginScreen(),
-            ),
+        child: BlocProvider(
+          create: (_) => AuthBloc(_authRepository),
+          child: LoginScreen(),
+        ),
       ),
-      GoRoute(
+      _buildRoute(
         path: '/register',
-        builder:
-            (context, state) => BlocProvider(
-              create: (_) => AuthBloc(_authRepository),
-              child: RegisterScreen(),
-            ),
+        child: BlocProvider(
+          create: (_) => AuthBloc(_authRepository),
+          child: RegisterScreen(),
+        ),
       ),
-      GoRoute(
+      _buildRoute(
         path: '/forgot',
-        builder: (context, state) => const ForgotScreen(),
+        child: BlocProvider(
+          create: (_) => AuthBloc(_authRepository),
+          child: ForgotScreen(),
+        ),
       ),
-      GoRoute(
-        path: '/home',
-        builder: (context, state) => const HomeScreen(), // Thêm route này
-      ),
-      // ...
+      _buildRoute(path: '/home', child: const HomeScreen()),
     ],
   );
+
+  /// 🪄 Hiệu ứng Slide + Fade (mượt kiểu iOS/Material)
+  static GoRoute _buildRoute({required String path, required Widget child}) {
+    return GoRoute(
+      path: path,
+      pageBuilder:
+          (context, state) => CustomTransitionPage<void>(
+            key: state.pageKey,
+            transitionDuration: const Duration(milliseconds: 350),
+            reverseTransitionDuration: const Duration(milliseconds: 300),
+            child: child,
+            transitionsBuilder: (
+              context,
+              animation,
+              secondaryAnimation,
+              child,
+            ) {
+              // Fade và trượt nhẹ từ phải qua (kiểu iOS)
+              final fade = CurvedAnimation(
+                parent: animation,
+                curve: Curves.easeOutCubic,
+              );
+              final offset = Tween<Offset>(
+                begin: const Offset(0.1, 0), // từ phải qua
+                end: Offset.zero,
+              ).animate(fade);
+
+              return FadeTransition(
+                opacity: fade,
+                child: SlideTransition(position: offset, child: child),
+              );
+            },
+          ),
+    );
+  }
 }

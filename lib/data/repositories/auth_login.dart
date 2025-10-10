@@ -43,6 +43,15 @@ class AuthRepository {
     }
   }
 
+  // Gửi email đặt lại mật khẩu
+  Future<void> sendPasswordResetEmail(String email) async {
+    try {
+      await _firebaseAuth.sendPasswordResetEmail(email: email);
+    } on FirebaseAuthException catch (e) {
+      throw AuthException(_mapFirebaseErrorToMessage(e.code));
+    }
+  }
+
   // Đăng xuất
   Future<void> signOut() async {
     await _firebaseAuth.signOut();

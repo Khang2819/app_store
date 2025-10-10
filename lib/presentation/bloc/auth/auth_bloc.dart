@@ -12,6 +12,7 @@ class AuthBloc extends Bloc<AuthEvent, AuthState> {
   AuthBloc(this.authRepository) : super(const AuthState()) {
     on<LoginWithEmailEvent>(_onLoginSubmitted);
     on<RegisterWithEmailEvent>(_onRegister);
+    on<ForgotPasswordEvent>(_onForgot);
     on<ClearAuthStatus>((event, emit) {
       emit(state.copyWith(isSuccess: false, generalError: null));
     });
@@ -137,6 +138,34 @@ class AuthBloc extends Bloc<AuthEvent, AuthState> {
         state.copyWith(
           isLoading: false,
           // Bọc lỗi chung trong ValueWrapper
+          generalError: ValueWrapper(e.toString()),
+          isSuccess: false,
+        ),
+      );
+    }
+  }
+
+  Future<void> _onForgot(
+    ForgotPasswordEvent event,
+    Emitter<AuthState> emit,
+  ) async {
+    final emailError = Validators.validateEmail(event.email);
+
+    if (emailError != null) {
+      emit(
+        state.copyWith(emailError: ValueWrapper(emailError), isSuccess: false),
+      );
+      return;
+    }
+
+    emit(state.copyWith(isLoading: true, generalError: null));
+    try {
+      await authRepository.sendPasswordResetEmail(event.email);
+      emit(state.copyWith(isLoading: false, isSuccess: true));
+    } catch (e) {
+      emit(
+        state.copyWith(
+          isLoading: false,
           generalError: ValueWrapper(e.toString()),
           isSuccess: false,
         ),

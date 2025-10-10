@@ -3,7 +3,9 @@ import "package:bloc_app/presentation/widgets/textfile.dart";
 import "package:flutter/material.dart";
 import "package:flutter_bloc/flutter_bloc.dart";
 import "package:go_router/go_router.dart";
+import "package:loader_overlay/loader_overlay.dart";
 
+import "../../core/snackbar_utils.dart";
 import "../bloc/auth/auth_bloc.dart";
 import "../bloc/auth/auth_state.dart";
 
@@ -42,28 +44,15 @@ class RegisterScreen extends StatelessWidget {
             },
             listener: (context, state) {
               if (state.isLoading) {
-                showDialog(
-                  context: context,
-                  barrierDismissible: false,
-                  useRootNavigator: true,
-                  builder:
-                      (_) => const Center(child: CircularProgressIndicator()),
-                );
+                context.loaderOverlay.show();
               } else {
-                if (Navigator.of(context).canPop()) {
-                  Navigator.of(context).pop();
+                context.loaderOverlay.hide();
+                if (state.isSuccess) {
+                  SnackbarUtils.showSuccess(context, "Đăng ký thành công!");
+                  context.go("/login");
+                } else if (state.generalError != null) {
+                  SnackbarUtils.showError(context, state.generalError!);
                 }
-              }
-              if (state.isSuccess) {
-                ScaffoldMessenger.of(context).showSnackBar(
-                  const SnackBar(content: Text("Đăng ký thành công!")),
-                );
-                context.go("/login");
-              }
-              if (state.generalError != null) {
-                ScaffoldMessenger.of(
-                  context,
-                ).showSnackBar(SnackBar(content: Text(state.generalError!)));
               }
             },
             builder: (context, state) {
