@@ -4,6 +4,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:go_router/go_router.dart';
 
+import '../../core/snackbar_utils.dart';
 import '../bloc/auth/auth_state.dart';
 
 class ForgotScreen extends StatefulWidget {
@@ -35,16 +36,21 @@ class _ForgotScreenState extends State<ForgotScreen> {
           backgroundColor: Colors.white,
           leading: IconButton(
             icon: Icon(Icons.arrow_back, color: Colors.black),
-            onPressed: () {
-              context.go("/login");
-            },
+            onPressed: () => context.go("/login"),
           ),
         ),
         body: SingleChildScrollView(
           padding: const EdgeInsets.all(20),
           child: BlocConsumer<AuthBloc, AuthState>(
             listener: (context, state) {
-              // TODO: implement listener
+              if (state.isSuccess) {
+                SnackbarUtils.showSuccess(
+                  context,
+                  "Đã gửi email đặt lại mật khẩu!",
+                );
+              } else if (state.generalError != null) {
+                SnackbarUtils.showError(context, state.generalError!);
+              }
             },
             builder: (context, state) {
               return Column(

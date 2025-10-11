@@ -96,9 +96,7 @@ class _LoginScreenState extends State<LoginScreen> {
                     Align(
                       alignment: Alignment.centerRight,
                       child: TextButton(
-                        onPressed: () {
-                          context.push('/forgot');
-                        },
+                        onPressed: () => context.go("/forgot"),
                         child: Text(
                           "Quên mật khẩu?",
                           style: TextStyle(color: Colors.blue),
@@ -192,9 +190,7 @@ class _LoginScreenState extends State<LoginScreen> {
                       children: [
                         Text('Chưa có tài khoản?'),
                         TextButton(
-                          onPressed: () {
-                            context.go('/register');
-                          },
+                          onPressed: () => context.go("/register"),
                           child: Text(
                             "Đăng ký",
                             style: TextStyle(color: Colors.blue),
