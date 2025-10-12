@@ -12,6 +12,7 @@ class AuthBloc extends Bloc<AuthEvent, AuthState> {
   AuthBloc(this.authRepository) : super(const AuthState()) {
     on<LoginWithEmailEvent>(_onLoginSubmitted);
     on<RegisterWithEmailEvent>(_onRegister);
+    on<LoginWithGoogle>(_onLoginWithGoogle);
     on<ForgotPasswordEvent>(_onForgot);
     on<ClearAuthStatus>((event, emit) {
       emit(state.copyWith(isSuccess: false, generalError: null));
@@ -161,6 +162,25 @@ class AuthBloc extends Bloc<AuthEvent, AuthState> {
     emit(state.copyWith(isLoading: true, generalError: null));
     try {
       await authRepository.sendPasswordResetEmail(event.email);
+      emit(state.copyWith(isLoading: false, isSuccess: true));
+    } catch (e) {
+      emit(
+        state.copyWith(
+          isLoading: false,
+          generalError: ValueWrapper(e.toString()),
+          isSuccess: false,
+        ),
+      );
+    }
+  }
+
+  Future<void> _onLoginWithGoogle(
+    LoginWithGoogle event,
+    Emitter<AuthState> emit,
+  ) async {
+    emit(state.copyWith(isLoading: true, generalError: null));
+    try {
+      await authRepository.signInWithGoogle();
       emit(state.copyWith(isLoading: false, isSuccess: true));
     } catch (e) {
       emit(

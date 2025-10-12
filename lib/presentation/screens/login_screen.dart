@@ -155,7 +155,7 @@ class _LoginScreenState extends State<LoginScreen> {
                               side: BorderSide(color: Colors.grey.shade300),
                             ),
                             onPressed: () {
-                              // Xử lý đăng nhập với Google
+                              context.read<AuthBloc>().add(LoginWithGoogle());
                             },
                             child: SvgPicture.asset(
                               AppVector.google,

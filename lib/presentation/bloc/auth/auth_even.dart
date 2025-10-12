@@ -68,4 +68,8 @@ class ConfirmPasswordChanged extends AuthEvent {
 
 class ClearAuthStatus extends AuthEvent {}
 
+class LoginWithGoogle extends AuthEvent {}
+
+class LoginWithFacebook extends AuthEvent {}
+
 class Logout extends AuthEvent {}
