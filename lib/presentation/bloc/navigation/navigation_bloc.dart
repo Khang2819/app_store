@@ -8,5 +8,8 @@ class NavigationBloc extends Bloc<NavigationEvent, NavigationState> {
     on<TabChanged>((event, emit) {
       emit(NavigationState(tabIndex: event.tabIndex));
     });
+    on<NavigationReset>((event, emit) {
+      emit(NavigationState(tabIndex: 0));
+    });
   }
 }

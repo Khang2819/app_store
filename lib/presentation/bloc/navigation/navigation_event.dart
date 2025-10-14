@@ -13,3 +13,5 @@ class TabChanged extends NavigationEvent {
   @override
   List<Object> get props => [tabIndex];
 }
+
+class NavigationReset extends NavigationEvent {}
