@@ -1,3 +1,4 @@
+import 'package:bloc_app/presentation/bloc/navigation/navigation_bloc.dart';
 import 'package:firebase_core/firebase_core.dart';
 import 'package:loader_overlay/loader_overlay.dart';
 import 'firebase_options.dart';
@@ -30,6 +31,7 @@ class MyApp extends StatelessWidget {
         BlocProvider(
           create: (context) => LanguageBloc()..add(LanguageStarted()),
         ),
+        BlocProvider(create: (context) => NavigationBloc()),
       ],
       child: BlocBuilder<ThemeCubit, ThemeMode>(
         builder: (context, state) {

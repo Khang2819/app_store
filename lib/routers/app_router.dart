@@ -5,8 +5,8 @@ import 'package:go_router/go_router.dart';
 import '../data/repositories/auth_login.dart';
 import '../presentation/bloc/auth/auth_bloc.dart';
 import '../presentation/screens/forgot_screen.dart';
-import '../presentation/screens/home_screen.dart';
 import '../presentation/screens/login_screen.dart';
+import '../presentation/screens/main_nav_screen.dart';
 import '../presentation/screens/register_screen.dart';
 import '../presentation/screens/slpash.dart';
 
@@ -38,7 +38,7 @@ class AppRouter {
           child: ForgotScreen(),
         ),
       ),
-      _buildRoute(path: '/home', child: const HomeScreen()),
+      _buildRoute(path: '/home', child: const MainNavScreen()),
     ],
   );
 
