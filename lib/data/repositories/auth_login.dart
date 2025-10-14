@@ -78,6 +78,7 @@ class AuthRepository {
   // Đăng xuất
   Future<void> signOut() async {
     await _firebaseAuth.signOut();
+    await _googleSignIn.signOut();
   }
 
   String _mapFirebaseErrorToMessage(String code) {

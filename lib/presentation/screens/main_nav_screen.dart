@@ -1,5 +1,6 @@
 import 'package:bloc_app/presentation/bloc/navigation/navigation_event.dart';
 import 'package:bloc_app/presentation/screens/home_screen.dart';
+import 'package:bloc_app/presentation/screens/person_screen.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import '../bloc/navigation/navigation_bloc.dart';
@@ -12,7 +13,7 @@ class MainNavScreen extends StatelessWidget {
     HomeScreen(),
     Scaffold(body: Center(child: Text("Search Screen"))),
     Scaffold(body: Center(child: Text("Cart Screen"))),
-    Scaffold(body: Center(child: Text("Profile Screen"))),
+    PersonScreen(),
   ];
 
   @override

@@ -38,7 +38,13 @@ class AppRouter {
           child: ForgotScreen(),
         ),
       ),
-      _buildRoute(path: '/home', child: const MainNavScreen()),
+      _buildRoute(
+        path: '/home',
+        child: BlocProvider(
+          create: (_) => AuthBloc(_authRepository),
+          child: const MainNavScreen(),
+        ),
+      ),
     ],
   );
 
