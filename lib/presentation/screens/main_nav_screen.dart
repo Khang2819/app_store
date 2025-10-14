@@ -24,6 +24,8 @@ class MainNavScreen extends StatelessWidget {
           body: IndexedStack(index: state.tabIndex, children: _screen),
           bottomNavigationBar: BottomNavigationBar(
             currentIndex: state.tabIndex,
+            selectedItemColor: Color(0xff2A4ECA),
+            unselectedItemColor: Colors.grey,
             onTap:
                 (index) => context.read<NavigationBloc>().add(
                   TabChanged(tabIndex: index),
