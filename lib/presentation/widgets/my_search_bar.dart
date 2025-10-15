@@ -36,7 +36,7 @@ class MySearchBar extends StatelessWidget {
             ),
             prefixIcon: const Icon(
               Icons.search_rounded,
-              color: Colors.grey,
+              color: Colors.black,
               size: 22,
             ),
             hintText: 'Tìm kiếm sản phẩm...',

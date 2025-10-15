@@ -1,3 +1,4 @@
+import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:google_sign_in/google_sign_in.dart';
 
@@ -12,6 +13,7 @@ class AuthException implements Exception {
 class AuthRepository {
   final FirebaseAuth _firebaseAuth = FirebaseAuth.instance;
   final GoogleSignIn _googleSignIn = GoogleSignIn();
+  final FirebaseFirestore _firestore = FirebaseFirestore.instance;
 
   Stream<User?> get userChanges => _firebaseAuth.authStateChanges();
 
@@ -37,10 +39,18 @@ class AuthRepository {
     required String password,
   }) async {
     try {
-      return await _firebaseAuth.createUserWithEmailAndPassword(
-        email: email,
-        password: password,
-      );
+      final UserCredential userCredential = await _firebaseAuth
+          .createUserWithEmailAndPassword(email: email, password: password);
+      final User? firebaseUser = userCredential.user;
+      if (firebaseUser != null) {
+        await _firestore.collection('users').doc(firebaseUser.uid).set({
+          'name': name,
+          'email': email,
+          'createdAt': Timestamp.now(),
+          'provider': 'email',
+        });
+      }
+      return userCredential;
     } on FirebaseAuthException catch (e) {
       throw AuthException(_mapFirebaseErrorToMessage(e.code));
     }
@@ -58,7 +68,23 @@ class AuthRepository {
         accessToken: googleAuth.accessToken,
         idToken: googleAuth.idToken,
       );
-      return await _firebaseAuth.signInWithCredential(credential);
+      final UserCredential userCredential = await _firebaseAuth
+          .signInWithCredential(credential);
+      final User? firebaseUser = userCredential.user;
+      if (firebaseUser != null) {
+        final userDoc = _firestore.collection('users').doc(firebaseUser.uid);
+        final docSnapshot = await userDoc.get();
+        if (!docSnapshot.exists) {
+          await userDoc.set({
+            'name': firebaseUser.displayName, // Lấy tên từ tài khoản Google
+            'email': firebaseUser.email, // Lấy email từ tài khoản Google
+            'photoUrl': firebaseUser.photoURL, // Lấy ảnh đại diện
+            'createdAt': Timestamp.now(),
+            'provider': 'google', // Thêm thông tin nhà cung cấp
+          });
+        }
+      }
+      return userCredential;
     } on FirebaseAuthException catch (e) {
       throw AuthException(_mapFirebaseErrorToMessage(e.code));
     } catch (e) {
