@@ -1,6 +1,10 @@
 import 'package:bloc_app/presentation/widgets/my_search_bar.dart';
 import 'package:flutter/material.dart';
 import 'package:firebase_auth/firebase_auth.dart';
+import 'package:flutter_bloc/flutter_bloc.dart';
+
+import '../bloc/home/home_bloc.dart';
+import '../bloc/home/home_state.dart';
 
 class HomeScreen extends StatelessWidget {
   const HomeScreen({super.key});
@@ -50,19 +54,22 @@ class HomeScreen extends StatelessWidget {
             const SizedBox(width: 10),
           ],
         ),
-        body: SingleChildScrollView(
-          padding: const EdgeInsets.symmetric(horizontal: 15, vertical: 10),
-          child: Column(
-            children: const [
-              MySearchBar(),
-              SizedBox(height: 20),
-              Text(
-                "Danh mục nổi bật",
-                style: TextStyle(fontSize: 18, fontWeight: FontWeight.bold),
+        body: BlocBuilder<HomeBloc, HomeState>(
+          builder: (context, state) {
+            return SingleChildScrollView(
+              padding: const EdgeInsets.symmetric(horizontal: 15, vertical: 10),
+              child: Column(
+                children: const [
+                  MySearchBar(),
+                  SizedBox(height: 20),
+                  Text(
+                    "Danh mục nổi bật",
+                    style: TextStyle(fontSize: 18, fontWeight: FontWeight.bold),
+                  ),
+                ],
               ),
-              // TODO: thêm danh mục sản phẩm ở đây
-            ],
-          ),
+            );
+          },
         ),
       ),
     );
