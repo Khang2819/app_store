@@ -1,10 +1,11 @@
 import 'package:equatable/equatable.dart';
 
+import '../../../data/models/category_model.dart';
 import '../../../data/models/product_model.dart';
 
 class HomeState extends Equatable {
   final bool isLoading;
-  final List<Product> categories;
+  final List<Category> categories;
   final List<Product> products;
   final List<String> favorites;
   final String? error;
@@ -18,7 +19,7 @@ class HomeState extends Equatable {
   });
   HomeState copyWith({
     bool? isLoading,
-    List<Product>? categories,
+    List<Category>? categories,
     List<Product>? products,
     List<String>? favorites,
     String? error,

@@ -1,5 +1,6 @@
 import 'package:cloud_firestore/cloud_firestore.dart';
 
+import '../models/category_model.dart';
 import '../models/product_model.dart';
 
 class ProductRepository {
@@ -11,9 +12,9 @@ class ProductRepository {
     return snapshot.docs.map((doc) => Product.fromFirestore(doc)).toList();
   }
 
-  Future<List<Product>> fetchCategories() async {
+  Future<List<Category>> fetchCategories() async {
     final snapshot = await _firestore.collection('categories').get();
     // Trả về một List<Product> thay vì List<Map>
-    return snapshot.docs.map((doc) => Product.fromFirestore(doc)).toList();
+    return snapshot.docs.map((doc) => Category.fromFirestore(doc)).toList();
   }
 }

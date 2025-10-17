@@ -2,10 +2,10 @@ import 'package:bloc_app/presentation/widgets/my_search_bar.dart';
 import 'package:flutter/material.dart';
 // import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
-
 import '../bloc/home/home_bloc.dart';
 import '../bloc/home/home_event.dart';
 import '../bloc/home/home_state.dart';
+import '../widgets/category_grid.dart';
 import '../widgets/home_appbar.dart';
 import '../widgets/product_grid.dart';
 
@@ -94,6 +94,18 @@ class _HomeScreenState extends State<HomeScreen> {
                     const SizedBox(height: 10),
                     const MySearchBar(),
                     const SizedBox(height: 24),
+                    Padding(
+                      padding: const EdgeInsets.symmetric(horizontal: 15),
+                      child: const Text(
+                        "Danh mục",
+                        style: TextStyle(
+                          fontSize: 18,
+                          fontWeight: FontWeight.bold,
+                        ),
+                      ),
+                    ),
+                    const SizedBox(height: 12),
+                    CategoryGrid(categories: state.categories),
                     Padding(
                       padding: const EdgeInsets.symmetric(horizontal: 15),
                       child: Row(
