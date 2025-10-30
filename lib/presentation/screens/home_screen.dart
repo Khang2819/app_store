@@ -1,10 +1,11 @@
 import 'package:bloc_app/presentation/widgets/my_search_bar.dart';
 import 'package:flutter/material.dart';
-// import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import '../bloc/home/home_bloc.dart';
 import '../bloc/home/home_event.dart';
 import '../bloc/home/home_state.dart';
+import '../bloc/navigation/navigation_bloc.dart';
+import '../bloc/navigation/navigation_event.dart';
 import '../widgets/category_grid.dart';
 import '../widgets/home_appbar.dart';
 import '../widgets/product_grid.dart';
@@ -20,18 +21,15 @@ class _HomeScreenState extends State<HomeScreen> {
   @override
   void initState() {
     super.initState();
-    // Load data khi screen khởi tạo
     context.read<HomeBloc>().add(LoadHomeData());
   }
 
   @override
   Widget build(BuildContext context) {
-    // final user = FirebaseAuth.instance.currentUser;
-
     return GestureDetector(
       onTap: () => FocusScope.of(context).unfocus(),
       child: Scaffold(
-        backgroundColor: Colors.white,
+        backgroundColor: Color(0xffFFF8F0),
         appBar: HomeAppbar(),
         body: BlocBuilder<HomeBloc, HomeState>(
           builder: (context, state) {
@@ -92,7 +90,21 @@ class _HomeScreenState extends State<HomeScreen> {
                   crossAxisAlignment: CrossAxisAlignment.start,
                   children: [
                     const SizedBox(height: 10),
-                    const MySearchBar(),
+                    GestureDetector(
+                      onTap: () {
+                        // Lấy NavigationBloc từ context
+                        // và phát sự kiện chuyển sang tab 1 (SearchScreen)
+                        // (Vì trong MainNavScreen: HomeScreen là 0, SearchScreen là 1)
+                        context.read<NavigationBloc>().add(
+                          const TabChanged(tabIndex: 1),
+                        );
+                      },
+                      child: AbsorbPointer(
+                        // AbsorbPointer ngăn người dùng tương tác (nhấn vào)
+                        // TextField thật sự ở bên trong MySearchBar
+                        child: const MySearchBar(),
+                      ),
+                    ),
                     const SizedBox(height: 24),
                     Padding(
                       padding: const EdgeInsets.symmetric(horizontal: 15),

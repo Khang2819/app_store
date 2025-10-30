@@ -1,3 +1,4 @@
+import 'package:bloc_app/core/localization_utils.dart';
 import 'package:bloc_app/presentation/bloc/auth/auth_bloc.dart';
 import 'package:bloc_app/presentation/bloc/auth/auth_even.dart';
 import 'package:flutter/material.dart';
@@ -5,6 +6,7 @@ import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:go_router/go_router.dart';
 
 import '../../core/snackbar_utils.dart';
+import '../../l10n/app_localizations.dart';
 import '../bloc/auth/auth_state.dart';
 
 class ForgotScreen extends StatefulWidget {
@@ -25,12 +27,13 @@ class _ForgotScreenState extends State<ForgotScreen> {
 
   @override
   Widget build(BuildContext context) {
+    final language = AppLocalizations.of(context)!;
     return GestureDetector(
       onTap: () => FocusScope.of(context).unfocus(),
       child: Scaffold(
         appBar: AppBar(
-          title: const Text(
-            'Quên mật khẩu',
+          title: Text(
+            language.forgot_password,
             style: TextStyle(color: Colors.black),
           ),
           backgroundColor: Colors.white,
@@ -46,10 +49,19 @@ class _ForgotScreenState extends State<ForgotScreen> {
               if (state.isSuccess) {
                 SnackbarUtils.showSuccess(
                   context,
-                  "Đã gửi email đặt lại mật khẩu!",
+                  language.forgot_password_success, // <-- Sửa
+                  language, // <-- Truyền
                 );
               } else if (state.generalError != null) {
-                SnackbarUtils.showError(context, state.generalError!);
+                final translatedError = LocalizationUtils.translateError(
+                  state.generalError,
+                  language,
+                );
+                SnackbarUtils.showError(
+                  context,
+                  translatedError ?? language.unknown_error, // <-- Sửa
+                  language, // <-- Truyền
+                );
               }
             },
             builder: (context, state) {
@@ -57,27 +69,27 @@ class _ForgotScreenState extends State<ForgotScreen> {
                 crossAxisAlignment: CrossAxisAlignment.start,
                 children: [
                   const SizedBox(height: 20),
-                  const Text(
-                    'Đặt lại mật khẩu',
-                    style: TextStyle(fontSize: 16),
-                  ),
+                  Text(language.reset_password, style: TextStyle(fontSize: 16)),
                   const SizedBox(height: 10),
-                  const Text(
-                    'Vui lòng nhập email đã đăng ký của bạn để nhận liên kết đặt lại mật khẩu.',
+                  Text(
+                    language.reset_password_description,
                     style: TextStyle(fontSize: 14, color: Colors.grey),
                   ),
                   const SizedBox(height: 20),
                   TextField(
                     controller: emailController,
                     decoration: InputDecoration(
-                      labelText: 'Email',
+                      labelText: language.email,
                       prefixIcon: Icon(Icons.email),
                       border: OutlineInputBorder(
                         borderRadius: BorderRadius.circular(12),
                       ),
                       filled: true,
                       fillColor: Colors.grey[100],
-                      errorText: state.emailError,
+                      errorText: LocalizationUtils.translateError(
+                        state.emailError,
+                        language,
+                      ),
                     ),
                     onChanged: (value) {
                       context.read<AuthBloc>().add(EmailChanged(value));
@@ -99,13 +111,16 @@ class _ForgotScreenState extends State<ForgotScreen> {
                       );
                       // Xử lý gửi email đặt lại mật khẩu
                     },
-                    child: const Center(
+                    child: Center(
                       child: Row(
                         mainAxisSize: MainAxisSize.min,
                         children: [
                           Icon(Icons.send, color: Colors.white),
                           SizedBox(width: 8),
-                          Text('Gửi yêu cầu', style: TextStyle(fontSize: 16)),
+                          Text(
+                            language.send_request,
+                            style: TextStyle(fontSize: 16),
+                          ),
                         ],
                       ),
                     ),

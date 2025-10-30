@@ -139,11 +139,197 @@ abstract class AppLocalizations {
   /// **'Shopping App'**
   String get appTitle;
 
+  /// No description provided for @email.
+  ///
+  /// In en, this message translates to:
+  /// **'Email'**
+  String get email;
+
+  /// No description provided for @password.
+  ///
+  /// In en, this message translates to:
+  /// **'Password'**
+  String get password;
+
+  /// No description provided for @forgot_password.
+  ///
+  /// In en, this message translates to:
+  /// **'Forgot password?'**
+  String get forgot_password;
+
+  /// No description provided for @or_login_with.
+  ///
+  /// In en, this message translates to:
+  /// **'Or login with'**
+  String get or_login_with;
+
+  /// No description provided for @reset_password.
+  ///
+  /// In en, this message translates to:
+  /// **'Reset password'**
+  String get reset_password;
+
+  /// No description provided for @send_request.
+  ///
+  /// In en, this message translates to:
+  /// **'Send request'**
+  String get send_request;
+
+  /// No description provided for @reset_password_description.
+  ///
+  /// In en, this message translates to:
+  /// **'Please enter your registered email to receive the password reset link.'**
+  String get reset_password_description;
+
+  /// No description provided for @dont_have_account.
+  ///
+  /// In en, this message translates to:
+  /// **'Already have an account?'**
+  String get dont_have_account;
+
   /// No description provided for @login.
   ///
   /// In en, this message translates to:
   /// **'Login'**
   String get login;
+
+  /// No description provided for @name.
+  ///
+  /// In en, this message translates to:
+  /// **'Name'**
+  String get name;
+
+  /// No description provided for @confirm_password.
+  ///
+  /// In en, this message translates to:
+  /// **'Confirm password'**
+  String get confirm_password;
+
+  /// No description provided for @already_have_account.
+  ///
+  /// In en, this message translates to:
+  /// **'Already have an account?'**
+  String get already_have_account;
+
+  /// No description provided for @name_empty.
+  ///
+  /// In en, this message translates to:
+  /// **'Name cannot be empty'**
+  String get name_empty;
+
+  /// No description provided for @name_too_short.
+  ///
+  /// In en, this message translates to:
+  /// **'Name must be at least 3 characters'**
+  String get name_too_short;
+
+  /// No description provided for @email_empty.
+  ///
+  /// In en, this message translates to:
+  /// **'Email cannot be empty'**
+  String get email_empty;
+
+  /// No description provided for @email_invalid.
+  ///
+  /// In en, this message translates to:
+  /// **'Invalid email address'**
+  String get email_invalid;
+
+  /// No description provided for @password_empty.
+  ///
+  /// In en, this message translates to:
+  /// **'Password cannot be empty'**
+  String get password_empty;
+
+  /// No description provided for @password_too_short.
+  ///
+  /// In en, this message translates to:
+  /// **'Password must be at least 6 characters'**
+  String get password_too_short;
+
+  /// No description provided for @confirm_password_empty.
+  ///
+  /// In en, this message translates to:
+  /// **'Confirm password cannot be empty'**
+  String get confirm_password_empty;
+
+  /// No description provided for @reset_password_email_sent.
+  ///
+  /// In en, this message translates to:
+  /// **'Password reset email has been sent!'**
+  String get reset_password_email_sent;
+
+  /// No description provided for @login_success.
+  ///
+  /// In en, this message translates to:
+  /// **'Login successful!'**
+  String get login_success;
+
+  /// No description provided for @success.
+  ///
+  /// In en, this message translates to:
+  /// **'Success 🎉'**
+  String get success;
+
+  /// No description provided for @error.
+  ///
+  /// In en, this message translates to:
+  /// **'Error ❌'**
+  String get error;
+
+  /// No description provided for @register_success.
+  ///
+  /// In en, this message translates to:
+  /// **'Registration successful!'**
+  String get register_success;
+
+  /// No description provided for @forgot_password_success.
+  ///
+  /// In en, this message translates to:
+  /// **'Password reset email has been sent!'**
+  String get forgot_password_success;
+
+  /// No description provided for @unknown_error.
+  ///
+  /// In en, this message translates to:
+  /// **'An unknown error occurred'**
+  String get unknown_error;
+
+  /// No description provided for @google_sign_in_cancelled.
+  ///
+  /// In en, this message translates to:
+  /// **'Google sign-in was cancelled.'**
+  String get google_sign_in_cancelled;
+
+  /// No description provided for @google_sign_in_failed.
+  ///
+  /// In en, this message translates to:
+  /// **'An error occurred during Google sign-in.'**
+  String get google_sign_in_failed;
+
+  /// No description provided for @invalid_credential.
+  ///
+  /// In en, this message translates to:
+  /// **'Invalid email or password.'**
+  String get invalid_credential;
+
+  /// No description provided for @email_already_in_use.
+  ///
+  /// In en, this message translates to:
+  /// **'This email address is already in use.'**
+  String get email_already_in_use;
+
+  /// No description provided for @weak_password.
+  ///
+  /// In en, this message translates to:
+  /// **'The password is too weak.'**
+  String get weak_password;
+
+  /// No description provided for @confirm_password_not_match.
+  ///
+  /// In en, this message translates to:
+  /// **'Passwords do not match'**
+  String get confirm_password_not_match;
 
   /// No description provided for @register.
   ///
@@ -168,6 +354,30 @@ abstract class AppLocalizations {
   /// In en, this message translates to:
   /// **'Order Now'**
   String get orderNow;
+
+  /// No description provided for @cart.
+  ///
+  /// In en, this message translates to:
+  /// **'Cart'**
+  String get cart;
+
+  /// No description provided for @cart_empty.
+  ///
+  /// In en, this message translates to:
+  /// **'Your cart is empty'**
+  String get cart_empty;
+
+  /// No description provided for @total.
+  ///
+  /// In en, this message translates to:
+  /// **'Total'**
+  String get total;
+
+  /// No description provided for @checkout.
+  ///
+  /// In en, this message translates to:
+  /// **'Checkout'**
+  String get checkout;
 }
 
 class _AppLocalizationsDelegate extends LocalizationsDelegate<AppLocalizations> {

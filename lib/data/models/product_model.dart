@@ -5,12 +5,13 @@ class Product {
   final String name;
   final String imageUrl;
   final int price;
-
+  final String description;
   Product({
     required this.id,
     required this.name,
     required this.imageUrl,
     required this.price,
+    required this.description,
   });
   factory Product.fromFirestore(DocumentSnapshot doc) {
     Map data = doc.data() as Map<String, dynamic>;
@@ -19,6 +20,7 @@ class Product {
       name: data['name'] ?? '',
       imageUrl: data['imageUrl'] ?? '',
       price: (data['price'] ?? 0).toInt(),
+      description: data['description'] ?? '',
     );
   }
 }

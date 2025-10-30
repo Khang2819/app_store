@@ -1,41 +1,69 @@
 import 'package:flutter/material.dart';
+import 'package:go_router/go_router.dart';
+
+import '../../assets/app_vector.dart';
 
 class HomeAppbar extends StatelessWidget implements PreferredSizeWidget {
-  const HomeAppbar({super.key});
+  final String? title; // Tiêu đề tùy chỉnh
+  final bool showBackButton; // Hiển thị nút quay lại hay không
+  final VoidCallback? onBack; // Hành động khi nhấn nút quay lại
+  final VoidCallback? onCartTap; // Hành động khi nhấn giỏ hàng
+
+  const HomeAppbar({
+    super.key,
+    this.title,
+    this.showBackButton = false,
+    this.onBack,
+    this.onCartTap,
+  });
 
   @override
   Widget build(BuildContext context) {
     return AppBar(
-      backgroundColor: Colors.white,
+      backgroundColor: Color(0xffDDB892),
       elevation: 3,
       surfaceTintColor: Colors.white,
-      titleSpacing: 0,
-      title: Row(
-        children: [
-          const SizedBox(width: 10),
-          CircleAvatar(
-            radius: 18,
-            // ignore: deprecated_member_use
-            backgroundColor: const Color(0xff8B5E3C).withOpacity(0.15),
-            child: const Icon(Icons.local_cafe, color: Color(0xff8B5E3C)),
-          ),
-          const SizedBox(width: 8),
-          const Text(
-            'E-Commerce',
-            style: TextStyle(
-              fontSize: 20,
-              fontWeight: FontWeight.bold,
-              color: Color(0xff8B5E3C),
-            ),
-          ),
-        ],
+      centerTitle: true,
+      leading:
+          showBackButton
+              ? IconButton(
+                icon: const Icon(
+                  Icons.arrow_back_ios_new_rounded,
+                  color: Colors.white,
+                  size: 22,
+                ),
+                onPressed: onBack ?? () => context.pop(),
+              )
+              : Padding(
+                padding: const EdgeInsets.only(left: 12),
+                child: CircleAvatar(
+                  radius: 20,
+                  backgroundColor: Colors.white,
+                  child: ClipOval(
+                    child: Image.asset(
+                      AppVector.icon,
+                      fit: BoxFit.contain,
+                      width: 36,
+                      height: 36,
+                    ),
+                  ),
+                ),
+              ),
+
+      title: Text(
+        title ?? 'Shop Coffe',
+        style: const TextStyle(
+          fontSize: 20,
+          fontWeight: FontWeight.bold,
+          color: Colors.white,
+        ),
       ),
       actions: [
         IconButton(
-          onPressed: () {},
-          icon: const Icon(
+          onPressed: onCartTap ?? () {},
+          icon: Icon(
             Icons.shopping_cart_outlined,
-            color: Colors.black87,
+            color: Colors.white,
             size: 26,
           ),
         ),

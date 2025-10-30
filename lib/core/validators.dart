@@ -1,20 +1,20 @@
 class Validators {
   static String? validateName(String name) {
-    if (name.isEmpty) return "Tên không được để trống";
-    if (name.length < 3) return "Tên phải có ít nhất 3 ký tự";
+    if (name.isEmpty) return 'name_empty';
+    if (name.length < 3) return 'name_too_short';
     return null;
   }
 
   static String? validateEmail(String email) {
     final emailRegex = RegExp(r'^[^@]+@[^@]+\.[^@]+');
-    if (email.isEmpty) return "Email không được để trống";
-    if (!emailRegex.hasMatch(email)) return "Email không hợp lệ";
+    if (email.isEmpty) return 'email_empty';
+    if (!emailRegex.hasMatch(email)) return 'email_invalid';
     return null;
   }
 
   static String? validatePassword(String password) {
-    if (password.isEmpty) return "Mật khẩu không được để trống";
-    if (password.length < 6) return "Mật khẩu phải có ít nhất 6 ký tự";
+    if (password.isEmpty) return 'password_empty';
+    if (password.length < 6) return 'password_too_short';
     return null;
   }
 
@@ -22,8 +22,8 @@ class Validators {
     String password,
     String confirmPassword,
   ) {
-    if (confirmPassword.isEmpty) return "Xác nhận mật khẩu không được để trống";
-    if (password != confirmPassword) return "Mật khẩu xác nhận không khớp";
+    if (confirmPassword.isEmpty) return 'confirm_password_empty';
+    if (password != confirmPassword) return 'confirm_password_not_match';
     return null;
   }
 }

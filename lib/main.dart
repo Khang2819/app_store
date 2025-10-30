@@ -1,6 +1,10 @@
+import 'package:bloc_app/presentation/bloc/auth/auth_bloc.dart';
+import 'package:bloc_app/presentation/bloc/cart/cart_event.dart';
 import 'package:bloc_app/presentation/bloc/navigation/navigation_bloc.dart';
 import 'package:firebase_core/firebase_core.dart';
 import 'package:loader_overlay/loader_overlay.dart';
+import 'data/repositories/auth_login.dart';
+import 'data/repositories/cart_repository.dart';
 import 'firebase_options.dart';
 import 'package:bloc_app/core/themes.dart';
 import 'package:bloc_app/l10n/app_localizations.dart';
@@ -9,6 +13,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:flutter_localizations/flutter_localizations.dart';
 
+import 'presentation/bloc/cart/cart_bloc.dart';
 import 'presentation/bloc/language/locale_bloc.dart';
 import 'presentation/bloc/language/locale_event.dart';
 import 'presentation/bloc/language/locale_state.dart';
@@ -32,6 +37,10 @@ class MyApp extends StatelessWidget {
           create: (context) => LanguageBloc()..add(LanguageStarted()),
         ),
         BlocProvider(create: (context) => NavigationBloc()),
+        BlocProvider(create: (context) => AuthBloc(AuthRepository())),
+        BlocProvider(
+          create: (context) => CartBloc(CartRepository())..add(LoadCart()),
+        ),
       ],
       child: BlocBuilder<ThemeCubit, ThemeMode>(
         builder: (context, state) {

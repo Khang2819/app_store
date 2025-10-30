@@ -38,7 +38,7 @@ class _SplashScreenState extends State<SplashScreen> {
             SvgPicture.asset(AppVector.logo, width: 150, height: 150),
             const SizedBox(height: 20),
             Text(
-              'E-Commerce App',
+              'Shop Coffee',
               style: Theme.of(
                 context,
               ).textTheme.headlineMedium?.copyWith(fontWeight: FontWeight.bold),

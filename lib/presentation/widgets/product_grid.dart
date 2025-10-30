@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
+import 'package:go_router/go_router.dart';
 import '../../data/models/product_model.dart';
 import '../bloc/home/home_bloc.dart';
 import '../bloc/home/home_event.dart';
@@ -17,17 +18,17 @@ class ProductGrid extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    if (products.isEmpty) {
-      return const Center(
-        child: Padding(
-          padding: EdgeInsets.all(32.0),
-          child: Text(
-            'Chưa có sản phẩm nào',
-            style: TextStyle(color: Colors.grey),
-          ),
-        ),
-      );
-    }
+    // if (products.isEmpty) {
+    //   return const Center(
+    //     child: Padding(
+    //       padding: EdgeInsets.all(32.0),
+    //       child: Text(
+    //         'Chưa có sản phẩm nào',
+    //         style: TextStyle(color: Colors.grey),
+    //       ),
+    //     ),
+    //   );
+    // }
 
     return GridView.builder(
       shrinkWrap: true,
@@ -51,7 +52,7 @@ class ProductGrid extends StatelessWidget {
             context.read<HomeBloc>().add(ToggleFavorite(product.id));
           },
           onTap: () {
-            //xem chi tiết sản phẩm
+            context.push('/product', extra: product);
           },
         );
       },

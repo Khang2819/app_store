@@ -30,7 +30,100 @@ class AppLocalizationsJa extends AppLocalizations {
   String get appTitle => 'ショッピングアプリ';
 
   @override
+  String get email => 'メールアドレス';
+
+  @override
+  String get password => 'パスワード';
+
+  @override
+  String get forgot_password => 'パスワードをお忘れですか？';
+
+  @override
+  String get or_login_with => 'または次でログイン';
+
+  @override
+  String get reset_password => 'パスワードをリセットする';
+
+  @override
+  String get send_request => 'リクエストを送信';
+
+  @override
+  String get reset_password_description => '登録済みのメールアドレスを入力して、パスワードリセットリンクを受け取ってください。';
+
+  @override
+  String get dont_have_account => 'すでにアカウントをお持ちですか？';
+
+  @override
   String get login => 'ログイン';
+
+  @override
+  String get name => '名前';
+
+  @override
+  String get confirm_password => 'パスワード確認';
+
+  @override
+  String get already_have_account => 'すでにアカウントをお持ちですか？';
+
+  @override
+  String get name_empty => '名前を入力してください';
+
+  @override
+  String get name_too_short => '名前は3文字以上で入力してください';
+
+  @override
+  String get email_empty => 'メールアドレスを入力してください';
+
+  @override
+  String get email_invalid => '無効なメールアドレスです';
+
+  @override
+  String get password_empty => 'パスワードを入力してください';
+
+  @override
+  String get password_too_short => 'パスワードは6文字以上で入力してください';
+
+  @override
+  String get confirm_password_empty => '確認用パスワードを入力してください';
+
+  @override
+  String get reset_password_email_sent => 'パスワードリセットのメールを送信しました！';
+
+  @override
+  String get login_success => 'ログインに成功しました！';
+
+  @override
+  String get success => '成功しました 🎉';
+
+  @override
+  String get error => 'エラー ❌';
+
+  @override
+  String get register_success => '登録に成功しました！';
+
+  @override
+  String get forgot_password_success => 'パスワードリセットのメールを送信しました！';
+
+  @override
+  String get unknown_error => '不明なエラーが発生しました';
+
+  @override
+  String get google_sign_in_cancelled => 'Googleサインインがキャンセルされました。';
+
+  @override
+  String get google_sign_in_failed => 'Googleサインイン中にエラーが発生しました。';
+
+  @override
+  String get invalid_credential => 'メールアドレスまたはパスワードが正しくありません。';
+
+  @override
+  String get email_already_in_use => 'このメールアドレスは既に使用されています。';
+
+  @override
+  String get weak_password => 'パスワードが弱すぎます。';
+
+  @override
+  String get confirm_password_not_match => 'パスワードが一致しません';
 
   @override
   String get register => '登録';
@@ -43,4 +136,16 @@ class AppLocalizationsJa extends AppLocalizations {
 
   @override
   String get orderNow => '今すぐ注文';
+
+  @override
+  String get cart => 'カート';
+
+  @override
+  String get cart_empty => 'カートは空です';
+
+  @override
+  String get total => '合計';
+
+  @override
+  String get checkout => 'チェックアウト';
 }

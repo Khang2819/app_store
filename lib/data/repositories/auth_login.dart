@@ -2,6 +2,8 @@ import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:google_sign_in/google_sign_in.dart';
 
+import '../models/users_model.dart';
+
 class AuthException implements Exception {
   final String message;
   AuthException(this.message);
@@ -43,12 +45,19 @@ class AuthRepository {
           .createUserWithEmailAndPassword(email: email, password: password);
       final User? firebaseUser = userCredential.user;
       if (firebaseUser != null) {
-        await _firestore.collection('users').doc(firebaseUser.uid).set({
-          'name': name,
-          'email': email,
-          'createdAt': Timestamp.now(),
-          'provider': 'email',
-        });
+        await firebaseUser.updateProfile(displayName: name);
+        final newUser = UsersModels(
+          id: firebaseUser.uid,
+          name: name,
+          email: email,
+          createdAt: Timestamp.now(),
+          provider: 'email',
+          photoUrl: null,
+        );
+        await _firestore
+            .collection('users')
+            .doc(firebaseUser.uid)
+            .set(newUser.toMap());
       }
       return userCredential;
     } on FirebaseAuthException catch (e) {
@@ -60,7 +69,7 @@ class AuthRepository {
     try {
       final GoogleSignInAccount? googleUser = await _googleSignIn.signIn();
       if (googleUser == null) {
-        throw AuthException('Đăng nhập Google đã bị hủy.');
+        throw AuthException('google_sign_in_cancelled');
       }
       final GoogleSignInAuthentication googleAuth =
           await googleUser.authentication;
@@ -75,20 +84,22 @@ class AuthRepository {
         final userDoc = _firestore.collection('users').doc(firebaseUser.uid);
         final docSnapshot = await userDoc.get();
         if (!docSnapshot.exists) {
-          await userDoc.set({
-            'name': firebaseUser.displayName, // Lấy tên từ tài khoản Google
-            'email': firebaseUser.email, // Lấy email từ tài khoản Google
-            'photoUrl': firebaseUser.photoURL, // Lấy ảnh đại diện
-            'createdAt': Timestamp.now(),
-            'provider': 'google', // Thêm thông tin nhà cung cấp
-          });
+          final newUser = UsersModels(
+            id: firebaseUser.uid,
+            name: firebaseUser.displayName,
+            email: firebaseUser.email,
+            photoUrl: firebaseUser.photoURL,
+            createdAt: Timestamp.now(),
+            provider: 'Google',
+          );
+          await userDoc.set(newUser.toMap());
         }
       }
       return userCredential;
     } on FirebaseAuthException catch (e) {
       throw AuthException(_mapFirebaseErrorToMessage(e.code));
     } catch (e) {
-      throw AuthException('Đã có lỗi xảy ra khi đăng nhập với Google.');
+      throw AuthException('google_sign_in_failed');
     }
   }
 
@@ -112,15 +123,15 @@ class AuthRepository {
       case 'invalid-credential':
       case 'user-not-found':
       case 'wrong-password':
-        return 'Email hoặc mật khẩu không chính xác.';
+        return 'invalid_credential';
       case 'email-already-in-use':
-        return 'Địa chỉ email này đã được sử dụng.';
+        return 'email_already_in_use';
       case 'weak-password':
-        return 'Mật khẩu quá yếu.';
+        return 'weak_password';
       case 'invalid-email':
-        return 'Địa chỉ email không hợp lệ.';
+        return 'invalid_email';
       default:
-        return 'Đã có lỗi xảy ra. Vui lòng thử lại.';
+        return 'unknown_error';
     }
   }
 }

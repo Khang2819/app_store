@@ -1,10 +1,14 @@
 import 'package:flutter/material.dart';
 
+import '../../l10n/app_localizations.dart';
+
 class MySearchBar extends StatelessWidget {
-  const MySearchBar({super.key});
+  final Function(String)? onChanged;
+  const MySearchBar({super.key, this.onChanged});
 
   @override
   Widget build(BuildContext context) {
+    final language = AppLocalizations.of(context)!;
     final border = OutlineInputBorder(
       borderRadius: BorderRadius.circular(25),
       borderSide: BorderSide.none,
@@ -29,6 +33,7 @@ class MySearchBar extends StatelessWidget {
         child: TextField(
           cursorColor: const Color(0xff2A4ECA),
           style: const TextStyle(color: Colors.black87, fontSize: 15),
+          onChanged: onChanged,
           decoration: InputDecoration(
             contentPadding: const EdgeInsets.symmetric(
               vertical: 12,
@@ -39,7 +44,7 @@ class MySearchBar extends StatelessWidget {
               color: Colors.black,
               size: 22,
             ),
-            hintText: 'Tìm kiếm sản phẩm...',
+            hintText: language.searchProduct,
             hintStyle: const TextStyle(color: Colors.black45, fontSize: 15),
             filled: true,
             fillColor: Colors.white,

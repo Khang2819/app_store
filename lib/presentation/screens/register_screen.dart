@@ -5,7 +5,9 @@ import "package:flutter_bloc/flutter_bloc.dart";
 import "package:go_router/go_router.dart";
 import "package:loader_overlay/loader_overlay.dart";
 
+import "../../core/localization_utils.dart";
 import "../../core/snackbar_utils.dart";
+import "../../l10n/app_localizations.dart";
 import "../bloc/auth/auth_bloc.dart";
 import "../bloc/auth/auth_state.dart";
 
@@ -37,12 +39,13 @@ class _RegisterScreenState extends State<RegisterScreen> {
 
   @override
   Widget build(BuildContext context) {
+    final language = AppLocalizations.of(context)!;
     return GestureDetector(
       onTap: () => FocusScope.of(context).unfocus(),
       child: Scaffold(
         backgroundColor: Colors.white,
         appBar: AppBar(
-          title: const Text("Register", style: TextStyle(color: Colors.black)),
+          title: Text(language.register, style: TextStyle(color: Colors.black)),
           backgroundColor: Colors.white,
           elevation: 0,
           leading: IconButton(
@@ -67,10 +70,22 @@ class _RegisterScreenState extends State<RegisterScreen> {
                 } else {
                   context.loaderOverlay.hide();
                   if (state.isSuccess) {
-                    SnackbarUtils.showSuccess(context, "Đăng ký thành công!");
+                    SnackbarUtils.showSuccess(
+                      context,
+                      language.register_success, // <-- Sửa
+                      language, // <-- Truyền
+                    );
                     context.go("/login");
                   } else if (state.generalError != null) {
-                    SnackbarUtils.showError(context, state.generalError!);
+                    final translatedError = LocalizationUtils.translateError(
+                      state.generalError,
+                      language,
+                    );
+                    SnackbarUtils.showError(
+                      context,
+                      translatedError ?? language.unknown_error, // <-- Sửa
+                      language, // <-- Truyền
+                    );
                   }
                 }
               },
@@ -80,42 +95,54 @@ class _RegisterScreenState extends State<RegisterScreen> {
                   children: [
                     const SizedBox(height: 20),
                     Textfile(
-                      labelText: "Name",
+                      labelText: language.name,
                       icon: Icon(Icons.person),
                       controller: nameController,
-                      errorText: state.nameError,
+                      errorText: LocalizationUtils.translateError(
+                        state.nameError,
+                        language,
+                      ),
                       onChanged: (value) {
                         context.read<AuthBloc>().add(NameChanged(value));
                       },
                     ),
                     const SizedBox(height: 20),
                     Textfile(
-                      labelText: "Email",
+                      labelText: language.email,
                       icon: Icon(Icons.email),
                       controller: emailController,
-                      errorText: state.emailError,
+                      errorText: LocalizationUtils.translateError(
+                        state.emailError,
+                        language,
+                      ),
                       onChanged: (value) {
                         context.read<AuthBloc>().add(EmailChanged(value));
                       },
                     ),
                     const SizedBox(height: 20),
                     Textfile(
-                      labelText: "Password",
+                      labelText: language.password,
                       icon: Icon(Icons.lock),
                       isPassword: true,
                       controller: passwordController,
-                      errorText: state.passwordError,
+                      errorText: LocalizationUtils.translateError(
+                        state.passwordError,
+                        language,
+                      ),
                       onChanged: (value) {
                         context.read<AuthBloc>().add(PasswordChanged(value));
                       },
                     ),
                     const SizedBox(height: 20),
                     Textfile(
-                      labelText: "Confirm Password",
+                      labelText: language.confirm_password,
                       icon: Icon(Icons.lock),
                       isPassword: true,
                       controller: confirmPasswordController,
-                      errorText: state.confirmPasswordError,
+                      errorText: LocalizationUtils.translateError(
+                        state.confirmPasswordError,
+                        language,
+                      ),
                       onChanged: (value) {
                         context.read<AuthBloc>().add(
                           ConfirmPasswordChanged(value),
@@ -142,8 +169,8 @@ class _RegisterScreenState extends State<RegisterScreen> {
                           ),
                         );
                       },
-                      child: const Text(
-                        "Register",
+                      child: Text(
+                        language.register,
                         style: TextStyle(fontSize: 16),
                       ),
                     ),
@@ -151,11 +178,11 @@ class _RegisterScreenState extends State<RegisterScreen> {
                     Row(
                       mainAxisAlignment: MainAxisAlignment.center,
                       children: [
-                        Text("Đã có tài khoản"),
+                        Text(language.already_have_account),
                         TextButton(
                           onPressed: () => context.go('/login'),
                           child: Text(
-                            "Đăng nhập",
+                            language.login,
                             style: TextStyle(color: Colors.blue),
                           ),
                         ),

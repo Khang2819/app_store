@@ -76,7 +76,9 @@ class AuthBloc extends Bloc<AuthEvent, AuthState> {
       return;
     }
 
-    emit(state.copyWith(isLoading: true, generalError: null));
+    emit(
+      state.copyWith(isLoading: true, generalError: const ValueWrapper(null)),
+    );
     try {
       await authRepository.signInWithEmail(
         email: event.email,
@@ -160,7 +162,9 @@ class AuthBloc extends Bloc<AuthEvent, AuthState> {
       return;
     }
 
-    emit(state.copyWith(isLoading: true, generalError: null));
+    emit(
+      state.copyWith(isLoading: true, generalError: const ValueWrapper(null)),
+    );
     try {
       await authRepository.sendPasswordResetEmail(event.email);
       emit(state.copyWith(isLoading: false, isSuccess: true));
@@ -195,7 +199,9 @@ class AuthBloc extends Bloc<AuthEvent, AuthState> {
     LoginWithGoogle event,
     Emitter<AuthState> emit,
   ) async {
-    emit(state.copyWith(isLoading: true, generalError: null));
+    emit(
+      state.copyWith(isLoading: true, generalError: const ValueWrapper(null)),
+    );
     try {
       await authRepository.signInWithGoogle();
       emit(state.copyWith(isLoading: false, isSuccess: true));

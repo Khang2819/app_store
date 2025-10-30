@@ -2,16 +2,22 @@ import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:go_router/go_router.dart';
 
+import '../data/models/product_model.dart';
 import '../data/repositories/auth_login.dart';
+import '../data/repositories/product_repository.dart';
 import '../presentation/bloc/auth/auth_bloc.dart';
+import '../presentation/bloc/product_detail/product_detail_bloc.dart';
+import '../presentation/bloc/product_detail/product_detail_event.dart';
 import '../presentation/screens/forgot_screen.dart';
 import '../presentation/screens/login_screen.dart';
 import '../presentation/screens/main_nav_screen.dart';
+import '../presentation/screens/product_detail_screen.dart';
 import '../presentation/screens/register_screen.dart';
 import '../presentation/screens/slpash.dart';
 
 class AppRouter {
   static final AuthRepository _authRepository = AuthRepository();
+  static final ProductRepository _productRepository = ProductRepository();
 
   static final GoRouter router = GoRouter(
     initialLocation: '/splash',
@@ -44,6 +50,20 @@ class AppRouter {
           create: (_) => AuthBloc(_authRepository),
           child: const MainNavScreen(),
         ),
+      ),
+      GoRoute(
+        path: '/product',
+        builder: (context, state) {
+          final product = state.extra as Product;
+          return BlocProvider(
+            // <-- 1. Bọc bằng BlocProvider
+            create:
+                (context) => ProductDetailBloc(_productRepository)..add(
+                  LoadProductDetail(product.id),
+                ), // <-- 2. Tạo BLoC và tải dữ liệu
+            child: ProductDetailScreen(product: product),
+          );
+        },
       ),
     ],
   );

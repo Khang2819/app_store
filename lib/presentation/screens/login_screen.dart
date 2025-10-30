@@ -6,11 +6,14 @@ import 'package:go_router/go_router.dart';
 import 'package:loader_overlay/loader_overlay.dart';
 
 import '../../assets/app_vector.dart';
+import '../../core/localization_utils.dart';
 import '../../core/snackbar_utils.dart';
 import '../../l10n/app_localizations.dart';
 import '../bloc/auth/auth_bloc.dart';
 import '../bloc/auth/auth_even.dart';
 import '../bloc/auth/auth_state.dart';
+import '../bloc/cart/cart_bloc.dart';
+import '../bloc/cart/cart_event.dart';
 
 class LoginScreen extends StatefulWidget {
   const LoginScreen({super.key});
@@ -56,11 +59,25 @@ class _LoginScreenState extends State<LoginScreen> {
                   context.loaderOverlay.hide();
                   // Nếu có lỗi, hiển thị SnackBar lỗi
                   if (state.generalError != null) {
-                    SnackbarUtils.showError(context, state.generalError!);
+                    final translatedError = LocalizationUtils.translateError(
+                      state.generalError,
+                      language,
+                    );
+                    SnackbarUtils.showError(
+                      context,
+                      translatedError ??
+                          language.unknown_error, // <-- Sửa ở đây
+                      language, // <-- Truyền language vào
+                    );
                   }
                   // Nếu đăng nhập thành công
                   else if (state.isSuccess) {
-                    SnackbarUtils.showSuccess(context, 'Đăng nhập thành công!');
+                    SnackbarUtils.showSuccess(
+                      context,
+                      language.login_success, // <-- SỬA Ở ĐÂY
+                      language, // <-- Truyền language vào
+                    );
+                    context.read<CartBloc>().add(LoadCart());
                     context.go('/home');
                   }
                 }
@@ -73,21 +90,27 @@ class _LoginScreenState extends State<LoginScreen> {
                     SvgPicture.asset(AppVector.logo, width: 150, height: 150),
                     const SizedBox(height: 40),
                     Textfile(
-                      labelText: "Email",
+                      labelText: language.email,
                       icon: Icon(Icons.email),
                       controller: emailController,
-                      errorText: state.emailError,
+                      errorText: LocalizationUtils.translateError(
+                        state.emailError,
+                        language,
+                      ),
                       onChanged: (value) {
                         context.read<AuthBloc>().add(EmailChanged(value));
                       },
                     ),
                     const SizedBox(height: 20),
                     Textfile(
-                      labelText: "Password",
+                      labelText: language.password,
                       icon: Icon(Icons.lock),
                       isPassword: true,
                       controller: passwordController,
-                      errorText: state.passwordError,
+                      errorText: LocalizationUtils.translateError(
+                        state.passwordError,
+                        language,
+                      ),
                       onChanged: (value) {
                         context.read<AuthBloc>().add(PasswordChanged(value));
                       },
@@ -98,7 +121,7 @@ class _LoginScreenState extends State<LoginScreen> {
                       child: TextButton(
                         onPressed: () => context.go("/forgot"),
                         child: Text(
-                          "Quên mật khẩu?",
+                          language.forgot_password,
                           style: TextStyle(color: Colors.blue),
                         ),
                       ),
@@ -134,7 +157,7 @@ class _LoginScreenState extends State<LoginScreen> {
                         Padding(
                           padding: const EdgeInsets.symmetric(horizontal: 8.0),
                           child: Text(
-                            'Hoặc đăng nhập với',
+                            language.or_login_with,
                             style: TextStyle(color: Colors.grey),
                           ),
                         ),
@@ -188,11 +211,11 @@ class _LoginScreenState extends State<LoginScreen> {
                     Row(
                       mainAxisAlignment: MainAxisAlignment.center,
                       children: [
-                        Text('Chưa có tài khoản?'),
+                        Text(language.dont_have_account),
                         TextButton(
                           onPressed: () => context.go("/register"),
                           child: Text(
-                            "Đăng ký",
+                            language.register,
                             style: TextStyle(color: Colors.blue),
                           ),
                         ),
