@@ -1,6 +1,6 @@
-import 'package:bloc_app/data/models/banner_model.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
 
+import '../models/banner_model.dart';
 import '../models/category_model.dart';
 import '../models/product_model.dart';
 import '../models/review_model.dart';

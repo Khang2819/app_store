@@ -1,4 +1,3 @@
-import 'package:bloc_app/data/models/banner_model.dart';
 import 'package:equatable/equatable.dart';
 
 import '../../../data/models/category_model.dart';
@@ -9,7 +8,7 @@ class HomeState extends Equatable {
   final List<Category> categories;
   final List<Product> products;
   final List<String> favorites;
-  final List<BannerModel> banners;
+  // final List<BannerModel> banners;
   final String? error;
 
   const HomeState({
@@ -17,7 +16,7 @@ class HomeState extends Equatable {
     this.categories = const [],
     this.products = const [],
     this.favorites = const [],
-    this.banners = const [],
+    // this.banners = const [],
     this.error,
   });
   HomeState copyWith({
@@ -25,7 +24,7 @@ class HomeState extends Equatable {
     List<Category>? categories,
     List<Product>? products,
     List<String>? favorites,
-    List<BannerModel>? banners,
+    // List<BannerModel>? banners,
     String? error,
   }) {
     return HomeState(
@@ -33,7 +32,7 @@ class HomeState extends Equatable {
       categories: categories ?? this.categories,
       products: products ?? this.products,
       favorites: favorites ?? this.favorites,
-      banners: banners ?? this.banners,
+      // banners: banners ?? this.banners,
       error: error ?? this.error,
     );
   }
@@ -44,7 +43,7 @@ class HomeState extends Equatable {
     categories,
     products,
     favorites,
-    banners,
+    // banners,
     error,
   ];
 }

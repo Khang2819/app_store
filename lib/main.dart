@@ -1,5 +1,4 @@
 import 'package:bloc_app/presentation/bloc/auth/auth_bloc.dart';
-import 'package:bloc_app/presentation/bloc/cart/cart_event.dart';
 import 'package:bloc_app/presentation/bloc/navigation/navigation_bloc.dart';
 import 'package:bloc_app/presentation/bloc/profile/profile_bloc.dart';
 import 'package:firebase_core/firebase_core.dart';
@@ -18,7 +17,6 @@ import 'package:flutter_localizations/flutter_localizations.dart';
 
 import 'presentation/bloc/cart/cart_bloc.dart';
 import 'presentation/bloc/home/home_bloc.dart';
-import 'presentation/bloc/home/home_event.dart';
 import 'presentation/bloc/language/locale_bloc.dart';
 import 'presentation/bloc/language/locale_event.dart';
 import 'presentation/bloc/language/locale_state.dart';
@@ -44,13 +42,8 @@ class MyApp extends StatelessWidget {
         BlocProvider(create: (context) => ProfileBloc(UserRepository())),
         BlocProvider(create: (context) => NavigationBloc()),
         BlocProvider(create: (context) => AuthBloc(AuthRepository())),
-        BlocProvider(
-          create: (context) => CartBloc(CartRepository())..add(LoadCart()),
-        ),
-        BlocProvider(
-          create:
-              (context) => HomeBloc(ProductRepository())..add(LoadHomeData()),
-        ),
+        BlocProvider(create: (context) => CartBloc(CartRepository())),
+        BlocProvider(create: (context) => HomeBloc(ProductRepository())),
       ],
       child: BlocBuilder<ThemeCubit, ThemeMode>(
         builder: (context, state) {

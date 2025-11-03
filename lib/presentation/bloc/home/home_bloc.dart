@@ -1,8 +1,5 @@
-import 'package:bloc_app/data/models/banner_model.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
-import '../../../data/models/category_model.dart';
-import '../../../data/models/product_model.dart';
 import '../../../data/repositories/product_repository.dart';
 import 'home_event.dart';
 import 'home_state.dart';
@@ -22,16 +19,8 @@ class HomeBloc extends Bloc<HomeEvent, HomeState> {
     emit(state.copyWith(isLoading: true));
     final user = FirebaseAuth.instance.currentUser;
     try {
-      // final products = await _repository.fetchProducts();
-      // final categories = await _repository.fetchCategories();
-      final results = await Future.wait([
-        _repository.fetchProducts(),
-        _repository.fetchCategories(),
-        _repository.fetchBanners(),
-      ]);
-      final products = results[0] as List<dynamic>;
-      final categories = results[1] as List<dynamic>;
-      final banners = results[2] as List<dynamic>;
+      final products = await _repository.fetchProducts();
+      final categories = await _repository.fetchCategories();
       List<String> favorites = [];
       if (user != null) {
         favorites = await _repository.fetchFavorites(user.uid);
@@ -39,9 +28,8 @@ class HomeBloc extends Bloc<HomeEvent, HomeState> {
       emit(
         state.copyWith(
           isLoading: false,
-          products: products.cast<Product>(),
-          categories: categories.cast<Category>(),
-          banners: banners.cast<BannerModel>(),
+          products: products,
+          categories: categories,
           favorites: favorites,
         ),
       );

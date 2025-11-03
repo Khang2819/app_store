@@ -6,8 +6,22 @@ import 'package:bloc_app/presentation/widgets/home_appbar.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 
-class CartScreen extends StatelessWidget {
+import '../bloc/cart/cart_event.dart';
+
+class CartScreen extends StatefulWidget {
   const CartScreen({super.key});
+
+  @override
+  State<CartScreen> createState() => _CartScreenState();
+}
+
+class _CartScreenState extends State<CartScreen> {
+  @override
+  void initState() {
+    super.initState();
+    // ✅ Load cart khi vào màn hình
+    context.read<CartBloc>().add(LoadCart());
+  }
 
   @override
   Widget build(BuildContext context) {

@@ -3,13 +3,11 @@ import 'package:bloc_app/presentation/widgets/my_search_bar.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:go_router/go_router.dart';
-import '../../data/models/banner_model.dart';
 import '../bloc/home/home_bloc.dart';
 import '../bloc/home/home_event.dart';
 import '../bloc/home/home_state.dart';
 import '../bloc/navigation/navigation_bloc.dart';
 import '../bloc/navigation/navigation_event.dart';
-import '../widgets/banner_carousel.dart';
 import '../widgets/category_grid.dart';
 import '../widgets/home_appbar.dart';
 import '../widgets/product_grid.dart';
@@ -28,22 +26,22 @@ class _HomeScreenState extends State<HomeScreen> {
     context.read<HomeBloc>().add(LoadHomeData());
   }
 
-  void _handleBannerTap(BannerModel banner) {
-    // Logic xử lý khi người dùng nhấp vào Banner (giả định)
-    switch (banner.targetType) {
-      case 'product':
-        print('Navigating to Product ID: ${banner.targetId}');
-        break;
-      case 'category':
-        print('Navigating to Category ID: ${banner.targetId}');
-        break;
-      case 'url':
-        print('Opening external URL: ${banner.targetId}');
-        break;
-      default:
-        print('Banner clicked, but no target defined.');
-    }
-  }
+  // void _handleBannerTap(BannerModel banner) {
+  //   // Logic xử lý khi người dùng nhấp vào Banner (giả định)
+  //   switch (banner.targetType) {
+  //     case 'product':
+  //       print('Navigating to Product ID: ${banner.targetId}');
+  //       break;
+  //     case 'category':
+  //       print('Navigating to Category ID: ${banner.targetId}');
+  //       break;
+  //     case 'url':
+  //       print('Opening external URL: ${banner.targetId}');
+  //       break;
+  //     default:
+  //       print('Banner clicked, but no target defined.');
+  //   }
+  // }
 
   @override
   Widget build(BuildContext context) {
@@ -124,12 +122,12 @@ class _HomeScreenState extends State<HomeScreen> {
                         child: const MySearchBar(),
                       ),
                     ),
-                    SliverToBoxAdapter(
-                      child: BannerCarousel(
-                        banners: state.banners,
-                        onBannerTap: _handleBannerTap,
-                      ),
-                    ),
+                    // SliverToBoxAdapter(
+                    //   child: BannerCarousel(
+                    //     banners: state.banners,
+                    //     onBannerTap: _handleBannerTap,
+                    //   ),
+                    // ),
                     const SizedBox(height: 24),
                     Padding(
                       padding: const EdgeInsets.symmetric(horizontal: 15),

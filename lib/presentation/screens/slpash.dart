@@ -3,7 +3,6 @@ import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_svg/svg.dart';
 import 'package:go_router/go_router.dart';
-import 'dart:async'; // Cần import này
 
 class SplashScreen extends StatefulWidget {
   const SplashScreen({super.key});
@@ -16,26 +15,23 @@ class _SplashScreenState extends State<SplashScreen> {
   @override
   void initState() {
     super.initState();
-    _navigateToNextScreen();
+    _init();
   }
 
-  void _navigateToNextScreen() {
-    // Chờ đồng thời 2 điều kiện: delay 2 giây VÀ lấy trạng thái Auth đầu tiên
-    Future.wait([
-      Future.delayed(const Duration(seconds: 2)),
-      FirebaseAuth.instance.authStateChanges().first,
-    ]).then((results) {
-      if (!mounted) return;
+  Future<void> _init() async {
+    // Chỉ delay, không load gì cả
+    await Future.delayed(const Duration(seconds: 2));
 
-      // Lấy kết quả User từ phần tử thứ hai của Future.wait
-      final User? user = results[1] as User?;
+    if (!mounted) return;
 
-      if (user != null) {
-        context.go('/home'); // Đã đăng nhập
-      } else {
-        context.go('/login'); // Chưa đăng nhập
-      }
-    });
+    // Kiểm tra auth
+    final user = FirebaseAuth.instance.currentUser;
+
+    if (user != null) {
+      context.go('/home');
+    } else {
+      context.go('/login');
+    }
   }
 
   @override
