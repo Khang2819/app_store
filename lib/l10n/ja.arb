@@ -42,10 +42,19 @@
   "confirm_password_empty": "確認用パスワードを入力してください",
   "confirm_password_not_match": "パスワードが一致しません",
   "searchProduct": "商品を検索...",
+  "searchProduct1": "商品を検索",
   "addToCart": "カートに追加",
   "orderNow": "今すぐ注文",
   "cart": "カート",
   "cart_empty": "カートは空です",
   "total": "合計",
-  "checkout": "チェックアウト"
+  "checkout": "チェックアウト",
+  "home": "ホーム",
+  "search": "検索",
+  "person": "プロフィール",
+  "category": "カテゴリ",
+  "product": "製品",
+  "seeAll": "すべて見る",
+  "favorites": "お気に入り",
+  "favorites_empty": "お気に入りリストは空です"
 }

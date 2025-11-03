@@ -1,3 +1,6 @@
+import 'package:flutter/material.dart';
+import '../data/models/category_model.dart';
+import '../data/models/product_model.dart';
 import '../l10n/app_localizations.dart';
 
 class LocalizationUtils {
@@ -47,5 +50,80 @@ class LocalizationUtils {
         // hãy trả về chính mã lỗi đó để lập trình viên biết
         return errorKey;
     }
+  }
+}
+
+// THÊM: Extension để lấy tên sản phẩm đã được bản địa hóa
+extension ProductLocalizationExtension on Product {
+  String localizedName(BuildContext context) {
+    // 1. Lấy mã ngôn ngữ hiện tại (ví dụ: 'vi', 'en', 'ja')
+    final currentLocaleCode = Localizations.localeOf(context).languageCode;
+
+    // 2. Tìm tên theo mã ngôn ngữ hiện tại
+    String? localized = name[currentLocaleCode]?.toString();
+
+    // 3. Fallback (dự phòng)
+    // Nếu tên không tồn tại, thử fallback về 'vi' (hoặc một ngôn ngữ mặc định)
+    if (localized == null || localized.isEmpty) {
+      localized = name['vi']?.toString();
+    }
+
+    // Nếu vẫn không có, thử fallback về 'en'
+    if (localized == null || localized.isEmpty) {
+      localized = name['en']?.toString();
+    }
+
+    // 4. Trường hợp cuối: Nếu vẫn không có, trả về tên đầu tiên có sẵn.
+    if (localized == null || localized.isEmpty) {
+      return name.values.isNotEmpty
+          ? name.values.first.toString()
+          : 'Unnamed Product';
+    }
+
+    return localized.toString();
+  }
+
+  String localizedDescription(BuildContext context) {
+    final currentLocaleCode = Localizations.localeOf(context).languageCode;
+    String? localized = description[currentLocaleCode]?.toString();
+    if (localized == null || localized.isEmpty) {
+      localized = description['vi']?.toString();
+    }
+    if (localized == null || localized.isEmpty) {
+      localized = description['en']?.toString();
+    }
+    if (localized == null || localized.isEmpty) {
+      return description.values.isNotEmpty
+          ? description.values.first.toString()
+          : 'No description available.';
+    }
+
+    return localized.toString();
+  }
+}
+
+extension CategoryLocalizationExtension on Category {
+  String localizedCategoryName(BuildContext context) {
+    // 1. Lấy mã ngôn ngữ hiện tại
+    final currentLocaleCode = Localizations.localeOf(context).languageCode;
+
+    // 2. Tìm tên theo mã ngôn ngữ hiện tại
+    String? localized = name[currentLocaleCode]?.toString();
+
+    // 3. Fallback (dự phòng): Ưu tiên 'vi' sau đó là 'en'
+    if (localized == null || localized.isEmpty) {
+      localized = name['vi']?.toString();
+    }
+    if (localized == null || localized.isEmpty) {
+      localized = name['en']?.toString();
+    }
+
+    // 4. Trường hợp cuối: Trả về tên đầu tiên có sẵn hoặc chuỗi mặc định
+    if (localized == null || localized.isEmpty) {
+      return name.values.isNotEmpty
+          ? name.values.first.toString()
+          : 'Unnamed Category';
+    }
+    return localized.toString();
   }
 }

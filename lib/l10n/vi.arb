@@ -42,10 +42,19 @@
   "confirm_password": "Xác nhận mật khẩu",
   "register": "Đăng ký",
   "searchProduct": "Tìm kiếm sản phẩm...",
+  "searchProduct1": "Tìm kiếm sản phẩm",
   "addToCart": "Thêm vào giỏ",
   "orderNow": "Đặt hàng", 
   "cart": "Giỏ hàng",
   "cart_empty": "Giỏ hàng của bạn trống",
   "total": "Tổng cộng",
-  "checkout": "Thanh toán"
+  "checkout": "Thanh toán",
+  "home": "Trang chủ",
+  "search": "Tìm kiếm",
+  "person": "Cá nhân",
+  "category": "Danh mục",
+  "product": "Sản phẩm",
+  "seeAll": "Xem tất cả",
+  "favorites": "Yêu thích",
+  "favorites_empty": "Danh sách yêu thích trống"
 }

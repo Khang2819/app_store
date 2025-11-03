@@ -132,6 +132,9 @@ class AppLocalizationsJa extends AppLocalizations {
   String get searchProduct => '商品を検索...';
 
   @override
+  String get searchProduct1 => '商品を検索';
+
+  @override
   String get addToCart => 'カートに追加';
 
   @override
@@ -148,4 +151,28 @@ class AppLocalizationsJa extends AppLocalizations {
 
   @override
   String get checkout => 'チェックアウト';
+
+  @override
+  String get home => 'ホーム';
+
+  @override
+  String get search => '検索';
+
+  @override
+  String get person => 'プロフィール';
+
+  @override
+  String get category => 'カテゴリ';
+
+  @override
+  String get product => '製品';
+
+  @override
+  String get seeAll => 'すべて見る';
+
+  @override
+  String get favorites => 'お気に入り';
+
+  @override
+  String get favorites_empty => 'お気に入りリストは空です';
 }

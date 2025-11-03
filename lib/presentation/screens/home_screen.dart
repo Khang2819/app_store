@@ -1,11 +1,15 @@
+import 'package:bloc_app/l10n/app_localizations.dart';
 import 'package:bloc_app/presentation/widgets/my_search_bar.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
+import 'package:go_router/go_router.dart';
+import '../../data/models/banner_model.dart';
 import '../bloc/home/home_bloc.dart';
 import '../bloc/home/home_event.dart';
 import '../bloc/home/home_state.dart';
 import '../bloc/navigation/navigation_bloc.dart';
 import '../bloc/navigation/navigation_event.dart';
+import '../widgets/banner_carousel.dart';
 import '../widgets/category_grid.dart';
 import '../widgets/home_appbar.dart';
 import '../widgets/product_grid.dart';
@@ -24,8 +28,26 @@ class _HomeScreenState extends State<HomeScreen> {
     context.read<HomeBloc>().add(LoadHomeData());
   }
 
+  void _handleBannerTap(BannerModel banner) {
+    // Logic xử lý khi người dùng nhấp vào Banner (giả định)
+    switch (banner.targetType) {
+      case 'product':
+        print('Navigating to Product ID: ${banner.targetId}');
+        break;
+      case 'category':
+        print('Navigating to Category ID: ${banner.targetId}');
+        break;
+      case 'url':
+        print('Opening external URL: ${banner.targetId}');
+        break;
+      default:
+        print('Banner clicked, but no target defined.');
+    }
+  }
+
   @override
   Widget build(BuildContext context) {
+    final language = AppLocalizations.of(context)!;
     return GestureDetector(
       onTap: () => FocusScope.of(context).unfocus(),
       child: Scaffold(
@@ -33,7 +55,7 @@ class _HomeScreenState extends State<HomeScreen> {
         appBar: HomeAppbar(),
         body: BlocBuilder<HomeBloc, HomeState>(
           builder: (context, state) {
-            if (state.isLoading) {
+            if (state.isLoading && state.products.isEmpty) {
               return const Center(
                 child: CircularProgressIndicator(color: Color(0xff2A4ECA)),
               );
@@ -92,9 +114,6 @@ class _HomeScreenState extends State<HomeScreen> {
                     const SizedBox(height: 10),
                     GestureDetector(
                       onTap: () {
-                        // Lấy NavigationBloc từ context
-                        // và phát sự kiện chuyển sang tab 1 (SearchScreen)
-                        // (Vì trong MainNavScreen: HomeScreen là 0, SearchScreen là 1)
                         context.read<NavigationBloc>().add(
                           const TabChanged(tabIndex: 1),
                         );
@@ -105,11 +124,17 @@ class _HomeScreenState extends State<HomeScreen> {
                         child: const MySearchBar(),
                       ),
                     ),
+                    SliverToBoxAdapter(
+                      child: BannerCarousel(
+                        banners: state.banners,
+                        onBannerTap: _handleBannerTap,
+                      ),
+                    ),
                     const SizedBox(height: 24),
                     Padding(
                       padding: const EdgeInsets.symmetric(horizontal: 15),
-                      child: const Text(
-                        "Danh mục",
+                      child: Text(
+                        language.category,
                         style: TextStyle(
                           fontSize: 18,
                           fontWeight: FontWeight.bold,
@@ -117,14 +142,19 @@ class _HomeScreenState extends State<HomeScreen> {
                       ),
                     ),
                     const SizedBox(height: 12),
-                    CategoryGrid(categories: state.categories),
+                    CategoryGrid(
+                      categories: state.categories,
+                      onCategoryTap: (category) {
+                        context.push('/category-products', extra: category);
+                      },
+                    ),
                     Padding(
                       padding: const EdgeInsets.symmetric(horizontal: 15),
                       child: Row(
                         mainAxisAlignment: MainAxisAlignment.spaceBetween,
                         children: [
-                          const Text(
-                            "Sản phẩm",
+                          Text(
+                            language.product,
                             style: TextStyle(
                               fontSize: 18,
                               fontWeight: FontWeight.bold,
@@ -134,8 +164,8 @@ class _HomeScreenState extends State<HomeScreen> {
                             onPressed: () {
                               // Navigate to all products
                             },
-                            child: const Text(
-                              "Xem tất cả",
+                            child: Text(
+                              language.seeAll,
                               style: TextStyle(color: Color(0xff2A4ECA)),
                             ),
                           ),

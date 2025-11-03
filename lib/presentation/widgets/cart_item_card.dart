@@ -1,3 +1,4 @@
+import 'package:bloc_app/core/localization_utils.dart';
 import 'package:bloc_app/data/models/cart_item_model.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
@@ -43,7 +44,7 @@ class CartItemCard extends StatelessWidget {
                 crossAxisAlignment: CrossAxisAlignment.start,
                 children: [
                   Text(
-                    item.product.name,
+                    item.product.localizedName(context),
                     style: const TextStyle(
                       fontSize: 16,
                       fontWeight: FontWeight.bold,

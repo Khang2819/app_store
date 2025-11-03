@@ -1,3 +1,4 @@
+import 'package:bloc_app/core/localization_utils.dart';
 import 'package:flutter/material.dart';
 import '../../data/models/product_model.dart';
 
@@ -90,7 +91,7 @@ class ProductCard extends StatelessWidget {
                 crossAxisAlignment: CrossAxisAlignment.start,
                 children: [
                   Text(
-                    product.name,
+                    product.localizedName(context),
                     style: const TextStyle(
                       fontSize: 16,
                       fontWeight: FontWeight.w600,

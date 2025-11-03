@@ -4,6 +4,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:go_router/go_router.dart';
 
+import '../../l10n/app_localizations.dart';
 import '../bloc/auth/auth_bloc.dart';
 import '../bloc/auth/auth_even.dart';
 import '../bloc/cart/cart_bloc.dart';
@@ -32,9 +33,10 @@ class _PersonScreenState extends State<PersonScreen> {
 
   @override
   Widget build(BuildContext context) {
+    final language = AppLocalizations.of(context)!;
     final user = FirebaseAuth.instance.currentUser;
     return Scaffold(
-      appBar: HomeAppbar(title: 'Trang cá nhân'),
+      appBar: HomeAppbar(title: language.person),
       backgroundColor: Color(0xffFFF8F0),
       body: BlocBuilder<ProfileBloc, ProfileState>(
         builder: (context, state) {
@@ -142,7 +144,9 @@ class _PersonScreenState extends State<PersonScreen> {
                                   Icons.arrow_forward_ios,
                                   size: 16,
                                 ),
-                                onTap: () {},
+                                onTap: () {
+                                  context.push('/favorites');
+                                },
                               ),
                               Divider(height: 1, indent: 16, endIndent: 16),
                               LanguageSettingTile(),
@@ -154,7 +158,9 @@ class _PersonScreenState extends State<PersonScreen> {
                                   Icons.arrow_forward_ios,
                                   size: 16,
                                 ),
-                                onTap: () {},
+                                onTap: () {
+                                  context.push('/edit-profile');
+                                },
                               ),
                               Divider(height: 1, indent: 16, endIndent: 16),
                               ListTile(

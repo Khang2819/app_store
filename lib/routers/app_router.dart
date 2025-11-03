@@ -2,12 +2,18 @@ import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:go_router/go_router.dart';
 
+import '../data/models/category_model.dart';
 import '../data/models/product_model.dart';
 import '../data/repositories/auth_login.dart';
 import '../data/repositories/product_repository.dart';
 import '../presentation/bloc/auth/auth_bloc.dart';
+import '../presentation/bloc/category_products/category_products_bloc.dart';
+import '../presentation/bloc/favorites/favorites_bloc.dart';
 import '../presentation/bloc/product_detail/product_detail_bloc.dart';
 import '../presentation/bloc/product_detail/product_detail_event.dart';
+import '../presentation/screens/category_products_screen.dart';
+import '../presentation/screens/edit_profile_screen.dart';
+import '../presentation/screens/favorites_screen.dart';
 import '../presentation/screens/forgot_screen.dart';
 import '../presentation/screens/login_screen.dart';
 import '../presentation/screens/main_nav_screen.dart';
@@ -44,13 +50,7 @@ class AppRouter {
           child: ForgotScreen(),
         ),
       ),
-      _buildRoute(
-        path: '/home',
-        child: BlocProvider(
-          create: (_) => AuthBloc(_authRepository),
-          child: const MainNavScreen(),
-        ),
-      ),
+      _buildRoute(path: '/home', child: const MainNavScreen()),
       GoRoute(
         path: '/product',
         builder: (context, state) {
@@ -65,6 +65,28 @@ class AppRouter {
           );
         },
       ),
+      GoRoute(
+        path: '/favorites',
+        builder: (context, state) {
+          // Cung cấp FavoritesBloc cho màn hình Yêu thích
+          return BlocProvider(
+            create: (context) => FavoritesBloc(_productRepository),
+            child: const FavoritesScreen(),
+          );
+        },
+      ),
+      GoRoute(
+        path: '/category-products',
+        builder: (context, state) {
+          final category = state.extra as Category;
+          return BlocProvider(
+            create: (context) => CategoryProductsBloc(_productRepository),
+            child: CategoryProductsScreen(category: category),
+          );
+        },
+      ),
+
+      _buildRoute(path: '/edit-profile', child: const EditProfileScreen()),
     ],
   );
 

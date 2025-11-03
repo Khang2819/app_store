@@ -1,3 +1,4 @@
+import 'package:bloc_app/core/localization_utils.dart';
 import 'package:bloc_app/data/models/product_model.dart';
 import 'package:bloc_app/presentation/widgets/home_appbar.dart';
 import 'package:flutter/material.dart';
@@ -10,7 +11,6 @@ import '../bloc/cart/cart_event.dart';
 import '../bloc/navigation/navigation_bloc.dart';
 import '../bloc/navigation/navigation_event.dart';
 import '../bloc/product_detail/product_detail_bloc.dart';
-// THÊM IMPORT NÀY
 import '../bloc/product_detail/product_detail_event.dart';
 import '../bloc/product_detail/product_detail_state.dart';
 import '../widgets/bottom_bar.dart';
@@ -86,7 +86,7 @@ class ProductDetailScreen extends StatelessWidget {
                         crossAxisAlignment: CrossAxisAlignment.start,
                         children: [
                           Text(
-                            product.name,
+                            product.localizedName(context),
                             style: const TextStyle(
                               fontWeight: FontWeight.bold,
                               fontSize: 22,
@@ -158,7 +158,7 @@ class ProductDetailScreen extends StatelessWidget {
                           const SizedBox(height: 10),
                           Text(
                             product.description.isNotEmpty
-                                ? product.description
+                                ? product.localizedDescription(context)
                                 : 'Chưa có mô tả cho sản phẩm này.',
                             style: const TextStyle(
                               fontSize: 15,

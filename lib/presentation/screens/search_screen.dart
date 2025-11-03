@@ -3,6 +3,7 @@ import 'package:bloc_app/presentation/widgets/my_search_bar.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 
+import '../../l10n/app_localizations.dart';
 import '../bloc/home/home_bloc.dart';
 import '../bloc/search/search_bloc.dart';
 import '../bloc/search/search_event.dart';
@@ -27,8 +28,9 @@ class _SearchScreenState extends State<SearchScreen> {
 
   @override
   Widget build(BuildContext context) {
+    final language = AppLocalizations.of(context)!;
     return Scaffold(
-      appBar: HomeAppbar(title: 'Tìm kiếm sản phẩm'),
+      appBar: HomeAppbar(title: language.searchProduct1),
       body: SingleChildScrollView(
         child: Column(
           children: [

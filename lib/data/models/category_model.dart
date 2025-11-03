@@ -2,7 +2,7 @@ import 'package:cloud_firestore/cloud_firestore.dart';
 
 class Category {
   final String id;
-  final String name;
+  final Map<String, dynamic> name;
   final String imageUrl;
 
   const Category({
@@ -14,7 +14,7 @@ class Category {
     Map data = doc.data() as Map<String, dynamic>;
     return Category(
       id: doc.id,
-      name: data['name'] ?? '',
+      name: data['name'] as Map<String, dynamic>? ?? const {},
       imageUrl: data['imageUrl'] ?? '',
     );
   }

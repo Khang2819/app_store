@@ -42,10 +42,19 @@
   "confirm_password_not_match": "Passwords do not match",
   "register": "Register",
   "searchProduct": "Search for product...",
+  "searchProduct1": "Search for product",
   "addToCart": "Add to Cart",
   "orderNow": "Order Now",
   "cart": "Cart",
   "cart_empty": "Your cart is empty",
   "total": "Total",
-  "checkout": "Checkout"
+  "checkout": "Checkout",
+  "home": "Home",
+  "search": "Search",
+  "person": "Person",
+  "category": "Category",
+  "product": "Product",
+  "seeAll": "See all",
+  "favorites": "Favorites",
+  "favorites_empty": "Your favorites list is empty"
 }

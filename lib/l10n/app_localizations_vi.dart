@@ -132,6 +132,9 @@ class AppLocalizationsVi extends AppLocalizations {
   String get searchProduct => 'Tìm kiếm sản phẩm...';
 
   @override
+  String get searchProduct1 => 'Tìm kiếm sản phẩm';
+
+  @override
   String get addToCart => 'Thêm vào giỏ';
 
   @override
@@ -148,4 +151,28 @@ class AppLocalizationsVi extends AppLocalizations {
 
   @override
   String get checkout => 'Thanh toán';
+
+  @override
+  String get home => 'Trang chủ';
+
+  @override
+  String get search => 'Tìm kiếm';
+
+  @override
+  String get person => 'Cá nhân';
+
+  @override
+  String get category => 'Danh mục';
+
+  @override
+  String get product => 'Sản phẩm';
+
+  @override
+  String get seeAll => 'Xem tất cả';
+
+  @override
+  String get favorites => 'Yêu thích';
+
+  @override
+  String get favorites_empty => 'Danh sách yêu thích trống';
 }

@@ -1,5 +1,3 @@
-import 'dart:io';
-
 import 'package:bloc_app/data/models/users_model.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:firebase_auth/firebase_auth.dart';
@@ -68,7 +66,9 @@ class UserRepository {
       final storageRef = _storage.ref().child(storagePath);
 
       // 2. Tải tệp lên
-      final uploadTask = await storageRef.putFile(File(imageFile.path));
+      final uploadTask = await storageRef.putData(
+        await imageFile.readAsBytes(),
+      );
 
       // 3. Lấy URL tải về
       final downloadUrl = await uploadTask.ref.getDownloadURL();

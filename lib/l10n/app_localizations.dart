@@ -343,6 +343,12 @@ abstract class AppLocalizations {
   /// **'Search for product...'**
   String get searchProduct;
 
+  /// No description provided for @searchProduct1.
+  ///
+  /// In en, this message translates to:
+  /// **'Search for product'**
+  String get searchProduct1;
+
   /// No description provided for @addToCart.
   ///
   /// In en, this message translates to:
@@ -378,6 +384,54 @@ abstract class AppLocalizations {
   /// In en, this message translates to:
   /// **'Checkout'**
   String get checkout;
+
+  /// No description provided for @home.
+  ///
+  /// In en, this message translates to:
+  /// **'Home'**
+  String get home;
+
+  /// No description provided for @search.
+  ///
+  /// In en, this message translates to:
+  /// **'Search'**
+  String get search;
+
+  /// No description provided for @person.
+  ///
+  /// In en, this message translates to:
+  /// **'Person'**
+  String get person;
+
+  /// No description provided for @category.
+  ///
+  /// In en, this message translates to:
+  /// **'Category'**
+  String get category;
+
+  /// No description provided for @product.
+  ///
+  /// In en, this message translates to:
+  /// **'Product'**
+  String get product;
+
+  /// No description provided for @seeAll.
+  ///
+  /// In en, this message translates to:
+  /// **'See all'**
+  String get seeAll;
+
+  /// No description provided for @favorites.
+  ///
+  /// In en, this message translates to:
+  /// **'Favorites'**
+  String get favorites;
+
+  /// No description provided for @favorites_empty.
+  ///
+  /// In en, this message translates to:
+  /// **'Your favorites list is empty'**
+  String get favorites_empty;
 }
 
 class _AppLocalizationsDelegate extends LocalizationsDelegate<AppLocalizations> {

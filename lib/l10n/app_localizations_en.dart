@@ -132,6 +132,9 @@ class AppLocalizationsEn extends AppLocalizations {
   String get searchProduct => 'Search for product...';
 
   @override
+  String get searchProduct1 => 'Search for product';
+
+  @override
   String get addToCart => 'Add to Cart';
 
   @override
@@ -148,4 +151,28 @@ class AppLocalizationsEn extends AppLocalizations {
 
   @override
   String get checkout => 'Checkout';
+
+  @override
+  String get home => 'Home';
+
+  @override
+  String get search => 'Search';
+
+  @override
+  String get person => 'Person';
+
+  @override
+  String get category => 'Category';
+
+  @override
+  String get product => 'Product';
+
+  @override
+  String get seeAll => 'See all';
+
+  @override
+  String get favorites => 'Favorites';
+
+  @override
+  String get favorites_empty => 'Your favorites list is empty';
 }

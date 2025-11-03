@@ -1,3 +1,4 @@
+import 'package:bloc_app/data/models/banner_model.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
 
 import '../models/category_model.dart';
@@ -23,6 +24,47 @@ class ProductRepository {
   Future<Product> fetchProduct(String productId) async {
     final doc = await _firestore.collection('products').doc(productId).get();
     return Product.fromFirestore(doc);
+  }
+
+  Future<List<String>> fetchFavorites(String userId) async {
+    final snapshot =
+        await _firestore
+            .collection('users')
+            .doc(userId)
+            .collection('favorites')
+            .get();
+    return snapshot.docs.map((doc) => doc.id).toList();
+  }
+
+  Future<void> toggleFavorite({
+    required String userId,
+    required String productId,
+    required bool isAdding,
+  }) async {
+    final favoritesRef = _firestore
+        .collection('users')
+        .doc(userId)
+        .collection('favorites');
+
+    final favoriteDoc = favoritesRef.doc(productId);
+
+    if (isAdding) {
+      await favoriteDoc.set({'addedAt': FieldValue.serverTimestamp()});
+    } else {
+      await favoriteDoc.delete();
+    }
+  }
+
+  Future<List<Product>> fetchProductsByIds(List<String> productIds) async {
+    if (productIds.isEmpty) return [];
+    final uniqueIds = productIds.toSet().toList();
+    final idsToFetch = uniqueIds.take(10).toList();
+    final snapshot =
+        await _firestore
+            .collection('products')
+            .where(FieldPath.documentId, whereIn: idsToFetch)
+            .get();
+    return snapshot.docs.map((doc) => Product.fromFirestore(doc)).toList();
   }
 
   // Lấy danh sách đánh giá của sản phẩm
@@ -115,12 +157,33 @@ class ProductRepository {
         snapshot.docs.map((doc) => Product.fromFirestore(doc)).toList();
     if (search.isEmpty) return allProducts;
     final filteredProducts =
-        allProducts
-            .where(
-              (product) =>
-                  product.name.toLowerCase().contains(search.toLowerCase()),
-            )
-            .toList();
+        allProducts.where((product) {
+          final names = product.name.values.map((v) => v.toString()).toList();
+          return names.any(
+            (name) => name.toLowerCase().contains(search.toLowerCase()),
+          );
+        }).toList();
     return filteredProducts;
+  }
+
+  Future<List<Product>> fetchProductsByCategory(String categoryId) async {
+    final snapshot =
+        await _firestore
+            .collection('products')
+            .where('categoryId', isEqualTo: categoryId)
+            .get();
+    return snapshot.docs.map((doc) => Product.fromFirestore(doc)).toList();
+  }
+
+  // này là baner quản cáo nha
+  // lấy từ firebase
+
+  Future<List<BannerModel>> fetchBanners() async {
+    final snapshot =
+        await _firestore
+            .collection('banners')
+            .orderBy('order', descending: false)
+            .get();
+    return snapshot.docs.map((doc) => BannerModel.fromFirestore(doc)).toList();
   }
 }
