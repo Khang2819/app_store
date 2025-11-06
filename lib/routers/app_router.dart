@@ -1,3 +1,5 @@
+import 'package:bloc_app/presentation/bloc/see_all_screen/see_all_screen_bloc.dart';
+import 'package:bloc_app/presentation/bloc/see_all_screen/see_all_screen_event.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:go_router/go_router.dart';
@@ -11,6 +13,7 @@ import '../presentation/bloc/category_products/category_products_bloc.dart';
 import '../presentation/bloc/favorites/favorites_bloc.dart';
 import '../presentation/bloc/product_detail/product_detail_bloc.dart';
 import '../presentation/bloc/product_detail/product_detail_event.dart';
+import '../presentation/screens/all_products_page.dart';
 import '../presentation/screens/category_products_screen.dart';
 import '../presentation/screens/edit_profile_screen.dart';
 import '../presentation/screens/favorites_screen.dart';
@@ -56,7 +59,6 @@ class AppRouter {
         builder: (context, state) {
           final product = state.extra as Product;
           return BlocProvider(
-            // <-- 1. Bọc bằng BlocProvider
             create:
                 (context) => ProductDetailBloc(_productRepository)..add(
                   LoadProductDetail(product.id),
@@ -72,6 +74,16 @@ class AppRouter {
           return BlocProvider(
             create: (context) => FavoritesBloc(_productRepository),
             child: const FavoritesScreen(),
+          );
+        },
+      ),
+      GoRoute(
+        path: '/all-products',
+        builder: (context, state) {
+          return BlocProvider(
+            create:
+                (_) => SeeAllScreenBloc(_productRepository)..add(LoadSeeAll()),
+            child: AllProductsPage(),
           );
         },
       ),

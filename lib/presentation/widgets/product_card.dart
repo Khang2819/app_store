@@ -97,7 +97,7 @@ class ProductCard extends StatelessWidget {
                       fontWeight: FontWeight.w600,
                       color: Color(0xff3E2C24),
                     ),
-                    maxLines: 2,
+                    maxLines: 1,
                     overflow: TextOverflow.ellipsis,
                   ),
                   const SizedBox(height: 4),
@@ -109,6 +109,26 @@ class ProductCard extends StatelessWidget {
                       color: Colors.red,
                     ),
                   ),
+                  if (product.averageRating > 0)
+                    Row(
+                      mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                      children: [
+                        Row(
+                          children: [
+                            Text('${product.averageRating}'),
+                            const SizedBox(width: 5),
+                            Icon(Icons.star, color: Colors.amber, size: 16),
+                          ],
+                        ),
+                        Text(
+                          '${product.reviewCount} Đánh giá',
+                          style: TextStyle(
+                            fontSize: 14,
+                            color: Colors.grey[600],
+                          ),
+                        ),
+                      ],
+                    ),
                 ],
               ),
             ),

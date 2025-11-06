@@ -7,6 +7,11 @@ class Product {
   final int price;
   final Map<String, dynamic> description;
   final String categoryId;
+  final double averageRating; // <<<<< THÊM MỚI
+  final int reviewCount;
+  final Timestamp? createdAt;
+  final int soldCount;
+
   Product({
     required this.id,
     required this.name,
@@ -14,6 +19,10 @@ class Product {
     required this.price,
     required this.description,
     required this.categoryId,
+    this.averageRating = 0.0,
+    this.reviewCount = 0,
+    this.createdAt,
+    this.soldCount = 0,
   });
   factory Product.fromFirestore(DocumentSnapshot doc) {
     Map data = doc.data() as Map<String, dynamic>;
@@ -24,6 +33,10 @@ class Product {
       categoryId: data['categoryId'] ?? '',
       price: (data['price'] ?? 0).toInt(),
       description: data['description'] as Map<String, dynamic>? ?? const {},
+      averageRating: (data['averageRating'] as num?)?.toDouble() ?? 0.0,
+      reviewCount: (data['reviewCount'] ?? 0).toInt(),
+      createdAt: data['createdAt'] as Timestamp?,
+      soldCount: (data['soldCount'] ?? 0).toInt(),
     );
   }
 }

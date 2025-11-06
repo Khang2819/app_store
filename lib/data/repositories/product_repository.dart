@@ -26,6 +26,28 @@ class ProductRepository {
     return Product.fromFirestore(doc);
   }
 
+  // lấy danh sách sản phẩm mới nhất
+  Future<List<Product>> fetchLatestProducts() async {
+    final snapshot =
+        await _firestore
+            .collection('products')
+            .orderBy('createdAt', descending: true)
+            .limit(10)
+            .get();
+    return snapshot.docs.map((doc) => Product.fromFirestore(doc)).toList();
+  }
+
+  // lấy số lượng sản phẩm được bán
+  Future<List<Product>> fetchBestsellingProducts() async {
+    final snapshot =
+        await _firestore
+            .collection('products')
+            .orderBy('soldCount', descending: true)
+            .limit(10)
+            .get();
+    return snapshot.docs.map((doc) => Product.fromFirestore(doc)).toList();
+  }
+
   Future<List<String>> fetchFavorites(String userId) async {
     final snapshot =
         await _firestore

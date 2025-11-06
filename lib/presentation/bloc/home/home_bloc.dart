@@ -21,6 +21,7 @@ class HomeBloc extends Bloc<HomeEvent, HomeState> {
     try {
       final products = await _repository.fetchProducts();
       final categories = await _repository.fetchCategories();
+      final banners = await _repository.fetchBanners();
       List<String> favorites = [];
       if (user != null) {
         favorites = await _repository.fetchFavorites(user.uid);
@@ -30,6 +31,7 @@ class HomeBloc extends Bloc<HomeEvent, HomeState> {
           isLoading: false,
           products: products,
           categories: categories,
+          banners: banners,
           favorites: favorites,
         ),
       );

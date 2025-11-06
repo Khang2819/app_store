@@ -3,11 +3,15 @@ import 'package:bloc_app/presentation/widgets/my_search_bar.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:go_router/go_router.dart';
+import '../../core/snackbar_utils.dart';
+import '../../data/models/banner_model.dart';
+import '../../data/repositories/product_repository.dart';
 import '../bloc/home/home_bloc.dart';
 import '../bloc/home/home_event.dart';
 import '../bloc/home/home_state.dart';
 import '../bloc/navigation/navigation_bloc.dart';
 import '../bloc/navigation/navigation_event.dart';
+import '../widgets/banner_carousel.dart';
 import '../widgets/category_grid.dart';
 import '../widgets/home_appbar.dart';
 import '../widgets/product_grid.dart';
@@ -20,28 +24,32 @@ class HomeScreen extends StatefulWidget {
 }
 
 class _HomeScreenState extends State<HomeScreen> {
+  final ProductRepository _productRepository = ProductRepository();
   @override
   void initState() {
     super.initState();
     context.read<HomeBloc>().add(LoadHomeData());
   }
 
-  // void _handleBannerTap(BannerModel banner) {
-  //   // Logic xử lý khi người dùng nhấp vào Banner (giả định)
-  //   switch (banner.targetType) {
-  //     case 'product':
-  //       print('Navigating to Product ID: ${banner.targetId}');
-  //       break;
-  //     case 'category':
-  //       print('Navigating to Category ID: ${banner.targetId}');
-  //       break;
-  //     case 'url':
-  //       print('Opening external URL: ${banner.targetId}');
-  //       break;
-  //     default:
-  //       print('Banner clicked, but no target defined.');
-  //   }
-  // }
+  void _handleBannerTap(BannerModel banner) async {
+    if (banner.targetType == 'product') {
+      try {
+        final product = await _productRepository.fetchProduct(banner.targetId);
+        if (mounted) {
+          context.push('/product', extra: product);
+        }
+      } catch (e) {
+        if (mounted) {
+          final language = AppLocalizations.of(context)!;
+          SnackbarUtils.showError(
+            context,
+            'Lỗi tải chi tiết sản phẩm: ${e.toString().split(':').last.trim()}',
+            language,
+          );
+        }
+      }
+    }
+  }
 
   @override
   Widget build(BuildContext context) {
@@ -122,13 +130,12 @@ class _HomeScreenState extends State<HomeScreen> {
                         child: const MySearchBar(),
                       ),
                     ),
-                    // SliverToBoxAdapter(
-                    //   child: BannerCarousel(
-                    //     banners: state.banners,
-                    //     onBannerTap: _handleBannerTap,
-                    //   ),
-                    // ),
-                    const SizedBox(height: 24),
+                    const SizedBox(height: 20),
+                    BannerCarousel(
+                      banners: state.banners,
+                      onBannerTap: _handleBannerTap,
+                    ),
+                    const SizedBox(height: 15),
                     Padding(
                       padding: const EdgeInsets.symmetric(horizontal: 15),
                       child: Text(
@@ -139,7 +146,7 @@ class _HomeScreenState extends State<HomeScreen> {
                         ),
                       ),
                     ),
-                    const SizedBox(height: 12),
+                    const SizedBox(height: 10),
                     CategoryGrid(
                       categories: state.categories,
                       onCategoryTap: (category) {
@@ -159,9 +166,7 @@ class _HomeScreenState extends State<HomeScreen> {
                             ),
                           ),
                           TextButton(
-                            onPressed: () {
-                              // Navigate to all products
-                            },
+                            onPressed: () => context.push('/all-products'),
                             child: Text(
                               language.seeAll,
                               style: TextStyle(color: Color(0xff2A4ECA)),

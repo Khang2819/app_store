@@ -15,7 +15,7 @@ class CategoryGrid extends StatelessWidget {
     }
 
     return SizedBox(
-      height: 120,
+      height: 110,
       child: ListView.builder(
         scrollDirection: Axis.horizontal,
         padding: const EdgeInsets.symmetric(horizontal: 15),
@@ -23,13 +23,13 @@ class CategoryGrid extends StatelessWidget {
         itemBuilder: (context, index) {
           final category = categories[index];
           return Padding(
-            padding: const EdgeInsets.only(right: 10.0),
+            padding: const EdgeInsets.only(right: 15.0),
             child: GestureDetector(
               onTap: () => onCategoryTap?.call(category),
               child: Column(
                 children: [
                   CircleAvatar(
-                    radius: 40,
+                    radius: 35,
                     backgroundImage: NetworkImage(category.imageUrl),
                     backgroundColor: Colors.grey[200],
                   ),

@@ -21,8 +21,6 @@ class _SearchScreenState extends State<SearchScreen> {
   @override
   void initState() {
     super.initState();
-    // 3. Gọi event SearchTextChanged với chuỗi rỗng ngay khi vào màn hình
-    //    để tải tất cả sản phẩm
     context.read<SearchBloc>().add(SearchTextChanged(""));
   }
 
@@ -30,6 +28,7 @@ class _SearchScreenState extends State<SearchScreen> {
   Widget build(BuildContext context) {
     final language = AppLocalizations.of(context)!;
     return Scaffold(
+      backgroundColor: Color(0xffFFF8F1),
       appBar: HomeAppbar(title: language.searchProduct1),
       body: SingleChildScrollView(
         child: Column(
