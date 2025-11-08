@@ -1,7 +1,12 @@
 import 'package:flutter/material.dart';
+import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:go_router/go_router.dart';
 
 import '../../assets/app_vector.dart';
+import '../bloc/cart/cart_bloc.dart';
+import '../bloc/cart/cart_state.dart';
+import '../bloc/navigation/navigation_bloc.dart';
+import '../bloc/navigation/navigation_event.dart';
 
 class HomeAppbar extends StatelessWidget implements PreferredSizeWidget {
   final String? title; // Tiêu đề tùy chỉnh
@@ -59,13 +64,53 @@ class HomeAppbar extends StatelessWidget implements PreferredSizeWidget {
         ),
       ),
       actions: [
-        IconButton(
-          onPressed: onCartTap ?? () {},
-          icon: Icon(
-            Icons.shopping_cart_outlined,
-            color: Colors.white,
-            size: 26,
-          ),
+        BlocBuilder<CartBloc, CartState>(
+          builder: (context, state) {
+            final int itemCount = state is CartLoaded ? state.items.length : 0;
+            return Stack(
+              children: [
+                IconButton(
+                  onPressed:
+                      onCartTap ??
+                      () {
+                        context.go('/home');
+                        context.read<NavigationBloc>().add(
+                          const TabChanged(tabIndex: 2),
+                        );
+                      },
+                  icon: Icon(
+                    Icons.shopping_cart_outlined,
+                    color: Colors.white,
+                    size: 26,
+                  ),
+                ),
+                if (itemCount > 0)
+                  Positioned(
+                    right: 1,
+                    top: -1,
+                    child: Container(
+                      padding: const EdgeInsets.all(7),
+                      decoration: BoxDecoration(
+                        color: Colors.red,
+                        shape: BoxShape.circle,
+                      ),
+                      constraints: const BoxConstraints(
+                        minWidth: 18,
+                        minHeight: 18,
+                      ),
+                      child: Text(
+                        '$itemCount',
+                        style: const TextStyle(
+                          color: Colors.white,
+                          fontSize: 11,
+                          fontWeight: FontWeight.bold,
+                        ),
+                      ),
+                    ),
+                  ),
+              ],
+            );
+          },
         ),
         const SizedBox(width: 10),
       ],

@@ -8,6 +8,7 @@ import 'package:go_router/go_router.dart';
 
 import '../bloc/cart/cart_bloc.dart';
 import '../bloc/cart/cart_event.dart';
+import '../bloc/home/home_bloc.dart';
 import '../bloc/navigation/navigation_bloc.dart';
 import '../bloc/navigation/navigation_event.dart';
 import '../bloc/product_detail/product_detail_bloc.dart';
@@ -15,6 +16,7 @@ import '../bloc/product_detail/product_detail_event.dart';
 import '../bloc/product_detail/product_detail_state.dart';
 import '../widgets/bottom_bar.dart';
 import '../widgets/imagrecarousel.dart';
+import '../widgets/product_grid.dart';
 
 class ProductDetailScreen extends StatelessWidget {
   final Product product;
@@ -22,6 +24,9 @@ class ProductDetailScreen extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+    final favoriteIds = context.select(
+      (HomeBloc bloc) => bloc.state.favorites.toSet(),
+    );
     return BlocListener<ProductDetailBloc, ProductDetailState>(
       listener: (context, state) {
         if (state.addToCartSuccess) {
@@ -73,224 +78,221 @@ class ProductDetailScreen extends StatelessWidget {
 
             return SingleChildScrollView(
               physics: const AlwaysScrollableScrollPhysics(),
-              child: Padding(
-                padding: const EdgeInsets.only(bottom: 100),
-                child: Column(
-                  crossAxisAlignment: CrossAxisAlignment.start,
-                  children: [
-                    Imagecarousel(product: product),
-                    const SizedBox(height: 20),
-                    Padding(
-                      padding: const EdgeInsets.symmetric(horizontal: 16),
-                      child: Column(
-                        crossAxisAlignment: CrossAxisAlignment.start,
-                        children: [
-                          Text(
-                            product.localizedName(context),
-                            style: const TextStyle(
-                              fontWeight: FontWeight.bold,
-                              fontSize: 22,
-                            ),
+              // child: Padding(
+              child: Column(
+                crossAxisAlignment: CrossAxisAlignment.start,
+                children: [
+                  Imagecarousel(product: product),
+                  const SizedBox(height: 20),
+                  Padding(
+                    padding: const EdgeInsets.symmetric(horizontal: 16),
+                    child: Column(
+                      crossAxisAlignment: CrossAxisAlignment.start,
+                      children: [
+                        Text(
+                          product.localizedName(context),
+                          style: const TextStyle(
+                            fontWeight: FontWeight.bold,
+                            fontSize: 22,
                           ),
-                          const SizedBox(height: 8),
-                          Text.rich(
-                            TextSpan(
-                              children: [
-                                const TextSpan(
-                                  text: 'Đơn giá: ',
-                                  style: TextStyle(
-                                    fontSize: 18,
-                                    color: Colors.black87,
-                                    fontWeight: FontWeight.w500,
-                                  ),
-                                ),
-                                TextSpan(
-                                  text: _formatPrice(product.price),
-                                  style: const TextStyle(
-                                    fontSize: 18,
-                                    color: Colors.red,
-                                    fontWeight: FontWeight.bold,
-                                  ),
-                                ),
-                              ],
-                            ),
-                          ),
-                          // Sử dụng rating trung bình từ state
-                          if (averageRating > 0)
-                            Row(
-                              children: [
-                                Text(
-                                  averageRating.toStringAsFixed(1),
-                                  style: const TextStyle(
-                                    fontSize: 16,
-                                    fontWeight: FontWeight.bold,
-                                    color: Colors.brown,
-                                  ),
-                                ),
-                                const SizedBox(width: 6),
-                                RatingBarIndicator(
-                                  rating: averageRating,
-                                  itemBuilder:
-                                      (context, index) => const Icon(
-                                        Icons.star,
-                                        color: Colors.amber,
-                                      ),
-                                  itemCount: 5,
-                                  itemSize: 20,
-                                  direction: Axis.horizontal,
-                                ),
-                                const SizedBox(width: 8),
-                                Text(
-                                  '(${state.reviews.length} đánh giá)',
-                                  style: TextStyle(color: Colors.grey[600]),
-                                ),
-                              ],
-                            ),
-                          Divider(color: Colors.grey[300]),
-                          const SizedBox(height: 10),
-                          const Text(
-                            'Mô tả sản phẩm',
-                            style: TextStyle(
-                              fontSize: 16,
-                              fontWeight: FontWeight.bold,
-                            ),
-                          ),
-                          const SizedBox(height: 10),
-                          Text(
-                            product.description.isNotEmpty
-                                ? product.localizedDescription(context)
-                                : 'Chưa có mô tả cho sản phẩm này.',
-                            style: const TextStyle(
-                              fontSize: 15,
-                              color: Colors.black87,
-                            ),
-                          ),
-                          Divider(color: Colors.grey[300]),
-                          Row(
-                            mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                        ),
+                        const SizedBox(height: 8),
+                        Text.rich(
+                          TextSpan(
                             children: [
-                              const Text(
-                                'Bình luận khách hàng',
+                              const TextSpan(
+                                text: 'Đơn giá: ',
                                 style: TextStyle(
-                                  fontSize: 16,
+                                  fontSize: 18,
+                                  color: Colors.black87,
+                                  fontWeight: FontWeight.w500,
+                                ),
+                              ),
+                              TextSpan(
+                                text: _formatPrice(product.price),
+                                style: const TextStyle(
+                                  fontSize: 18,
+                                  color: Colors.red,
                                   fontWeight: FontWeight.bold,
                                 ),
                               ),
-                              // Nút "Xem tất cả" có thể ẩn đi nếu muốn
-                              // TextButton(
-                              //   onPressed: () {},
-                              //   child: const Text(
-                              //     'Xem tất cả',
-                              //     style: TextStyle(color: Color(0xff2A4ECA)),
-                              //   ),
-                              // ),
                             ],
                           ),
-                          const SizedBox(height: 10),
-
-                          // ===== BẮT ĐẦU PHẦN CẬP NHẬT LOGIC REVIEW =====
-
-                          // 1. Hiển thị danh sách reviews
-                          if (state.reviews.isEmpty)
-                            Padding(
-                              padding: const EdgeInsets.symmetric(
-                                vertical: 16.0,
-                              ),
-                              child: Center(
-                                child: Text(
-                                  'Chưa có đánh giá nào',
-                                  style: TextStyle(color: Colors.grey[600]),
+                        ),
+                        // Sử dụng rating trung bình từ state
+                        if (averageRating > 0)
+                          Row(
+                            children: [
+                              Text(
+                                averageRating.toStringAsFixed(1),
+                                style: const TextStyle(
+                                  fontSize: 16,
+                                  fontWeight: FontWeight.bold,
+                                  color: Colors.brown,
                                 ),
                               ),
-                            )
-                          else
-                            // Hiển thị các review
-                            ListView.builder(
-                              shrinkWrap: true,
-                              physics: const NeverScrollableScrollPhysics(),
-                              itemCount: state.reviews.length,
-                              itemBuilder: (context, index) {
-                                final review = state.reviews[index];
-                                return Card(
-                                  margin: const EdgeInsets.only(bottom: 8),
-                                  elevation: 0,
-                                  color: Colors.white.withOpacity(0.5),
-                                  shape: RoundedRectangleBorder(
-                                    borderRadius: BorderRadius.circular(8),
-                                  ),
-                                  child: ListTile(
-                                    title: Text(
-                                      review.userName,
-                                      style: const TextStyle(
-                                        fontWeight: FontWeight.bold,
-                                      ),
+                              const SizedBox(width: 6),
+                              RatingBarIndicator(
+                                rating: averageRating,
+                                itemBuilder:
+                                    (context, index) => const Icon(
+                                      Icons.star,
+                                      color: Colors.amber,
                                     ),
-                                    subtitle: Text(review.comment),
-                                    trailing: RatingBarIndicator(
-                                      rating: review.rating,
-                                      itemBuilder:
-                                          (context, index) => const Icon(
-                                            Icons.star,
-                                            color: Colors.amber,
-                                          ),
-                                      itemCount: 5,
-                                      itemSize: 16,
-                                    ),
-                                  ),
-                                );
-                              },
+                                itemCount: 5,
+                                itemSize: 20,
+                                direction: Axis.horizontal,
+                              ),
+                              const SizedBox(width: 8),
+                              Text(
+                                '(${state.reviews.length} đánh giá)',
+                                style: TextStyle(color: Colors.grey[600]),
+                              ),
+                            ],
+                          ),
+                        Divider(color: Colors.grey[300]),
+                        const SizedBox(height: 10),
+                        const Text(
+                          'Mô tả sản phẩm',
+                          style: TextStyle(
+                            fontSize: 16,
+                            fontWeight: FontWeight.bold,
+                          ),
+                        ),
+                        const SizedBox(height: 10),
+                        Text(
+                          product.description.isNotEmpty
+                              ? product.localizedDescription(context)
+                              : 'Chưa có mô tả cho sản phẩm này.',
+                          style: const TextStyle(
+                            fontSize: 15,
+                            color: Colors.black87,
+                          ),
+                        ),
+                        Divider(color: Colors.grey[300]),
+                        Row(
+                          mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                          children: [
+                            const Text(
+                              'Bình luận khách hàng',
+                              style: TextStyle(
+                                fontSize: 16,
+                                fontWeight: FontWeight.bold,
+                              ),
                             ),
+                            TextButton(
+                              onPressed: () {},
+                              child: const Text(
+                                'Xem tất cả',
+                                style: TextStyle(color: Color(0xff2A4ECA)),
+                              ),
+                            ),
+                          ],
+                        ),
+                        const SizedBox(height: 10),
 
-                          const SizedBox(height: 16),
+                        // ===== BẮT ĐẦU PHẦN CẬP NHẬT LOGIC REVIEW =====
 
-                          // 2. Hiển thị Form nhập hoặc Thông báo
-                          if (state.canReview)
-                            _ReviewInputSection(productId: product.id)
-                          else
-                            Container(
-                              padding: const EdgeInsets.all(12),
-                              decoration: BoxDecoration(
-                                color: Colors.yellow[100],
-                                borderRadius: BorderRadius.circular(8),
-                                border: Border.all(
-                                  color: Colors.orange.shade200,
+                        // 1. Hiển thị danh sách reviews
+                        if (state.reviews.isEmpty)
+                          Padding(
+                            padding: const EdgeInsets.symmetric(vertical: 16.0),
+                            child: Center(
+                              child: Text(
+                                'Chưa có đánh giá nào',
+                                style: TextStyle(color: Colors.grey[600]),
+                              ),
+                            ),
+                          )
+                        else
+                          // Hiển thị các review
+                          ListView.builder(
+                            shrinkWrap: true,
+                            physics: const NeverScrollableScrollPhysics(),
+                            itemCount: state.reviews.length,
+                            itemBuilder: (context, index) {
+                              final review = state.reviews[index];
+                              return Card(
+                                margin: const EdgeInsets.only(bottom: 8),
+                                elevation: 0,
+                                // ignore: deprecated_member_use
+                                color: Colors.white.withOpacity(0.5),
+                                shape: RoundedRectangleBorder(
+                                  borderRadius: BorderRadius.circular(8),
                                 ),
-                              ),
-                              child: const Row(
-                                children: [
-                                  Icon(
-                                    Icons.info_outline,
-                                    color: Colors.orange,
-                                  ),
-                                  SizedBox(width: 10),
-                                  Expanded(
-                                    child: Text(
-                                      "Chỉ khách hàng đã mua sản phẩm này mới có thể đánh giá.",
-                                      style: TextStyle(color: Colors.black87),
+                                child: ListTile(
+                                  title: Text(
+                                    review.userName,
+                                    style: const TextStyle(
+                                      fontWeight: FontWeight.bold,
                                     ),
                                   ),
-                                ],
-                              ),
-                            ),
+                                  subtitle: Text(review.comment),
+                                  trailing: RatingBarIndicator(
+                                    rating: review.rating,
+                                    itemBuilder:
+                                        (context, index) => const Icon(
+                                          Icons.star,
+                                          color: Colors.amber,
+                                        ),
+                                    itemCount: 5,
+                                    itemSize: 16,
+                                  ),
+                                ),
+                              );
+                            },
+                          ),
 
-                          // ===== KẾT THÚC PHẦN CẬP NHẬT LOGIC REVIEW =====
-                          const SizedBox(height: 16),
-                          Divider(color: Colors.grey[300]),
-                          const Text(
-                            'Các sản phẩm có liên quan',
-                            style: TextStyle(
-                              fontSize: 16,
-                              fontWeight: FontWeight.bold,
+                        const SizedBox(height: 16),
+
+                        // 2. Hiển thị Form nhập hoặc Thông báo
+                        if (state.canReview)
+                          _ReviewInputSection(productId: product.id)
+                        else
+                          Container(
+                            padding: const EdgeInsets.all(12),
+                            decoration: BoxDecoration(
+                              color: Colors.yellow[100],
+                              borderRadius: BorderRadius.circular(8),
+                              border: Border.all(color: Colors.orange.shade200),
+                            ),
+                            child: const Row(
+                              children: [
+                                Icon(Icons.info_outline, color: Colors.orange),
+                                SizedBox(width: 10),
+                                Expanded(
+                                  child: Text(
+                                    "Chỉ khách hàng đã mua sản phẩm này mới có thể đánh giá.",
+                                    style: TextStyle(color: Colors.black87),
+                                  ),
+                                ),
+                              ],
                             ),
                           ),
-                          // (Thêm code hiển thị sản phẩm liên quan ở đây)
-                        ],
-                      ),
+
+                        // ===== KẾT THÚC PHẦN CẬP NHẬT LOGIC REVIEW =====
+                        const SizedBox(height: 16),
+                        Divider(color: Colors.grey[300]),
+                        const Text(
+                          'Các sản phẩm có liên quan',
+                          style: TextStyle(
+                            fontSize: 16,
+                            fontWeight: FontWeight.bold,
+                          ),
+                        ),
+                        const SizedBox(height: 20),
+                      ],
                     ),
-                  ],
-                ),
+                  ),
+                  ProductGrid(
+                    products: state.relatedProducts,
+                    favorites: favoriteIds,
+                  ),
+                  const SizedBox(height: 30),
+                ],
               ),
             );
+            // );
           },
         ),
         bottomNavigationBar: BlocBuilder<ProductDetailBloc, ProductDetailState>(

@@ -208,4 +208,25 @@ class ProductRepository {
             .get();
     return snapshot.docs.map((doc) => BannerModel.fromFirestore(doc)).toList();
   }
+
+  Future<List<Product>> fetchRelatedProducts(
+    String categoryId,
+    String currentProductId,
+  ) async {
+    final snapshot =
+        await _firestore
+            .collection('products')
+            .where('categoryId', isEqualTo: categoryId)
+            .limit(6) // Giới hạn số lượng truy vấn
+            .get();
+
+    final allRelatedProducts =
+        snapshot.docs.map((doc) => Product.fromFirestore(doc)).toList();
+
+    // Loại bỏ sản phẩm hiện tại khỏi danh sách và giới hạn 5 sản phẩm
+    return allRelatedProducts
+        .where((product) => product.id != currentProductId)
+        .take(5)
+        .toList();
+  }
 }

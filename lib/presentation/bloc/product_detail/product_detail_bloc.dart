@@ -27,6 +27,10 @@ class ProductDetailBloc extends Bloc<ProductDetailEvent, ProductDetailState> {
     try {
       final product = await _productRepository.fetchProduct(event.productId);
       final reviews = await _productRepository.fetchReviews(event.productId);
+      final relatedProducts = await _productRepository.fetchRelatedProducts(
+        product.categoryId,
+        product.id,
+      );
       bool canReview = false;
       if (user != null) {
         canReview = await _productRepository.checkIfUserPurchasedProduct(
@@ -40,6 +44,7 @@ class ProductDetailBloc extends Bloc<ProductDetailEvent, ProductDetailState> {
           product: product,
           reviews: reviews,
           canReview: canReview,
+          relatedProducts: relatedProducts,
         ),
       );
     } catch (e) {

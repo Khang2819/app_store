@@ -10,6 +10,7 @@ class ProductDetailState extends Equatable {
   final String? error;
   final bool canReview;
   final bool addToCartSuccess;
+  final List<Product> relatedProducts;
 
   const ProductDetailState({
     this.isLoading = false,
@@ -19,6 +20,7 @@ class ProductDetailState extends Equatable {
     this.error,
     this.canReview = false,
     this.addToCartSuccess = false,
+    this.relatedProducts = const [],
   });
 
   ProductDetailState copyWith({
@@ -30,6 +32,7 @@ class ProductDetailState extends Equatable {
     bool? canReview,
     bool? addToCartSuccess,
     bool? clearError,
+    List<Product>? relatedProducts,
   }) {
     return ProductDetailState(
       isLoading: isLoading ?? this.isLoading,
@@ -39,6 +42,7 @@ class ProductDetailState extends Equatable {
       error: clearError == true ? null : error ?? this.error,
       canReview: canReview ?? this.canReview,
       addToCartSuccess: addToCartSuccess ?? this.addToCartSuccess,
+      relatedProducts: relatedProducts ?? this.relatedProducts,
     );
   }
 
@@ -51,5 +55,6 @@ class ProductDetailState extends Equatable {
     error,
     canReview,
     addToCartSuccess,
+    relatedProducts,
   ];
 }

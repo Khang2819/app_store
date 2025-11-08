@@ -106,7 +106,7 @@ class CartItemCard extends StatelessWidget {
             ),
             // Nút xóa
             IconButton(
-              icon: Icon(Icons.delete_outline, color: Colors.grey[600]),
+              icon: Icon(Icons.delete_outline, color: Colors.red),
               onPressed: () {
                 context.read<CartBloc>().add(
                   RemoveItemFromCart(item.product.id),
