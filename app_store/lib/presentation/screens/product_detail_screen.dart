@@ -1,5 +1,5 @@
 import 'package:bloc_app/core/localization_utils.dart';
-import 'package:bloc_app/data/models/product_model.dart';
+import 'package:shop_core/shop_core.dart';
 import 'package:bloc_app/presentation/widgets/home_appbar.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
@@ -319,6 +319,7 @@ class _ReviewInputSectionState extends State<_ReviewInputSection> {
   Widget build(BuildContext context) {
     return Card(
       elevation: 0,
+      // ignore: deprecated_member_use
       color: Colors.white.withOpacity(0.8),
       shape: RoundedRectangleBorder(
         borderRadius: BorderRadius.circular(12),

@@ -1,6 +1,6 @@
 import 'package:carousel_slider/carousel_slider.dart';
 import 'package:flutter/material.dart';
-import '../../data/models/banner_model.dart'; // <<< THÊM IMPORT MỚI
+import 'package:shop_core/shop_core.dart';
 
 class BannerCarousel extends StatefulWidget {
   // SỬA: Thay List<String> bằng List<BannerModel>

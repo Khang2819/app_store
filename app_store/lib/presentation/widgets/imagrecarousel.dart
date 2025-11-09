@@ -1,7 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:carousel_slider/carousel_slider.dart';
 
-import '../../data/models/product_model.dart';
+import 'package:shop_core/shop_core.dart';
 
 class Imagecarousel extends StatefulWidget {
   const Imagecarousel({super.key, required this.product});

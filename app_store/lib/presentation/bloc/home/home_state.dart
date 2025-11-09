@@ -1,8 +1,6 @@
 import 'package:equatable/equatable.dart';
 
-import '../../../data/models/banner_model.dart';
-import '../../../data/models/category_model.dart';
-import '../../../data/models/product_model.dart';
+import 'package:shop_core/shop_core.dart';
 
 class HomeState extends Equatable {
   final bool isLoading;

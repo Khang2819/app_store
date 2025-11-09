@@ -1,6 +1,5 @@
 import 'package:equatable/equatable.dart';
-import '../../../data/models/product_model.dart';
-import '../../../data/models/review_model.dart';
+import 'package:shop_core/shop_core.dart';
 
 class ProductDetailState extends Equatable {
   final bool isLoading;

@@ -1,7 +1,6 @@
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
-import '../../../data/repositories/auth_login.dart';
-import '../../../data/repositories/user_repository.dart';
+import 'package:shop_core/shop_core.dart';
 import 'profile_state.dart';
 import 'profile_event.dart';
 

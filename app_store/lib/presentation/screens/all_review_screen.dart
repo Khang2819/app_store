@@ -1,4 +1,4 @@
-import 'package:bloc_app/data/models/review_model.dart';
+import 'package:shop_core/shop_core.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 

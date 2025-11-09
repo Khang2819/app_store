@@ -1,6 +1,6 @@
 import 'package:equatable/equatable.dart';
 
-import '../../../data/models/review_model.dart';
+import 'package:shop_core/shop_core.dart';
 
 class ReviewState extends Equatable {
   final bool isLoading;

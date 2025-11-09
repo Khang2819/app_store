@@ -1,6 +1,6 @@
 import 'package:flutter_bloc/flutter_bloc.dart';
 
-import '../../../data/repositories/product_repository.dart';
+import 'package:shop_core/shop_core.dart';
 import 'category_products_event.dart';
 import 'category_products_state.dart';
 

@@ -1,11 +1,9 @@
-// lib/presentation/bloc/see_all_screen/see_all_screen_bloc.dart
 import 'package:bloc_app/presentation/bloc/see_all_screen/see_all_screen_event.dart';
 import 'package:bloc_app/presentation/bloc/see_all_screen/see_all_screen_state.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 
-import '../../../data/models/product_model.dart'; // THÊM IMPORT
-import '../../../data/repositories/product_repository.dart';
+import 'package:shop_core/shop_core.dart';
 
 class SeeAllScreenBloc extends Bloc<SeeAllScreenEvent, SeeAllScreenState> {
   final ProductRepository _repository;

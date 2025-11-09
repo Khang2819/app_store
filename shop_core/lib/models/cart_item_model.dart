@@ -1,5 +1,5 @@
-import 'package:bloc_app/data/models/product_model.dart';
 import 'package:equatable/equatable.dart';
+import 'product_model.dart';
 
 class CartItem extends Equatable {
   final Product product;

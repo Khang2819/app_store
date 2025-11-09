@@ -1,6 +1,5 @@
 import 'package:flutter_bloc/flutter_bloc.dart';
-import '../../../data/models/product_model.dart';
-import '../../../data/repositories/product_repository.dart';
+import 'package:shop_core/shop_core.dart';
 import 'favorites_event.dart';
 import 'favorites_state.dart';
 

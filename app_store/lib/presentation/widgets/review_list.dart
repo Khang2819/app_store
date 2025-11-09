@@ -1,7 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_rating_bar/flutter_rating_bar.dart';
 
-import '../../data/models/review_model.dart';
+import 'package:shop_core/shop_core.dart';
 
 class ReviewList extends StatelessWidget {
   final List<Review> reviews;

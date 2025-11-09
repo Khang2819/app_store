@@ -5,11 +5,7 @@ import 'package:bloc_app/presentation/bloc/see_all_screen/see_all_screen_event.d
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:go_router/go_router.dart';
-
-import '../data/models/category_model.dart';
-import '../data/models/product_model.dart';
-import '../data/repositories/auth_login.dart';
-import '../data/repositories/product_repository.dart';
+import 'package:shop_core/shop_core.dart';
 import '../presentation/bloc/auth/auth_bloc.dart';
 import '../presentation/bloc/category_products/category_products_bloc.dart';
 import '../presentation/bloc/favorites/favorites_bloc.dart';

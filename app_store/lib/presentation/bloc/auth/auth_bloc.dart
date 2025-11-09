@@ -4,7 +4,7 @@ import 'package:flutter_bloc/flutter_bloc.dart';
 
 import '../../../core/utils.dart';
 import '../../../core/validators.dart';
-import '../../../data/repositories/auth_login.dart';
+import 'package:shop_core/shop_core.dart';
 
 class AuthBloc extends Bloc<AuthEvent, AuthState> {
   final AuthRepository authRepository;

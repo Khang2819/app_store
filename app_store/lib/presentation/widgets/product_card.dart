@@ -1,6 +1,6 @@
 import 'package:bloc_app/core/localization_utils.dart';
 import 'package:flutter/material.dart';
-import '../../data/models/product_model.dart';
+import 'package:shop_core/shop_core.dart';
 
 class ProductCard extends StatelessWidget {
   final Product product;

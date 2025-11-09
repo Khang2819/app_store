@@ -1,6 +1,6 @@
 import 'package:bloc_app/core/localization_utils.dart';
 import 'package:flutter/material.dart';
-import '../../data/models/category_model.dart';
+import 'package:shop_core/shop_core.dart';
 
 class CategoryGrid extends StatelessWidget {
   final List<Category> categories;

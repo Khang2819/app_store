@@ -5,7 +5,7 @@ import 'package:bloc_app/presentation/screens/person_screen.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 
-import '../../data/repositories/product_repository.dart';
+import 'package:shop_core/shop_core.dart';
 import '../../l10n/app_localizations.dart';
 import '../bloc/navigation/navigation_bloc.dart';
 import '../bloc/navigation/navigation_state.dart';

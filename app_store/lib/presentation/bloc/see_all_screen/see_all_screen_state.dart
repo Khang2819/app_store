@@ -1,4 +1,4 @@
-import 'package:bloc_app/data/models/product_model.dart';
+import 'package:shop_core/shop_core.dart';
 import 'package:equatable/equatable.dart';
 
 class SeeAllScreenState extends Equatable {

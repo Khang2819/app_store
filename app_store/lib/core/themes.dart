@@ -76,6 +76,7 @@ class AppThemes {
     ),
     chipTheme: ChipThemeData(
       backgroundColor: Colors.grey.shade200,
+      // ignore: deprecated_member_use
       selectedColor: primaryColor.withOpacity(0.2),
       labelStyle: const TextStyle(color: Colors.black87),
       shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(20)),
@@ -150,6 +151,7 @@ class AppThemes {
     ),
     chipTheme: ChipThemeData(
       backgroundColor: Colors.grey.shade800,
+      // ignore: deprecated_member_use
       selectedColor: primaryColor.withOpacity(0.3),
       labelStyle: const TextStyle(color: Colors.white),
       shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(20)),

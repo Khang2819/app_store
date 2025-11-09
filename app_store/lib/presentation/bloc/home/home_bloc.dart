@@ -1,6 +1,6 @@
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
-import '../../../data/repositories/product_repository.dart';
+import 'package:shop_core/shop_core.dart';
 import 'home_event.dart';
 import 'home_state.dart';
 

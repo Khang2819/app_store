@@ -2,7 +2,7 @@ import 'package:bloc_app/core/localization_utils.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 
-import '../../data/models/category_model.dart';
+import 'package:shop_core/shop_core.dart';
 import '../bloc/category_products/category_products_bloc.dart';
 import '../bloc/category_products/category_products_event.dart';
 import '../bloc/category_products/category_products_state.dart';

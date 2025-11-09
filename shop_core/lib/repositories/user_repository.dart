@@ -1,8 +1,9 @@
-import 'package:bloc_app/data/models/users_model.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:firebase_storage/firebase_storage.dart';
 import 'package:image_picker/image_picker.dart';
+
+import '../models/users_model.dart';
 
 // Lớp Exception tùy chỉnh cho các lỗi liên quan đến User
 class UserException implements Exception {
