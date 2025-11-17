@@ -30,6 +30,13 @@ environment:
 dependencies:
   flutter:
     sdk: flutter
+  flutter_bloc: ^9.1.1
+  shop_core:
+    path: ../shop_core
+
+  go_router: ^16.0.0
+  equatable: ^2.0.7
+  firebase_core: ^4.0.0
 
   # The following adds the Cupertino Icons font to your application.
   # Use with the CupertinoIcons class for iOS style icons.
@@ -38,9 +45,6 @@ dependencies:
 dev_dependencies:
   flutter_test:
     sdk: flutter
-
-  shop_core:
-    path: ../shop_core
 
   # The "flutter_lints" package below contains a set of recommended lints to
   # encourage good coding practices. The lint set provided by the package is

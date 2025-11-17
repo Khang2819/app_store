@@ -7,6 +7,7 @@ class UsersModels {
   final String? photoUrl;
   final Timestamp? createdAt;
   final String? provider;
+  final String role;
 
   UsersModels({
     required this.id,
@@ -15,17 +16,18 @@ class UsersModels {
     this.photoUrl,
     this.createdAt,
     this.provider,
+    this.role = 'user',
   });
 
-  factory UsersModels.fromFirestore(DocumentSnapshot doc) {
-    Map data = doc.data() as Map<String, dynamic>;
+  factory UsersModels.fromMap(Map<String, dynamic> map) {
     return UsersModels(
-      id: doc.id,
-      name: data['name'],
-      email: data['email'],
-      photoUrl: data['photoUrl'],
-      createdAt: data['createdAt'] as Timestamp?,
-      provider: data['provider'],
+      id: map['id'] as String,
+      name: map['name'] as String?,
+      email: map['email'] as String?,
+      photoUrl: map['photoUrl'] as String?,
+      createdAt: map['createdAt'] as Timestamp,
+      provider: map['provider'] as String,
+      role: map['role'] as String? ?? 'user',
     );
   }
   Map<String, dynamic> toMap() => {
@@ -34,5 +36,6 @@ class UsersModels {
     'photoUrl': photoUrl,
     'createdAt': createdAt,
     'provider': provider,
+    'role': role,
   };
 }
