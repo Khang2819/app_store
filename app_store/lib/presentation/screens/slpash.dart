@@ -1,4 +1,4 @@
-import 'package:bloc_app/assets/app_vector.dart';
+import 'package:shop_core/assets/app_vector.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_svg/svg.dart';

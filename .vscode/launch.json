@@ -1,0 +1,68 @@
+{
+    // Use IntelliSense to learn about possible attributes.
+    // Hover to view descriptions of existing attributes.
+    // For more information, visit: https://go.microsoft.com/fwlink/?linkid=830387
+    "version": "0.2.0",
+    "configurations": [
+        {
+            "name": "app_store",
+            "cwd": "app_store",
+            "request": "launch",
+            "type": "dart"
+        },
+        {
+            "name": "app_store (profile mode)",
+            "cwd": "app_store",
+            "request": "launch",
+            "type": "dart",
+            "flutterMode": "profile"
+        },
+        {
+            "name": "app_store (release mode)",
+            "cwd": "app_store",
+            "request": "launch",
+            "type": "dart",
+            "flutterMode": "release"
+        },
+        {
+            "name": "shop_admin_web",
+            "cwd": "shop_admin_web",
+            "request": "launch",
+            "type": "dart"
+        },
+        {
+            "name": "shop_admin_web (profile mode)",
+            "cwd": "shop_admin_web",
+            "request": "launch",
+            "type": "dart",
+            "flutterMode": "profile"
+        },
+        {
+            "name": "shop_admin_web (release mode)",
+            "cwd": "shop_admin_web",
+            "request": "launch",
+            "type": "dart",
+            "flutterMode": "release"
+        },
+        {
+            "name": "shop_core",
+            "cwd": "shop_core",
+            "request": "launch",
+            "type": "dart"
+        },
+        {
+            "name": "shop_core (profile mode)",
+            "cwd": "shop_core",
+            "request": "launch",
+            "type": "dart",
+            "flutterMode": "profile"
+        },
+        {
+            "name": "shop_core (release mode)",
+            "cwd": "shop_core",
+            "request": "launch",
+            "type": "dart",
+            "flutterMode": "release"
+        }
+    ]
+}

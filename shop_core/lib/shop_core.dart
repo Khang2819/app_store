@@ -13,3 +13,7 @@ export 'repositories/auth_login.dart';
 export 'repositories/cart_repository.dart';
 export 'repositories/product_repository.dart';
 export 'repositories/user_repository.dart';
+
+// image
+
+export 'assets/app_vector.dart';

@@ -1,5 +1,6 @@
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:firebase_auth/firebase_auth.dart';
+import 'package:flutter/foundation.dart';
 import 'package:google_sign_in/google_sign_in.dart';
 
 import '../models/users_model.dart';
@@ -14,8 +15,15 @@ class AuthException implements Exception {
 
 class AuthRepository {
   final FirebaseAuth _firebaseAuth = FirebaseAuth.instance;
-  final GoogleSignIn _googleSignIn = GoogleSignIn();
+  // final GoogleSignIn _googleSignIn = GoogleSignIn();
+  GoogleSignIn? _googleSignIn;
   final FirebaseFirestore _firestore = FirebaseFirestore.instance;
+
+  AuthRepository({bool isWebAdmin = false}) {
+    if (!kIsWeb && !isWebAdmin) {
+      _googleSignIn = GoogleSignIn();
+    }
+  }
 
   Stream<User?> get userChanges => _firebaseAuth.authStateChanges();
 
@@ -66,9 +74,12 @@ class AuthRepository {
   }
 
   Future<UserCredential> signInWithGoogle() async {
+    if (kIsWeb || _googleSignIn == null) {
+      throw AuthException('Google Sign-In not supported on Web Admin');
+    }
     try {
-      await _googleSignIn.signOut();
-      final GoogleSignInAccount? googleUser = await _googleSignIn.signIn();
+      await _googleSignIn?.signOut();
+      final GoogleSignInAccount? googleUser = await _googleSignIn?.signIn();
       if (googleUser == null) {
         throw AuthException('google_sign_in_cancelled');
       }
@@ -116,7 +127,7 @@ class AuthRepository {
   // Đăng xuất
   Future<void> signOut() async {
     await _firebaseAuth.signOut();
-    await _googleSignIn.signOut();
+    await _googleSignIn?.signOut();
   }
 
   String _mapFirebaseErrorToMessage(String code) {

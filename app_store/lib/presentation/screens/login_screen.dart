@@ -4,8 +4,8 @@ import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:flutter_svg/svg.dart';
 import 'package:go_router/go_router.dart';
 import 'package:loader_overlay/loader_overlay.dart';
+import 'package:shop_core/shop_core.dart';
 
-import '../../assets/app_vector.dart';
 import '../../core/localization_utils.dart';
 import '../../core/snackbar_utils.dart';
 import '../../l10n/app_localizations.dart';

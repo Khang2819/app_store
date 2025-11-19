@@ -19,14 +19,19 @@ class MyApp extends StatelessWidget {
   const MyApp({super.key});
   @override
   Widget build(BuildContext context) {
-    return MultiBlocProvider(
-      providers: [
-        BlocProvider(create: (context) => AuthAdminBloc(AuthRepository())),
-      ],
-      child: MaterialApp.router(
-        title: 'Admin',
-        debugShowCheckedModeBanner: false,
-        routerConfig: WebRouter.router,
+    final authRepository = AuthRepository(isWebAdmin: true);
+    return RepositoryProvider.value(
+      value: authRepository,
+      // create: (context) => AuthRepository(),
+      child: MultiBlocProvider(
+        providers: [
+          BlocProvider(create: (context) => AuthAdminBloc(authRepository)),
+        ],
+        child: MaterialApp.router(
+          title: 'Admin',
+          debugShowCheckedModeBanner: false,
+          routerConfig: WebRouter.router,
+        ),
       ),
     );
   }
