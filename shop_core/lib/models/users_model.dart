@@ -19,15 +19,16 @@ class UsersModels {
     this.role = 'user',
   });
 
-  factory UsersModels.fromMap(Map<String, dynamic> map) {
+  factory UsersModels.fromFirestore(DocumentSnapshot doc) {
+    final data = doc.data() as Map<String, dynamic>;
     return UsersModels(
-      id: map['id'] as String,
-      name: map['name'] as String?,
-      email: map['email'] as String?,
-      photoUrl: map['photoUrl'] as String?,
-      createdAt: map['createdAt'] as Timestamp,
-      provider: map['provider'] as String,
-      role: map['role'] as String? ?? 'user',
+      id: doc.id,
+      name: data['name'] as String?,
+      email: data['email'] as String?,
+      photoUrl: data['photoUrl'] as String?,
+      createdAt: data['createdAt'] as Timestamp,
+      provider: data['provider'] as String,
+      role: data['role'] as String? ?? 'user',
     );
   }
   Map<String, dynamic> toMap() => {

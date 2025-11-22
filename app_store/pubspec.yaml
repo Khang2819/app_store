@@ -27,6 +27,7 @@ dependencies:
   flutter_rating_bar: ^4.0.1
   firebase_auth: ^6.0.1
   equatable: ^2.0.7
+  image_picker: ^1.2.0
   shop_core:
     path: ../shop_core
 

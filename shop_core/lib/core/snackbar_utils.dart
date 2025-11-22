@@ -7,14 +7,14 @@ class SnackbarUtils {
   static void showSuccess(
     BuildContext context,
     String message,
-    AppLocalizations language,
+    AppLocalizations? language,
   ) {
     final snackBar = SnackBar(
       elevation: 0,
       behavior: SnackBarBehavior.floating,
       backgroundColor: Colors.transparent,
       content: AwesomeSnackbarContent(
-        title: language.success,
+        title: language?.success ?? 'Thành công 🎉',
         message: message,
         contentType: ContentType.success,
       ),

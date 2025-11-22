@@ -1,9 +1,8 @@
-import 'package:bloc_app/l10n/app_localizations.dart';
+import 'package:shop_core/l10n/app_localizations.dart';
 import 'package:bloc_app/presentation/widgets/my_search_bar.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:go_router/go_router.dart';
-import '../../core/snackbar_utils.dart';
 import 'package:shop_core/shop_core.dart';
 import '../bloc/home/home_bloc.dart';
 import '../bloc/home/home_event.dart';

@@ -1,4 +1,4 @@
-import 'package:bloc_app/core/localization_utils.dart';
+import 'package:shop_core/core/localization_utils.dart';
 import 'package:shop_core/shop_core.dart';
 import 'package:bloc_app/presentation/widgets/home_appbar.dart';
 import 'package:flutter/material.dart';

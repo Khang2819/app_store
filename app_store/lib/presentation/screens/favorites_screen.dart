@@ -1,4 +1,4 @@
-import 'package:bloc_app/l10n/app_localizations.dart';
+import 'package:shop_core/l10n/app_localizations.dart';
 import 'package:bloc_app/presentation/bloc/favorites/favorites_bloc.dart';
 import 'package:bloc_app/presentation/bloc/favorites/favorites_event.dart';
 import 'package:bloc_app/presentation/bloc/favorites/favorites_state.dart';

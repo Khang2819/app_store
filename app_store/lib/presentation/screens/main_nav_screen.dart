@@ -4,9 +4,9 @@ import 'package:bloc_app/presentation/screens/home_screen.dart';
 import 'package:bloc_app/presentation/screens/person_screen.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
+import 'package:shop_core/l10n/app_localizations.dart';
 
 import 'package:shop_core/shop_core.dart';
-import '../../l10n/app_localizations.dart';
 import '../bloc/navigation/navigation_bloc.dart';
 import '../bloc/navigation/navigation_state.dart';
 import '../bloc/search/search_bloc.dart';

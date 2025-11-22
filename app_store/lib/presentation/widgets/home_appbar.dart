@@ -47,6 +47,7 @@ class HomeAppbar extends StatelessWidget implements PreferredSizeWidget {
                   child: ClipOval(
                     child: Image.asset(
                       AppVector.icon,
+                      package: 'shop_core',
                       fit: BoxFit.contain,
                       width: 36,
                       height: 36,

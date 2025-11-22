@@ -1,6 +1,5 @@
 import 'package:equatable/equatable.dart';
-
-import '../../../core/utils.dart';
+import 'package:shop_core/shop_core.dart';
 
 class AuthState extends Equatable {
   final String name;

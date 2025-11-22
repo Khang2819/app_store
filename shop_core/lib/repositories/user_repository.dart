@@ -30,7 +30,7 @@ class UserRepository {
       if (!doc.exists) {
         throw UserException("Không tìm thấy thông tin người dùng.");
       }
-      return UsersModels.fromMap(doc.data()!);
+      return UsersModels.fromFirestore(doc);
     } catch (e) {
       throw UserException("Lỗi khi lấy thông tin người dùng: ${e.toString()}");
     }

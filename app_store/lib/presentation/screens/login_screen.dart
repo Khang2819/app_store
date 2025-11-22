@@ -4,11 +4,9 @@ import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:flutter_svg/svg.dart';
 import 'package:go_router/go_router.dart';
 import 'package:loader_overlay/loader_overlay.dart';
+import 'package:shop_core/l10n/app_localizations.dart';
 import 'package:shop_core/shop_core.dart';
 
-import '../../core/localization_utils.dart';
-import '../../core/snackbar_utils.dart';
-import '../../l10n/app_localizations.dart';
 import '../bloc/auth/auth_bloc.dart';
 import '../bloc/auth/auth_even.dart';
 import '../bloc/auth/auth_state.dart';
@@ -182,6 +180,7 @@ class _LoginScreenState extends State<LoginScreen> {
                             },
                             child: SvgPicture.asset(
                               AppVector.google,
+                              package: 'shop_core',
                               width: 24,
                               height: 24,
                             ),
@@ -200,6 +199,7 @@ class _LoginScreenState extends State<LoginScreen> {
                             },
                             child: SvgPicture.asset(
                               AppVector.facebook,
+                              package: 'shop_core',
                               width: 24,
                               height: 24,
                             ),

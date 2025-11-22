@@ -2,8 +2,8 @@ import 'package:bloc_app/presentation/widgets/home_appbar.dart';
 import 'package:bloc_app/presentation/widgets/my_search_bar.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
+import 'package:shop_core/l10n/app_localizations.dart';
 
-import '../../l10n/app_localizations.dart';
 import '../bloc/home/home_bloc.dart';
 import '../bloc/search/search_bloc.dart';
 import '../bloc/search/search_event.dart';

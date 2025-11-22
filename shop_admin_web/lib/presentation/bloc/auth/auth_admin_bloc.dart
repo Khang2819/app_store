@@ -1,17 +1,17 @@
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:shop_core/shop_core.dart';
-import 'auth_event.dart';
-import 'auth_state.dart';
+import 'auth_admin_event.dart';
+import 'auth_admin_state.dart';
 
-class AuthAdminBloc extends Bloc<AuthEvent, AuthState> {
+class AuthAdminBloc extends Bloc<AuthAdminEvent, AuthAdminState> {
   final AuthRepository authRepository;
-  AuthAdminBloc(this.authRepository) : super(const AuthState()) {
+  AuthAdminBloc(this.authRepository) : super(const AuthAdminState()) {
     on<LoginRequested>(_onLoginRequested);
   }
 
   Future<void> _onLoginRequested(
     LoginRequested event,
-    Emitter<AuthState> emit,
+    Emitter<AuthAdminState> emit,
   ) async {
     emit(state.copyWith(isLoading: true, errorMessage: null));
     try {

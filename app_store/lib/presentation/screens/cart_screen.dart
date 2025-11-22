@@ -1,4 +1,4 @@
-import 'package:bloc_app/l10n/app_localizations.dart';
+import 'package:shop_core/l10n/app_localizations.dart';
 import 'package:bloc_app/presentation/bloc/cart/cart_bloc.dart';
 import 'package:bloc_app/presentation/bloc/cart/cart_state.dart';
 import 'package:bloc_app/presentation/widgets/cart_item_card.dart';

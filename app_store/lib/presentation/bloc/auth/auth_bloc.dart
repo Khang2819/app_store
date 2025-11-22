@@ -2,8 +2,6 @@ import 'package:bloc_app/presentation/bloc/auth/auth_even.dart';
 import 'package:bloc_app/presentation/bloc/auth/auth_state.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 
-import '../../../core/utils.dart';
-import '../../../core/validators.dart';
 import 'package:shop_core/shop_core.dart';
 
 class AuthBloc extends Bloc<AuthEvent, AuthState> {

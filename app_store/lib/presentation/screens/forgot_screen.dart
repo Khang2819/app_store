@@ -1,12 +1,12 @@
-import 'package:bloc_app/core/localization_utils.dart';
+// import 'package:shop_core/core/localization_utils.dart';
 import 'package:bloc_app/presentation/bloc/auth/auth_bloc.dart';
 import 'package:bloc_app/presentation/bloc/auth/auth_even.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:go_router/go_router.dart';
+import 'package:shop_core/l10n/app_localizations.dart';
+import 'package:shop_core/shop_core.dart';
 
-import '../../core/snackbar_utils.dart';
-import '../../l10n/app_localizations.dart';
 import '../bloc/auth/auth_state.dart';
 
 class ForgotScreen extends StatefulWidget {

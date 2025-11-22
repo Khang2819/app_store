@@ -1,6 +1,6 @@
 import 'package:equatable/equatable.dart';
 
-class AuthState extends Equatable {
+class AuthAdminState extends Equatable {
   final String name;
   final String email;
   final String password;
@@ -8,7 +8,7 @@ class AuthState extends Equatable {
   final bool isSuccess;
   final bool isLoading;
 
-  const AuthState({
+  const AuthAdminState({
     this.name = '',
     this.email = '',
     this.password = '',
@@ -16,7 +16,7 @@ class AuthState extends Equatable {
     this.isSuccess = false,
     this.isLoading = false,
   });
-  AuthState copyWith({
+  AuthAdminState copyWith({
     String? name,
     String? email,
     String? password,
@@ -24,7 +24,7 @@ class AuthState extends Equatable {
     bool? isSuccess,
     bool? isLoading,
   }) {
-    return AuthState(
+    return AuthAdminState(
       name: name ?? this.name,
       email: email ?? this.email,
       password: password ?? this.password,

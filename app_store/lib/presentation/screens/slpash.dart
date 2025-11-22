@@ -42,7 +42,12 @@ class _SplashScreenState extends State<SplashScreen> {
         child: Column(
           mainAxisAlignment: MainAxisAlignment.center,
           children: [
-            SvgPicture.asset(AppVector.logo, width: 150, height: 150),
+            SvgPicture.asset(
+              AppVector.logo,
+              package: 'shop_core',
+              width: 150,
+              height: 150,
+            ),
             const SizedBox(height: 20),
             Text(
               'Shop Coffee',

@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
-import '../l10n/app_localizations.dart';
 import 'package:shop_core/shop_core.dart';
+
+import '../l10n/app_localizations.dart';
 
 class LocalizationUtils {
   /// Dịch một mã lỗi (error key) từ BLoC sang văn bản

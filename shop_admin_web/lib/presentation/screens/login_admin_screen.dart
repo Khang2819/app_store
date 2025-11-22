@@ -1,9 +1,12 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
+import 'package:go_router/go_router.dart';
 import 'package:shop_core/assets/app_vector.dart';
+import 'package:shop_core/shop_core.dart';
 import '../bloc/auth/auth_admin_bloc.dart';
-import '../bloc/auth/auth_event.dart';
-import '../bloc/auth/auth_state.dart';
+import '../bloc/auth/auth_admin_event.dart';
+import '../bloc/auth/auth_admin_state.dart';
+import '../widgets/custom_text_field.dart';
 
 class LoginAdminScreen extends StatefulWidget {
   const LoginAdminScreen({super.key});
@@ -39,6 +42,7 @@ class _LoginScreenState extends State<LoginAdminScreen> {
                     child: Center(
                       child: Image.asset(
                         AppVector.icon,
+                        package: 'shop_core',
                         width: 420,
                         height: 150,
                       ),
@@ -65,7 +69,7 @@ class _LoginScreenState extends State<LoginAdminScreen> {
   }
 
   Widget _buildLoginForm(BuildContext context) {
-    return BlocConsumer<AuthAdminBloc, AuthState>(
+    return BlocConsumer<AuthAdminBloc, AuthAdminState>(
       listener: (context, state) {
         if (state.errorMessage != null) {
           ScaffoldMessenger.of(context).showSnackBar(
@@ -77,68 +81,62 @@ class _LoginScreenState extends State<LoginAdminScreen> {
         }
 
         if (state.isSuccess) {
-          ScaffoldMessenger.of(context).showSnackBar(
-            const SnackBar(
-              content: Text("Đăng nhập thành công!"),
-              backgroundColor: Colors.green,
-            ),
-          );
+          SnackbarUtils.showSuccess(context, 'Đăng nhập thành công', null);
+          context.pushReplacement('/dashboard');
         }
       },
       builder: (context, state) {
         return Container(
-          padding: const EdgeInsets.all(32),
+          padding: const EdgeInsets.all(40),
           decoration: BoxDecoration(
             color: Colors.white,
-            borderRadius: BorderRadius.circular(24),
+            borderRadius: BorderRadius.circular(28),
             boxShadow: [
               BoxShadow(
                 // ignore: deprecated_member_use
-                color: Colors.black12.withOpacity(0.08),
-                blurRadius: 20,
-                offset: const Offset(0, 8),
+                color: Color(0xFF667eea).withOpacity(0.8),
+                blurRadius: 30,
+                offset: const Offset(0, 12),
+                spreadRadius: 0,
               ),
             ],
           ),
           child: Column(
             children: [
               const Text(
-                "Admin Login",
+                "Chào mừng trở lại! 👋",
                 style: TextStyle(
-                  fontSize: 32,
+                  fontSize: 30,
                   fontWeight: FontWeight.bold,
-                  color: Color(0xFF1A1A1A),
+                  color: Color(0xFF1E293B),
                 ),
               ),
-              const SizedBox(height: 32),
-
-              // Email
-              TextField(
+              const Text(
+                'Đăng nhập để tiếp tục quản trị',
+                style: TextStyle(fontSize: 15, color: Colors.black45),
+              ),
+              const SizedBox(height: 40),
+              CustomTextField(
                 controller: emailController,
-                decoration: InputDecoration(
-                  labelText: "Email",
-                  filled: true,
-                  fillColor: Colors.grey.shade100,
-                  border: OutlineInputBorder(
-                    borderRadius: BorderRadius.circular(14),
-                    borderSide: BorderSide.none,
-                  ),
+                labelText: 'Email',
+                icon: Icon(
+                  Icons.email_outlined,
+                  color: Colors.grey.shade600,
+                  size: 22,
                 ),
               ),
-              const SizedBox(height: 20),
+              // Email
+              const SizedBox(height: 25),
 
               // Password
-              TextField(
+              CustomTextField(
                 controller: passwordController,
-                obscureText: true,
-                decoration: InputDecoration(
-                  labelText: "Password",
-                  filled: true,
-                  fillColor: Colors.grey.shade100,
-                  border: OutlineInputBorder(
-                    borderRadius: BorderRadius.circular(14),
-                    borderSide: BorderSide.none,
-                  ),
+                labelText: 'Password',
+                isPassword: true,
+                icon: Icon(
+                  Icons.lock_outline,
+                  color: Colors.grey.shade600,
+                  size: 22,
                 ),
               ),
               const SizedBox(height: 28),
