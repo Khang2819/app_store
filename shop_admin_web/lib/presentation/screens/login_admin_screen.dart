@@ -1,7 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:go_router/go_router.dart';
-import 'package:shop_core/assets/app_vector.dart';
 import 'package:shop_core/shop_core.dart';
 import '../bloc/auth/auth_admin_bloc.dart';
 import '../bloc/auth/auth_admin_event.dart';
@@ -34,18 +33,46 @@ class _LoginScreenState extends State<LoginAdminScreen> {
                   child: Container(
                     decoration: const BoxDecoration(
                       gradient: LinearGradient(
-                        colors: [Color(0xFF1A2A6C), Color(0xFF1A73E8)],
+                        colors: [
+                          Color(0xFF667eea),
+                          Color(0xFF764ba2),
+                          Color(0xFF1A73E8),
+                        ],
                         begin: Alignment.topLeft,
                         end: Alignment.bottomRight,
                       ),
                     ),
-                    child: Center(
-                      child: Image.asset(
-                        AppVector.icon,
-                        package: 'shop_core',
-                        width: 420,
-                        height: 150,
-                      ),
+                    child: Column(
+                      mainAxisAlignment: MainAxisAlignment.center,
+                      children: [
+                        Container(
+                          padding: EdgeInsets.symmetric(
+                            horizontal: 10,
+                            vertical: 20,
+                          ),
+                          decoration: BoxDecoration(
+                            // ignore: deprecated_member_use
+                            color: Colors.white.withOpacity(0.3),
+                            border: Border.all(color: Colors.white),
+                            borderRadius: BorderRadius.circular(10),
+                          ),
+                          child: Image.asset(
+                            AppVector.icon,
+                            package: 'shop_core',
+                            width: 420,
+                            height: 150,
+                          ),
+                        ),
+                        const SizedBox(height: 20),
+                        Text(
+                          'Quản lý hệ thống Admin',
+                          style: TextStyle(
+                            color: Colors.white,
+                            fontSize: 30,
+                            fontWeight: FontWeight.bold,
+                          ),
+                        ),
+                      ],
                     ),
                   ),
                 ),

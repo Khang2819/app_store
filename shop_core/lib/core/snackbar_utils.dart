@@ -28,14 +28,14 @@ class SnackbarUtils {
   static void showError(
     BuildContext context,
     String message,
-    AppLocalizations language,
+    AppLocalizations? language,
   ) {
     final snackBar = SnackBar(
       elevation: 0,
       behavior: SnackBarBehavior.floating,
       backgroundColor: Colors.transparent,
       content: AwesomeSnackbarContent(
-        title: language.error,
+        title: language?.error ?? 'Thất bại',
         message: message,
         contentType: ContentType.failure,
       ),

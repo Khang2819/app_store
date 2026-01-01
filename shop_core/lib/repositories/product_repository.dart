@@ -1,6 +1,5 @@
 import 'package:cloud_firestore/cloud_firestore.dart';
 
-import '../models/banner_model.dart';
 import '../models/category_model.dart';
 import '../models/product_model.dart';
 import '../models/review_model.dart';
@@ -197,18 +196,6 @@ class ProductRepository {
     return snapshot.docs.map((doc) => Product.fromFirestore(doc)).toList();
   }
 
-  // này là baner quản cáo nha
-  // lấy từ firebase
-
-  Future<List<BannerModel>> fetchBanners() async {
-    final snapshot =
-        await _firestore
-            .collection('banners')
-            .orderBy('order', descending: false)
-            .get();
-    return snapshot.docs.map((doc) => BannerModel.fromFirestore(doc)).toList();
-  }
-
   Future<List<Product>> fetchRelatedProducts(
     String categoryId,
     String currentProductId,
@@ -228,5 +215,54 @@ class ProductRepository {
         .where((product) => product.id != currentProductId)
         .take(5)
         .toList();
+  }
+
+  Future<void> fetchUpdateProdust({
+    required String productId,
+    required Map<String, String> name,
+    required int price,
+    required Map<String, String> description,
+  }) async {
+    try {
+      await _firestore.collection('products').doc(productId).update({
+        'name': name,
+        'price': price,
+        'description': description,
+      });
+    } catch (e) {
+      throw Expando('Lỗi thêm sản phẩm $e');
+    }
+  }
+
+  Future<void> fetchDeleteProduct({required String productId}) async {
+    try {
+      await _firestore.collection('products').doc(productId).delete();
+    } catch (e) {
+      throw Expando('Lỗi xóa sản phẩm $e');
+    }
+  }
+
+  Future<void> addProduct({
+    required Map<String, dynamic> name,
+    required String imageUrl,
+    required int price,
+    required Map<String, dynamic> description,
+    required String categoryId,
+  }) async {
+    try {
+      await _firestore.collection('products').add({
+        'name': name,
+        'imageUrl': imageUrl,
+        'price': price,
+        'description': description,
+        'categoryId': categoryId,
+        'averageRating': 0.0,
+        'reviewCount': 0,
+        'createdAt': FieldValue.serverTimestamp(),
+        'soldCount': 0,
+      });
+    } catch (e) {
+      throw Expando('Lỗi xóa sản phẩm $e');
+    }
   }
 }

@@ -6,8 +6,9 @@ import 'home_state.dart';
 
 class HomeBloc extends Bloc<HomeEvent, HomeState> {
   final ProductRepository _repository;
+  final BannerRepository _bannerRepository;
 
-  HomeBloc(this._repository) : super(HomeState()) {
+  HomeBloc(this._repository, this._bannerRepository) : super(HomeState()) {
     on<LoadHomeData>(_onLoadHomeData);
     on<ToggleFavorite>(_onToggleFavorite);
   }
@@ -21,7 +22,7 @@ class HomeBloc extends Bloc<HomeEvent, HomeState> {
     try {
       final products = await _repository.fetchProducts();
       final categories = await _repository.fetchCategories();
-      final banners = await _repository.fetchBanners();
+      final banners = await _bannerRepository.fetchBanners();
       List<String> favorites = [];
       if (user != null) {
         favorites = await _repository.fetchFavorites(user.uid);

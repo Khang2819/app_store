@@ -15,7 +15,6 @@ class AuthException implements Exception {
 
 class AuthRepository {
   final FirebaseAuth _firebaseAuth = FirebaseAuth.instance;
-  // final GoogleSignIn _googleSignIn = GoogleSignIn();
   GoogleSignIn? _googleSignIn;
   final FirebaseFirestore _firestore = FirebaseFirestore.instance;
 
@@ -122,6 +121,15 @@ class AuthRepository {
     } on FirebaseAuthException catch (e) {
       throw AuthException(_mapFirebaseErrorToMessage(e.code));
     }
+  }
+
+  // lấy user từ firebase
+  Future<UsersModels> getAdminUserModel(String uid) async {
+    final snapshot = await _firestore.collection('users').doc(uid).get();
+    if (!snapshot.exists) {
+      throw Exception('Không tìm thấy dữ liệu người dùng trong database.');
+    }
+    return UsersModels.fromFirestore(snapshot);
   }
 
   // Đăng xuất

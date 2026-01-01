@@ -2,10 +2,19 @@ import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:shop_admin_web/firebase_options.dart';
 import 'package:firebase_core/firebase_core.dart';
+import 'package:shop_admin_web/presentation/bloc/banner/banner_admin_bloc.dart';
+import 'package:shop_admin_web/presentation/bloc/banner/banner_admin_event.dart';
+import 'package:shop_admin_web/presentation/bloc/products/products_admin_event.dart';
 import 'package:shop_admin_web/routes/web_router.dart';
-import 'package:shop_core/repositories/auth_login.dart';
+import 'package:shop_core/shop_core.dart';
 
 import 'presentation/bloc/auth/auth_admin_bloc.dart';
+import 'presentation/bloc/dashboard/admin_dashboard_bloc.dart';
+import 'presentation/bloc/dashboard/admin_dashboard_event.dart';
+import 'presentation/bloc/products/products_admin_bloc.dart';
+import 'presentation/bloc/sidebar/sidebar_bloc.dart';
+import 'presentation/bloc/users/users_admin_bloc.dart';
+import 'presentation/bloc/users/users_admin_event.dart';
 
 void main() async {
   WidgetsFlutterBinding.ensureInitialized();
@@ -20,12 +29,41 @@ class MyApp extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     final authRepository = AuthRepository(isWebAdmin: true);
+    final productRepository = ProductRepository();
+    final userRepository = UserRepository();
+    final bannerRepository = BannerRepository();
     return RepositoryProvider.value(
       value: authRepository,
-      // create: (context) => AuthRepository(),
+
       child: MultiBlocProvider(
         providers: [
           BlocProvider(create: (context) => AuthAdminBloc(authRepository)),
+          BlocProvider(create: (context) => SidebarBloc()),
+          BlocProvider(
+            create:
+                (context) => AdminDashboardBloc(
+                  productRepository: productRepository,
+                  userRepository: userRepository,
+                )..add(LoadDashboardData()),
+          ),
+          BlocProvider(
+            create:
+                (context) =>
+                    UsersAdminBloc(userRepository: userRepository)
+                      ..add((LoadUsers())),
+          ),
+          BlocProvider(
+            create:
+                (context) =>
+                    ProductsAdminBloc(productRepository: productRepository)
+                      ..add(LoadProducts()),
+          ),
+          BlocProvider(
+            create:
+                (context) =>
+                    BannerAdminBloc(bannerRepository: bannerRepository)
+                      ..add(LoadBanner()),
+          ),
         ],
         child: MaterialApp.router(
           title: 'Admin',

@@ -39,7 +39,10 @@ class MyApp extends StatelessWidget {
         BlocProvider(create: (context) => NavigationBloc()),
         BlocProvider(create: (context) => AuthBloc(AuthRepository())),
         BlocProvider(create: (context) => CartBloc(CartRepository())),
-        BlocProvider(create: (context) => HomeBloc(ProductRepository())),
+        BlocProvider(
+          create:
+              (context) => HomeBloc(ProductRepository(), BannerRepository()),
+        ),
       ],
       child: BlocBuilder<ThemeCubit, ThemeMode>(
         builder: (context, state) {
