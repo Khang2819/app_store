@@ -19,6 +19,8 @@ class CartLoaded extends CartState {
   List<Object> get props => [items, totalPrice];
 }
 
+class CartSuccess extends CartState {}
+
 class CartEmpty extends CartState {}
 
 class CartError extends CartState {

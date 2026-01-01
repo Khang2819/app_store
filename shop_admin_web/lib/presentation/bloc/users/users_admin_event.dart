@@ -29,3 +29,20 @@ class SearchUsers extends UsersAdminEvent {
   @override
   List<Object> get props => [query];
 }
+
+class AddUser extends UsersAdminEvent {
+  final String name;
+  final String email;
+  final String role;
+  final String password; // Thêm trường password
+
+  const AddUser({
+    required this.name,
+    required this.email,
+    required this.role,
+    required this.password,
+  });
+
+  @override
+  List<Object> get props => [name, email, role, password];
+}

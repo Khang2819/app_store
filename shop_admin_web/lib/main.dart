@@ -4,11 +4,13 @@ import 'package:shop_admin_web/firebase_options.dart';
 import 'package:firebase_core/firebase_core.dart';
 import 'package:shop_admin_web/presentation/bloc/banner/banner_admin_bloc.dart';
 import 'package:shop_admin_web/presentation/bloc/banner/banner_admin_event.dart';
+import 'package:shop_admin_web/presentation/bloc/category/category_admin_bloc.dart';
 import 'package:shop_admin_web/presentation/bloc/products/products_admin_event.dart';
 import 'package:shop_admin_web/routes/web_router.dart';
 import 'package:shop_core/shop_core.dart';
 
 import 'presentation/bloc/auth/auth_admin_bloc.dart';
+import 'presentation/bloc/category/category_admin_event.dart';
 import 'presentation/bloc/dashboard/admin_dashboard_bloc.dart';
 import 'presentation/bloc/dashboard/admin_dashboard_event.dart';
 import 'presentation/bloc/products/products_admin_bloc.dart';
@@ -18,9 +20,7 @@ import 'presentation/bloc/users/users_admin_event.dart';
 
 void main() async {
   WidgetsFlutterBinding.ensureInitialized();
-  await Firebase.initializeApp(
-    options: DefaultFirebaseOptions.currentPlatform, // web sẽ tự lấy config
-  );
+  await Firebase.initializeApp(options: DefaultFirebaseOptions.currentPlatform);
   runApp(const MyApp());
 }
 
@@ -63,6 +63,12 @@ class MyApp extends StatelessWidget {
                 (context) =>
                     BannerAdminBloc(bannerRepository: bannerRepository)
                       ..add(LoadBanner()),
+          ),
+          BlocProvider(
+            create:
+                (context) =>
+                    CategoryAdminBloc(productRepository: productRepository)
+                      ..add(LoadCategories()),
           ),
         ],
         child: MaterialApp.router(

@@ -7,6 +7,8 @@ export 'models/category_model.dart';
 export 'models/product_model.dart';
 export 'models/review_model.dart';
 export 'models/users_model.dart';
+export 'models/order_model.dart';
+export 'models/address_model.dart';
 
 // Export tất cả Repositories
 export 'repositories/auth_login.dart';
@@ -14,6 +16,7 @@ export 'repositories/cart_repository.dart';
 export 'repositories/product_repository.dart';
 export 'repositories/user_repository.dart';
 export 'repositories/banner_repository.dart';
+export 'repositories/order_repository.dart';
 
 // image
 

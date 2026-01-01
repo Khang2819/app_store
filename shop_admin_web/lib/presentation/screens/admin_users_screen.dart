@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:shop_core/shop_core.dart';
+import '../widgets/add_user_dialog.dart';
 import '../widgets/tablerow.dart';
 import '../bloc/users/users_admin_event.dart';
 
@@ -95,7 +96,12 @@ class UsersContext extends StatelessWidget {
                   icon: Icons.people,
                   buttonIcon: Icons.add_circle_outline,
                   buttonText: 'Thêm người dùng',
-                  onPressed: () {},
+                  onPressed: () {
+                    showDialog(
+                      context: context,
+                      builder: (context) => const AddUserDialog(),
+                    );
+                  },
                 ),
                 const SizedBox(height: 20),
                 Row(
@@ -147,9 +153,14 @@ class UsersContext extends StatelessWidget {
                     children: [
                       Row(
                         children: [
-                          const Expanded(
+                          Expanded(
                             child: SearchAdmin(
                               text: 'Tìm kiếm theo tên, email...',
+                              onChanged: (query) {
+                                context.read<UsersAdminBloc>().add(
+                                  SearchUsers(query),
+                                );
+                              },
                             ),
                           ),
                           const SizedBox(width: 12),

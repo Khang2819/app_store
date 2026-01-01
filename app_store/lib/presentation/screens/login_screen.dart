@@ -63,17 +63,16 @@ class _LoginScreenState extends State<LoginScreen> {
                     );
                     SnackbarUtils.showError(
                       context,
-                      translatedError ??
-                          language.unknown_error, // <-- Sửa ở đây
-                      language, // <-- Truyền language vào
+                      translatedError ?? language.unknown_error,
+                      language,
                     );
                   }
                   // Nếu đăng nhập thành công
                   else if (state.isSuccess) {
                     SnackbarUtils.showSuccess(
                       context,
-                      language.login_success, // <-- SỬA Ở ĐÂY
-                      language, // <-- Truyền language vào
+                      language.login_success,
+                      language,
                     );
                     context.read<CartBloc>().add(LoadCart());
                     context.go('/home');
@@ -85,7 +84,12 @@ class _LoginScreenState extends State<LoginScreen> {
                   crossAxisAlignment: CrossAxisAlignment.stretch,
                   children: [
                     const SizedBox(height: 50),
-                    SvgPicture.asset(AppVector.logo, width: 150, height: 150),
+                    SvgPicture.asset(
+                      AppVector.logo,
+                      package: 'shop_core',
+                      width: 150,
+                      height: 150,
+                    ),
                     const SizedBox(height: 40),
                     Textfile(
                       labelText: language.email,

@@ -12,6 +12,7 @@ class UsersAdminBloc extends Bloc<UsersAdminEvent, UsersAdminState> {
     on<UpdateUsers>(_onUpdateUsers);
     on<DeleteUsers>(_onDeleteUsers);
     on<SearchUsers>(_onSearchUsers);
+    on<AddUser>(_onAddUser);
   }
 
   Future<void> _onLoadUsers(
@@ -118,6 +119,24 @@ class UsersAdminBloc extends Bloc<UsersAdminEvent, UsersAdminState> {
           errorMessage: 'Lỗi không tìm kiếm được người dùng',
         ),
       );
+    }
+  }
+
+  Future<void> _onAddUser(AddUser event, Emitter<UsersAdminState> emit) async {
+    emit(state.copyWith(isLoading: true, errorMessage: null));
+    try {
+      await userRepository.addUser(
+        name: event.name,
+        email: event.email,
+        role: event.role,
+        password: event.password, // Truyền mật khẩu từ event
+      );
+
+      // Tải lại danh sách bằng hàm fetchAllUsers đã có trong repo của bạn
+      final users = await userRepository.fetchAllUsers();
+      emit(state.copyWith(isLoading: false, users: users, errorMessage: null));
+    } catch (e) {
+      emit(state.copyWith(isLoading: false, errorMessage: e.toString()));
     }
   }
 }

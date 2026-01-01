@@ -37,6 +37,7 @@ class AdminSidebar extends StatelessWidget {
       'route': '/orders',
     },
     {'title': 'Quảng cáo', 'icon': Icons.sell, 'route': '/banner'},
+    {'title': 'Doanh mục', 'icon': Icons.category, 'route': '/category'},
     {
       'title': 'Thông báo',
       'icon': Icons.notifications,

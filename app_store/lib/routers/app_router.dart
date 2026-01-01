@@ -2,6 +2,7 @@ import 'package:bloc_app/presentation/bloc/review/review_bloc.dart';
 import 'package:bloc_app/presentation/bloc/review/review_event.dart';
 import 'package:bloc_app/presentation/bloc/see_all_screen/see_all_screen_bloc.dart';
 import 'package:bloc_app/presentation/bloc/see_all_screen/see_all_screen_event.dart';
+import 'package:bloc_app/presentation/screens/checkout_screen.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:go_router/go_router.dart';
@@ -9,6 +10,8 @@ import 'package:shop_core/shop_core.dart';
 import '../presentation/bloc/auth/auth_bloc.dart';
 import '../presentation/bloc/category_products/category_products_bloc.dart';
 import '../presentation/bloc/favorites/favorites_bloc.dart';
+import '../presentation/bloc/order/order_bloc.dart';
+import '../presentation/bloc/order/order_event.dart';
 import '../presentation/bloc/product_detail/product_detail_bloc.dart';
 import '../presentation/bloc/product_detail/product_detail_event.dart';
 import '../presentation/screens/all_products_page.dart';
@@ -19,6 +22,7 @@ import '../presentation/screens/favorites_screen.dart';
 import '../presentation/screens/forgot_screen.dart';
 import '../presentation/screens/login_screen.dart';
 import '../presentation/screens/main_nav_screen.dart';
+import '../presentation/screens/order_history_screen.dart';
 import '../presentation/screens/product_detail_screen.dart';
 import '../presentation/screens/register_screen.dart';
 import '../presentation/screens/slpash.dart';
@@ -109,6 +113,26 @@ class AppRouter {
             create: (context) => CategoryProductsBloc(_productRepository),
             child: CategoryProductsScreen(category: category),
           );
+        },
+      ),
+      GoRoute(
+        path: '/order-history',
+        name: 'order-history',
+        builder:
+            (context, state) => BlocProvider(
+              // Khởi tạo Bloc và gọi ngay sự kiện Load dữ liệu
+              create:
+                  (context) =>
+                      OrderBloc(OrderRepository())..add(LoadOrderHistory()),
+              child: const OrderHistoryScreen(),
+            ),
+      ),
+      GoRoute(
+        path: '/checkout',
+        builder: (context, state) {
+          final amount =
+              state.extra as int; // Nhận tổng tiền truyền từ CartScreen
+          return CheckoutScreen(totalAmount: amount);
         },
       ),
 

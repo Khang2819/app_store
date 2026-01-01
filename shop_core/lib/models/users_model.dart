@@ -26,8 +26,8 @@ class UsersModels {
       name: data['name'] as String?,
       email: data['email'] as String?,
       photoUrl: data['photoUrl'] as String?,
-      createdAt: data['createdAt'] as Timestamp,
-      provider: data['provider'] as String,
+      createdAt: data['createdAt'] as Timestamp?,
+      provider: data['provider'] as String? ?? 'password',
       role: data['role'] as String? ?? 'user',
     );
   }

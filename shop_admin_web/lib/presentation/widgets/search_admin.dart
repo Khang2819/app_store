@@ -2,11 +2,13 @@ import 'package:flutter/material.dart';
 
 class SearchAdmin extends StatelessWidget {
   final String text;
-  const SearchAdmin({super.key, required this.text});
+  final Function(String)? onChanged;
+  const SearchAdmin({super.key, required this.text, this.onChanged});
 
   @override
   Widget build(BuildContext context) {
     return TextField(
+      onChanged: onChanged,
       decoration: InputDecoration(
         hintText: text,
         prefixIcon: Icon(Icons.search),

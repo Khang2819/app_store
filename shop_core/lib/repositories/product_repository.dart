@@ -119,6 +119,28 @@ class ProductRepository {
           'comment': comment,
           'timestamp': FieldValue.serverTimestamp(),
         });
+    final reviewsSnapshot =
+        await _firestore
+            .collection('products')
+            .doc(productId)
+            .collection('reviews')
+            .get();
+
+    final reviews = reviewsSnapshot.docs;
+    final int totalReviews = reviews.length;
+
+    // Tính trung bình cộng của các rating
+    final double averageRating =
+        reviews.fold(0.0, (sum, doc) => sum + (doc['rating'] as num)) /
+        totalReviews;
+
+    // 3. Cập nhật ngược lại vào tài liệu Product
+    await _firestore.collection('products').doc(productId).update({
+      'averageRating': double.parse(
+        averageRating.toStringAsFixed(1),
+      ), // Làm tròn 1 chữ số thập phân
+      'reviewCount': totalReviews,
+    });
   }
 
   // Thêm vào giỏ hàng
@@ -152,21 +174,28 @@ class ProductRepository {
     required String productId,
   }) async {
     try {
+      // 1. Lấy tất cả đơn hàng đã hoàn thành của người dùng
       final ordersSnapshot =
           await _firestore
               .collection('users')
               .doc(userId)
               .collection('orders')
-              .where('productId', isEqualTo: productId)
-              // Đảm bảo chỉ tính các đơn hàng đã thành công
-              .where('status', whereIn: ['paid', 'completed', 'delivered'])
-              .limit(1)
+              .where('status', isEqualTo: 'completed') // Chỉ tính đơn đã xong
               .get();
 
-      // Nếu tìm thấy bất kỳ đơn hàng nào khớp, trả về true
-      return ordersSnapshot.docs.isNotEmpty;
+      // 2. Duyệt qua từng đơn hàng (document)
+      for (var doc in ordersSnapshot.docs) {
+        final data = doc.data();
+        final List items = data['items'] as List? ?? [];
+
+        // 3. Kiểm tra xem trong danh sách items có productId này không
+        final hasProduct = items.any((item) => item['productId'] == productId);
+
+        if (hasProduct) return true; // Tìm thấy thì cho phép review ngay
+      }
+
+      return false; // Không tìm thấy trong bất kỳ đơn hàng nào
     } catch (e) {
-      // Mặc định là không cho phép nếu có lỗi
       return false;
     }
   }
@@ -217,17 +246,21 @@ class ProductRepository {
         .toList();
   }
 
-  Future<void> fetchUpdateProdust({
+  Future<void> fetchUpdateProduct({
     required String productId,
-    required Map<String, String> name,
+    required Map<String, dynamic> name,
     required int price,
-    required Map<String, String> description,
+    required Map<String, dynamic> description,
+    required String imageUrl, // Thêm trường ảnh nếu muốn sửa ảnh
+    required String categoryId,
   }) async {
     try {
       await _firestore.collection('products').doc(productId).update({
         'name': name,
         'price': price,
         'description': description,
+        'imageUrl': imageUrl,
+        'categoryId': categoryId,
       });
     } catch (e) {
       throw Expando('Lỗi thêm sản phẩm $e');

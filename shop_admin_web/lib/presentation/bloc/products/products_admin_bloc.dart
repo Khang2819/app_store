@@ -12,6 +12,7 @@ class ProductsAdminBloc extends Bloc<ProductsAdminEvent, ProductsAdminState> {
     on<UpdateProducts>(_onUpdateProducts);
     on<DeleteProducts>(_onDeleteProducts);
     on<AddProduct>(_onAddProduct);
+    on<SearchProducts>(_onSearchProducts);
   }
 
   Future<void> _onLoadProducts(
@@ -44,11 +45,13 @@ class ProductsAdminBloc extends Bloc<ProductsAdminEvent, ProductsAdminState> {
   ) async {
     emit(state.copyWith(isLoading: true, errorMessage: null));
     try {
-      await productRepository.fetchUpdateProdust(
+      await productRepository.fetchUpdateProduct(
         productId: event.productId,
         name: event.name,
         price: event.price,
         description: event.description,
+        imageUrl: event.imageUrl,
+        categoryId: event.categoryId,
       );
       final updateProduct = await productRepository.fetchProducts();
       emit(
@@ -122,6 +125,26 @@ class ProductsAdminBloc extends Bloc<ProductsAdminEvent, ProductsAdminState> {
         state.copyWith(
           isActionLoading: false,
           errorMessage: 'Lỗi không xác định khi thêm sản phẩm: ${e.toString()}',
+        ),
+      );
+    }
+  }
+
+  Future<void> _onSearchProducts(
+    SearchProducts event,
+    Emitter<ProductsAdminState> emit,
+  ) async {
+    emit(state.copyWith(isLoading: true, errorMessage: null));
+    try {
+      final results = await productRepository.searchProducts(event.query);
+      emit(
+        state.copyWith(isLoading: false, products: results, errorMessage: null),
+      );
+    } catch (e) {
+      emit(
+        state.copyWith(
+          isLoading: false,
+          errorMessage: 'Lỗi khi tìm kiếm sản phẩm: ${e.toString()}',
         ),
       );
     }

@@ -5,12 +5,14 @@ import 'cart_state.dart';
 
 class CartBloc extends Bloc<CartEvent, CartState> {
   final CartRepository _cartRepository;
+  final OrderRepository _orderRepository;
 
-  CartBloc(this._cartRepository) : super(CartLoading()) {
+  CartBloc(this._cartRepository, this._orderRepository) : super(CartLoading()) {
     on<LoadCart>(_onLoadCart);
     on<RemoveItemFromCart>(_onRemoveItemFromCart);
     on<UpdateItemQuantity>(_onUpdateItemQuantity);
     on<ClearCart>(_onClearCart);
+    on<CheckoutCart>(_onCheckoutCart);
   }
 
   Future<void> _onLoadCart(LoadCart event, Emitter<CartState> emit) async {
@@ -115,5 +117,28 @@ class CartBloc extends Bloc<CartEvent, CartState> {
   Future<void> _onClearCart(ClearCart event, Emitter<CartState> emit) async {
     // Chỉ cần phát ra trạng thái giỏ hàng trống
     emit(CartEmpty());
+  }
+
+  Future<void> _onCheckoutCart(
+    CheckoutCart event,
+    Emitter<CartState> emit,
+  ) async {
+    if (state is! CartLoaded) return;
+    final currentState = state as CartLoaded;
+
+    try {
+      emit(CartLoading());
+
+      // Gọi logic từ Repository thay vì viết trực tiếp ở đây
+      await _orderRepository.createOrder(
+        items: currentState.items,
+        totalAmount: event.totalAmount,
+        address: event.address,
+      );
+
+      emit(CartSuccess()); // Hoặc emit(CartEmpty()) tùy bạn xử lý UI
+    } catch (e) {
+      emit(CartError(e.toString()));
+    }
   }
 }

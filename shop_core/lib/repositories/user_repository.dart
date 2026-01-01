@@ -188,4 +188,33 @@ class UserRepository {
       'banned': bannedQuery.count ?? 0,
     };
   }
+
+  Future<void> addUser({
+    required String name,
+    required String email,
+    required String role,
+    required String password,
+  }) async {
+    try {
+      UserCredential userCredential = await _firebaseAuth
+          .createUserWithEmailAndPassword(email: email, password: password);
+
+      String? uid = userCredential.user?.uid;
+
+      if (uid != null) {
+        await _firestore.collection('users').doc(uid).set({
+          'name': name,
+          'email': email,
+          'role': role,
+          'password': password,
+          'status': 'active',
+          'provider': 'password',
+          'createdAt': FieldValue.serverTimestamp(),
+          'photoUrl': '',
+        });
+      }
+    } catch (e) {
+      throw UserException("Lỗi khi thêm người dùng: ${e.toString()}");
+    }
+  }
 }

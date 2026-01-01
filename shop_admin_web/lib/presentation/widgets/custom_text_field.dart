@@ -6,6 +6,7 @@ class CustomTextField extends StatefulWidget {
   final Icon icon;
   final bool isPassword;
   final TextInputType keyboardType;
+  final bool obscureText;
   const CustomTextField({
     super.key,
     required this.controller,
@@ -13,6 +14,7 @@ class CustomTextField extends StatefulWidget {
     required this.icon,
     this.isPassword = false,
     this.keyboardType = TextInputType.text,
+    this.obscureText = false,
   });
 
   @override

@@ -4,6 +4,7 @@ import 'package:go_router/go_router.dart';
 
 import '../presentation/bloc/auth/auth_admin_bloc.dart';
 import '../presentation/screens/admin_banner_screen.dart';
+import '../presentation/screens/admin_category_screen.dart';
 import '../presentation/screens/admin_dashboard_screen.dart';
 import '../presentation/screens/admin_noti_screen.dart';
 import '../presentation/screens/admin_order_screen.dart';
@@ -53,6 +54,10 @@ class WebRouter {
       GoRoute(
         path: '/notification',
         builder: (context, state) => AdminNotiScreen(),
+      ),
+      GoRoute(
+        path: '/category',
+        builder: (context, state) => AdminCategoryScreen(),
       ),
       GoRoute(
         path: '/settings',

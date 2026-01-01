@@ -1,3 +1,4 @@
+import 'package:go_router/go_router.dart';
 import 'package:shop_core/l10n/app_localizations.dart';
 import 'package:bloc_app/presentation/bloc/cart/cart_bloc.dart';
 import 'package:bloc_app/presentation/bloc/cart/cart_state.dart';
@@ -148,7 +149,7 @@ class _CartScreenState extends State<CartScreen> {
           // Nút Checkout
           ElevatedButton(
             onPressed: () {
-              // Xử lý logic checkout
+              context.push('/checkout', extra: totalPrice);
             },
             style: ElevatedButton.styleFrom(
               backgroundColor: const Color(0xff7F5539), // Màu từ bottom_bar

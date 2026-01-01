@@ -1,4 +1,5 @@
 import 'package:equatable/equatable.dart';
+import 'package:shop_core/shop_core.dart';
 
 abstract class CartEvent extends Equatable {
   const CartEvent();
@@ -26,4 +27,10 @@ class UpdateItemQuantity extends CartEvent {
   });
   @override
   List<Object> get props => [productId, newQuantity];
+}
+
+class CheckoutCart extends CartEvent {
+  final int totalAmount;
+  final AddressModel address;
+  const CheckoutCart({required this.totalAmount, required this.address});
 }

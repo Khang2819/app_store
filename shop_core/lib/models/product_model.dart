@@ -33,10 +33,11 @@ class Product {
       categoryId: data['categoryId'] ?? '',
       price: (data['price'] ?? 0).toInt(),
       description: data['description'] as Map<String, dynamic>? ?? const {},
+      // Đảm bảo ép kiểu double/int chính xác
       averageRating: (data['averageRating'] as num?)?.toDouble() ?? 0.0,
-      reviewCount: (data['reviewCount'] ?? 0).toInt(),
+      reviewCount: (data['reviewCount'] as num?)?.toInt() ?? 0,
+      soldCount: (data['soldCount'] as num?)?.toInt() ?? 0,
       createdAt: data['createdAt'] as Timestamp?,
-      soldCount: (data['soldCount'] ?? 0).toInt(),
     );
   }
 }

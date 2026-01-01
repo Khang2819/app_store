@@ -210,7 +210,7 @@ class ProductDetailScreen extends StatelessWidget {
                             ),
                           )
                         else
-                          ReviewList(reviews: state.reviews),
+                          ReviewList(reviews: state.reviews.take(2).toList()),
 
                         const SizedBox(height: 16),
 
@@ -334,13 +334,14 @@ class _ReviewInputSectionState extends State<_ReviewInputSection> {
               'Viết đánh giá của bạn',
               style: TextStyle(fontSize: 16, fontWeight: FontWeight.bold),
             ),
-            const SizedBox(height: 12),
+            const SizedBox(height: 5),
             // Thanh chọn sao
             RatingBar.builder(
               initialRating: _currentRating,
               minRating: 1,
               direction: Axis.horizontal,
               itemCount: 5,
+              itemSize: 30,
               itemPadding: const EdgeInsets.symmetric(horizontal: 4.0),
               itemBuilder:
                   (context, _) => const Icon(Icons.star, color: Colors.amber),
@@ -362,7 +363,7 @@ class _ReviewInputSectionState extends State<_ReviewInputSection> {
                 filled: true,
                 fillColor: Colors.white,
               ),
-              maxLines: 3,
+              maxLines: 1,
             ),
             const SizedBox(height: 12),
             // Nút Gửi

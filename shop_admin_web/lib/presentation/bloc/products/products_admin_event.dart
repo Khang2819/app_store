@@ -13,10 +13,26 @@ class UpdateProducts extends ProductsAdminEvent {
   final Map<String, String> name;
   final int price;
   final Map<String, String> description;
+  final String imageUrl;
+  final String categoryId;
 
-  const UpdateProducts(this.productId, this.name, this.price, this.description);
+  const UpdateProducts({
+    required this.productId,
+    required this.name,
+    required this.price,
+    required this.description,
+    required this.imageUrl,
+    required this.categoryId,
+  });
   @override
-  List<Object> get props => [productId, name, price, description];
+  List<Object> get props => [
+    productId,
+    name,
+    price,
+    description,
+    imageUrl,
+    categoryId,
+  ];
 }
 
 class DeleteProducts extends ProductsAdminEvent {

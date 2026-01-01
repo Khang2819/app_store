@@ -8,6 +8,7 @@ import '../bloc/products/products_admin_event.dart';
 import '../bloc/products/products_admin_state.dart';
 import '../widgets/add_product_dialog.dart';
 import '../widgets/containerbox.dart';
+import '../widgets/edit_product_dialog.dart';
 import '../widgets/fiterchip.dart';
 import '../widgets/header_admin.dart';
 import '../widgets/product_table_row.dart';
@@ -140,8 +141,15 @@ class ProductsContext extends StatelessWidget {
                     children: [
                       Row(
                         children: [
-                          const Expanded(
-                            child: SearchAdmin(text: 'Tìm kiếm tên sản phẩm'),
+                          Expanded(
+                            child: SearchAdmin(
+                              text: 'Tìm kiếm tên sản phẩm',
+                              onChanged: (query) {
+                                context.read<ProductsAdminBloc>().add(
+                                  SearchProducts(query),
+                                );
+                              },
+                            ),
                           ),
                           const SizedBox(width: 12),
                           Container(
@@ -343,12 +351,14 @@ class ProductsContext extends StatelessWidget {
         final product = state.products[index];
         return TableRowItem(
           index: index,
-          totalUsers:
-              state.products.length, // Tái sử dụng totalUsers cho animation
+          totalUsers: state.products.length,
           child: ProductTableRow(
             product: product,
             onEdit: () {
-              // TODO: Logic hiển thị dialog/form sửa sản phẩm
+              showDialog(
+                context: context,
+                builder: (context) => EditProductDialog(product: product),
+              );
             },
             onDelete: () => _confirmDelete(context, product),
           ),

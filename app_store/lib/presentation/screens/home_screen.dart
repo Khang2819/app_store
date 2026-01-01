@@ -122,11 +122,7 @@ class _HomeScreenState extends State<HomeScreen> {
                           const TabChanged(tabIndex: 1),
                         );
                       },
-                      child: AbsorbPointer(
-                        // AbsorbPointer ngăn người dùng tương tác (nhấn vào)
-                        // TextField thật sự ở bên trong MySearchBar
-                        child: const MySearchBar(),
-                      ),
+                      child: AbsorbPointer(child: const MySearchBar()),
                     ),
                     const SizedBox(height: 20),
                     BannerCarousel(
