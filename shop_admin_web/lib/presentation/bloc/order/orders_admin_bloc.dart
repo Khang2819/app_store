@@ -4,9 +4,10 @@ import 'orders_admin_event.dart';
 import 'orders_admin_state.dart';
 
 class OrdersAdminBloc extends Bloc<OrdersAdminEvent, OrdersAdminState> {
-  final OrderRepository _orderRepository = OrderRepository();
+  final OrderRepository orderRepository;
 
-  OrdersAdminBloc() : super(const OrdersAdminState()) {
+  OrdersAdminBloc({required this.orderRepository})
+    : super(const OrdersAdminState()) {
     on<LoadOrders>(_onLoadOrders);
     on<UpdateOrderStatus>(_onUpdateOrderStatus);
   }
@@ -15,10 +16,12 @@ class OrdersAdminBloc extends Bloc<OrdersAdminEvent, OrdersAdminState> {
     LoadOrders event,
     Emitter<OrdersAdminState> emit,
   ) async {
-    emit(state.copyWith(isLoading: true));
+    emit(state.copyWith(isLoading: true, errorMessage: null));
     try {
-      final orders = await _orderRepository.fetchAllOrdersForAdmin();
-      emit(state.copyWith(isLoading: false, orders: orders));
+      final orders = await orderRepository.fetchAllOrdersForAdmin();
+      emit(
+        state.copyWith(isLoading: false, orders: orders, errorMessage: null),
+      );
     } catch (e) {
       emit(state.copyWith(isLoading: false, errorMessage: e.toString()));
     }
@@ -29,7 +32,7 @@ class OrdersAdminBloc extends Bloc<OrdersAdminEvent, OrdersAdminState> {
     Emitter<OrdersAdminState> emit,
   ) async {
     try {
-      await _orderRepository.updateOrderStatus(
+      await orderRepository.updateOrderStatus(
         event.userId,
         event.orderId,
         event.newStatus,

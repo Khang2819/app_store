@@ -4,8 +4,6 @@ import 'package:intl/intl.dart';
 
 class OrderTableRow extends StatelessWidget {
   final OrderModel order;
-  // Giả sử bạn muốn hiển thị thông tin người dùng đi kèm đơn hàng
-  // Bạn có thể lấy thông tin này nếu trong OrderModel có chứa thông tin user cơ bản
   final VoidCallback onEdit;
   final VoidCallback onDelete;
 
@@ -36,6 +34,36 @@ class OrderTableRow extends StatelessWidget {
                 // Chỉ hiển thị địa chỉ chi tiết
                 Text('Địa chỉ: ${order.address.detailAddress}'),
                 const Divider(),
+                const Text(
+                  'Sản phẩm:',
+                  style: TextStyle(fontWeight: FontWeight.bold),
+                ),
+                const SizedBox(height: 8),
+                ...order.items.map(
+                  (item) => Padding(
+                    padding: const EdgeInsets.only(bottom: 4.0),
+                    child: Row(
+                      crossAxisAlignment: CrossAxisAlignment.start,
+                      children: [
+                        Text(
+                          '• ',
+                          style: TextStyle(fontWeight: FontWeight.bold),
+                        ),
+                        Expanded(
+                          child: Text(
+                            item.productName, // Hiển thị tên sản phẩm
+                            style: const TextStyle(fontSize: 14),
+                          ),
+                        ),
+                        const SizedBox(width: 10),
+                        Text(
+                          'x${item.quantity}', // Hiển thị số lượng
+                          style: const TextStyle(color: Colors.grey),
+                        ),
+                      ],
+                    ),
+                  ),
+                ),
                 Text(
                   'Ngày đặt: ${DateFormat('dd/MM/yyyy HH:mm').format(order.createdAt)}',
                 ),
@@ -44,7 +72,7 @@ class OrderTableRow extends StatelessWidget {
             actions: [
               TextButton(
                 onPressed: () => Navigator.pop(context),
-                child: const Text('Đóng'),
+                child: const Text('Đóng', style: TextStyle(color: Colors.blue)),
               ),
             ],
           ),
@@ -159,7 +187,7 @@ class OrderTableRow extends StatelessWidget {
   Widget _buildStatusChip(String status) {
     Color color;
     switch (status.toLowerCase()) {
-      case 'completed':
+      case 'hoàn thành':
         color = Colors.green;
         break;
       case 'pending':

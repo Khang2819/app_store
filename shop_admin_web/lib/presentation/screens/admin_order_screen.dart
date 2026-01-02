@@ -292,7 +292,7 @@ class OrderContext extends StatelessWidget {
                           ],
                         ),
                       ),
-                      _buildOrderList(context),
+                      _buildOrderList(context, state),
                     ],
                   ),
                 ),
@@ -321,57 +321,68 @@ class OrderContext extends StatelessWidget {
     );
   }
 
-  Widget _buildOrderList(BuildContext context) {
-    return BlocBuilder<OrdersAdminBloc, OrdersAdminState>(
-      builder: (context, state) {
-        if (state.isLoading) {
-          return const Center(
-            child: Padding(
-              padding: EdgeInsets.all(40.0),
-              child: CircularProgressIndicator(),
-            ),
-          );
-        }
+  Widget _buildOrderList(BuildContext context, OrdersAdminState state) {
+    if (state.isLoading) {
+      return const Center(
+        child: Padding(
+          padding: EdgeInsets.all(40.0),
+          child: CircularProgressIndicator(),
+        ),
+      );
+    }
 
-        if (state.orders.isEmpty) {
-          return const Center(
-            child: Padding(
-              padding: EdgeInsets.all(40.0),
-              child: Text('Chưa có đơn hàng nào'),
-            ),
-          );
-        }
+    if (state.orders.isEmpty) {
+      return const Center(
+        child: Padding(
+          padding: EdgeInsets.all(40.0),
+          child: Text('Chưa có đơn hàng nào'),
+        ),
+      );
+    }
 
-        return ListView.separated(
-          shrinkWrap: true,
-          physics: const NeverScrollableScrollPhysics(),
-          itemCount: state.orders.length,
-          separatorBuilder: (_, __) => const Divider(height: 1),
-          itemBuilder: (context, index) {
-            final order = state.orders[index];
+    // return ListView.separated(
+    //   shrinkWrap: true,
+    //   physics: const NeverScrollableScrollPhysics(),
+    //   itemCount: state.orders.length,
+    //   separatorBuilder: (_, __) => const Divider(height: 1),
+    //   itemBuilder: (context, index) {
+    //     final order = state.orders[index];
 
-            return TableRowItem(
-              index: index,
-              totalUsers: state.orders.length,
-              child: OrderTableRow(
-                order: order,
-                onEdit: () => _showStatusPicker(context, order),
-                onDelete: () {},
-              ),
-            );
-          },
+    //     return TableRowItem(
+    //       index: index,
+    //       totalUsers: state.orders.length,
+    //       child: OrderTableRow(
+    //         order: order,
+    //         onEdit: () => _showStatusPicker(context, order),
+    //         onDelete: () {},
+    //       ),
+    //     );
+    //   },
+    // );
+
+    return Column(
+      children: List.generate(state.orders.length, (index) {
+        final order = state.orders[index];
+        return TableRowItem(
+          index: index,
+          totalUsers: state.orders.length,
+          child: OrderTableRow(
+            order: order,
+            onEdit: () => _showStatusPicker(context, order),
+            onDelete: () {},
+          ),
         );
-      },
+      }),
     );
   }
 
   void _showStatusPicker(BuildContext context, OrderModel order) {
     final List<String> statuses = [
-      'pending',
-      'processing',
-      'shipped',
-      'delivered',
-      'cancelled',
+      'đang chờ xử lý',
+      'đang xử lý',
+      'đã vận chuyển',
+      'đã giao hàng',
+      'đã hủy',
     ];
 
     showModalBottomSheet(

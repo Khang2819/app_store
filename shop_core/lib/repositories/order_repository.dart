@@ -34,6 +34,7 @@ class OrderRepository {
 
     // 1. Chuẩn bị dữ liệu đơn hàng
     final orderData = {
+      'userId': user.uid,
       'items':
           items
               .map(
@@ -49,7 +50,7 @@ class OrderRepository {
               .toList(),
       'totalAmount': totalAmount,
       'address': address.toMap(),
-      'status': 'completed',
+      'status': 'pending',
       'createdAt': FieldValue.serverTimestamp(),
     };
 
@@ -57,6 +58,9 @@ class OrderRepository {
     final orderRef =
         _firestore.collection('users').doc(user.uid).collection('orders').doc();
     batch.set(orderRef, orderData);
+
+    final adminOrderRef = _firestore.collection('orders').doc(orderRef.id);
+    batch.set(adminOrderRef, orderData);
 
     // 3. Cập nhật soldCount cho từng sản phẩm
     for (var item in items) {
@@ -81,31 +85,33 @@ class OrderRepository {
     }
 
     // 5. Thực thi tất cả lệnh trong một lần (Atomic)
-    try {
-      await batch.commit();
-      print("Đơn hàng đã tạo và cập nhật thành công!");
-    } catch (e) {
-      print("Lỗi khi tạo đơn hàng: $e");
-      // Nếu có lỗi ở đây, toàn bộ đơn hàng và soldCount sẽ không được lưu
-    }
+    await batch.commit();
   }
 
   Future<void> deleteOrder(String orderId) async {
     final user = _auth.currentUser;
     if (user == null) throw Exception('Người dùng chưa đăng nhập');
 
-    await _firestore
+    final batch = _firestore.batch();
+
+    final userOrderRef = _firestore
         .collection('users')
         .doc(user.uid)
         .collection('orders')
-        .doc(orderId)
-        .delete();
+        .doc(orderId);
+    batch.delete(userOrderRef);
+
+    final adminOrderRef = _firestore.collection('orders').doc(orderId);
+    batch.delete(adminOrderRef);
+
+    await batch.commit();
   }
 
+  // Lấy tất cả đơn hàng cho Admin (Web)
   Future<List<OrderModel>> fetchAllOrdersForAdmin() async {
     final snapshot =
         await _firestore
-            .collectionGroup('orders')
+            .collection('orders')
             .orderBy('createdAt', descending: true)
             .get();
 
@@ -117,11 +123,20 @@ class OrderRepository {
     String orderId,
     String status,
   ) async {
-    await _firestore
+    final batch = _firestore.batch();
+
+    // Cập nhật cho User
+    final userOrderRef = _firestore
         .collection('users')
         .doc(userId)
         .collection('orders')
-        .doc(orderId)
-        .update({'status': status});
+        .doc(orderId);
+    batch.update(userOrderRef, {'status': status});
+
+    // Cập nhật cho danh sách tổng của Admin
+    final adminOrderRef = _firestore.collection('orders').doc(orderId);
+    batch.update(adminOrderRef, {'status': status});
+
+    await batch.commit();
   }
 }

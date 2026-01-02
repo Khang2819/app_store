@@ -34,6 +34,7 @@ class MyApp extends StatelessWidget {
     final productRepository = ProductRepository();
     final userRepository = UserRepository();
     final bannerRepository = BannerRepository();
+    final orderRepository = OrderRepository();
     return RepositoryProvider.value(
       value: authRepository,
 
@@ -73,7 +74,10 @@ class MyApp extends StatelessWidget {
                       ..add(LoadCategories()),
           ),
           BlocProvider(
-            create: (context) => OrdersAdminBloc()..add(LoadOrders()),
+            create:
+                (context) =>
+                    OrdersAdminBloc(orderRepository: orderRepository)
+                      ..add(LoadOrders()),
           ),
         ],
         child: MaterialApp.router(

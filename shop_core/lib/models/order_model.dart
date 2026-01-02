@@ -27,7 +27,7 @@ class OrderModel {
       id: doc.id,
       userId: data['userId'] ?? '',
       totalAmount: (data['totalAmount'] ?? 0).toInt(),
-      status: data['status'] ?? 'pending',
+      status: data['status'] ?? 'đang chờ xử lý',
       // Chuyển đổi Timestamp sang DateTime an toàn
       createdAt:
           data['createdAt'] is Timestamp
