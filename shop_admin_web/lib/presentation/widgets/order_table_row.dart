@@ -1,61 +1,55 @@
 import 'package:flutter/material.dart';
+import 'package:shop_core/shop_core.dart';
+import 'package:intl/intl.dart';
 
-/// =======================
-/// 1️⃣ MODEL GIẢ
-/// =======================
-class UsersModels {
-  final String id;
-  final String? name;
-  final String? photoUrl;
-
-  UsersModels({required this.id, this.name, this.photoUrl});
-}
-
-/// =======================
-/// 2️⃣ DỮ LIỆU GIẢ
-/// =======================
-final List<UsersModels> mockUsers = [
-  UsersModels(id: 'DH-001', name: 'Nguyễn Văn Khang', photoUrl: null),
-  UsersModels(id: 'DH-002', name: 'Trần Thị Mai', photoUrl: null),
-  UsersModels(id: 'DH-003', name: 'Lê Quốc Anh', photoUrl: null),
-  UsersModels(id: 'DH-001', name: 'Nguyễn Văn Khang', photoUrl: null),
-  UsersModels(
-    id: 'DH-002',
-    name: 'Trần Thị Mai',
-    photoUrl: 'https://i.pravatar.cc/150?img=3',
-  ),
-  UsersModels(
-    id: 'DH-003',
-    name: 'Lê Quốc Anh',
-    photoUrl: 'https://i.pravatar.cc/150?img=5',
-  ),
-  UsersModels(id: 'DH-001', name: 'Nguyễn Văn Khang', photoUrl: null),
-  UsersModels(
-    id: 'DH-002',
-    name: 'Trần Thị Mai',
-    photoUrl: 'https://i.pravatar.cc/150?img=3',
-  ),
-  UsersModels(
-    id: 'DH-003',
-    name: 'Lê Quốc Anh',
-    photoUrl: 'https://i.pravatar.cc/150?img=5',
-  ),
-];
-
-/// =======================
-/// 3️⃣ ORDER TABLE ROW
-/// =======================
 class OrderTableRow extends StatelessWidget {
-  final UsersModels user;
+  final OrderModel order;
+  // Giả sử bạn muốn hiển thị thông tin người dùng đi kèm đơn hàng
+  // Bạn có thể lấy thông tin này nếu trong OrderModel có chứa thông tin user cơ bản
   final VoidCallback onEdit;
   final VoidCallback onDelete;
 
   const OrderTableRow({
     super.key,
-    required this.user,
+    required this.order,
     required this.onEdit,
     required this.onDelete,
   });
+
+  void _showDetail(BuildContext context) {
+    showDialog(
+      context: context,
+      builder:
+          (context) => AlertDialog(
+            title: Text(
+              'Chi tiết đơn hàng #${order.id.substring(0, 6).toUpperCase()}',
+            ),
+            content: Column(
+              mainAxisSize: MainAxisSize.min,
+              crossAxisAlignment: CrossAxisAlignment.start,
+              children: [
+                Text(
+                  'Người nhận: ${order.address.fullName}',
+                  style: const TextStyle(fontWeight: FontWeight.bold),
+                ),
+                Text('Số điện thoại: ${order.address.phoneNumber}'),
+                // Chỉ hiển thị địa chỉ chi tiết
+                Text('Địa chỉ: ${order.address.detailAddress}'),
+                const Divider(),
+                Text(
+                  'Ngày đặt: ${DateFormat('dd/MM/yyyy HH:mm').format(order.createdAt)}',
+                ),
+              ],
+            ),
+            actions: [
+              TextButton(
+                onPressed: () => Navigator.pop(context),
+                child: const Text('Đóng'),
+              ),
+            ],
+          ),
+    );
+  }
 
   @override
   Widget build(BuildContext context) {
@@ -63,11 +57,11 @@ class OrderTableRow extends StatelessWidget {
       padding: const EdgeInsets.symmetric(vertical: 8),
       child: Row(
         children: [
-          // Mã đơn
+          // 1. Mã đơn
           Expanded(
             flex: 1,
             child: Text(
-              user.id,
+              order.id.substring(0, 8).toUpperCase(),
               style: TextStyle(
                 color: Colors.blue[600],
                 fontWeight: FontWeight.w500,
@@ -75,31 +69,30 @@ class OrderTableRow extends StatelessWidget {
             ),
           ),
 
-          // Khách hàng
+          // 2. Khách hàng (Có Avatar)
           Expanded(
             flex: 2,
             child: Row(
               children: [
                 CircleAvatar(
                   radius: 18,
-                  backgroundImage:
-                      user.photoUrl != null
-                          ? NetworkImage(user.photoUrl!)
-                          : null,
-                  child:
-                      user.photoUrl == null
-                          ? Text(
-                            user.name?.isNotEmpty == true
-                                ? user.name![0].toUpperCase()
-                                : 'U',
-                            style: const TextStyle(color: Colors.white),
-                          )
-                          : null,
+                  backgroundColor: Colors.grey[200],
+                  // Nếu bạn có link ảnh user trong order.address hoặc một model user đi kèm
+                  // Ở đây giả định hiển thị chữ cái đầu nếu không có ảnh
+                  child: Text(
+                    order.address.fullName.isNotEmpty
+                        ? order.address.fullName[0].toUpperCase()
+                        : 'U',
+                    style: const TextStyle(
+                      fontSize: 14,
+                      color: Colors.blueGrey,
+                    ),
+                  ),
                 ),
                 const SizedBox(width: 10),
                 Expanded(
                   child: Text(
-                    user.name ?? 'No Name',
+                    order.address.fullName,
                     overflow: TextOverflow.ellipsis,
                     style: const TextStyle(fontWeight: FontWeight.w500),
                   ),
@@ -108,20 +101,20 @@ class OrderTableRow extends StatelessWidget {
             ),
           ),
 
-          // Ngày đặt
+          // 3. Ngày đặt
           Expanded(
             flex: 1,
             child: Text(
-              '12/12/2025',
+              DateFormat('dd/MM/yyyy').format(order.createdAt),
               style: TextStyle(color: Colors.grey[700]),
             ),
           ),
 
-          // Tổng tiền
+          // 4. Tổng tiền
           Expanded(
             flex: 1,
             child: Text(
-              '1.250.000 ₫',
+              '${NumberFormat('#,###').format(order.totalAmount)} ₫',
               style: TextStyle(
                 fontWeight: FontWeight.w600,
                 color: Colors.grey[800],
@@ -129,13 +122,13 @@ class OrderTableRow extends StatelessWidget {
             ),
           ),
 
-          // Thanh toán
+          // 5. Thanh toán
           const Expanded(flex: 1, child: Text('COD')),
 
-          // Trạng thái
-          Expanded(flex: 1, child: _buildChip('Đang giá', Colors.orange)),
+          // 6. Trạng thái
+          Expanded(child: _buildStatusChip(order.status)),
 
-          // Thao tác
+          // 7. Thao tác
           Expanded(
             flex: 1,
             child: Row(
@@ -145,7 +138,7 @@ class OrderTableRow extends StatelessWidget {
                   message: 'Xem chi tiết',
                   child: IconButton(
                     icon: const Icon(Icons.visibility_outlined),
-                    onPressed: () {},
+                    onPressed: () => _showDetail(context),
                   ),
                 ),
                 Tooltip(
@@ -163,20 +156,33 @@ class OrderTableRow extends StatelessWidget {
     );
   }
 
-  /// Helper cho chip hiển thị trạng thái
-  Widget _buildChip(String text, Color color) {
+  Widget _buildStatusChip(String status) {
+    Color color;
+    switch (status.toLowerCase()) {
+      case 'completed':
+        color = Colors.green;
+        break;
+      case 'pending':
+        color = Colors.orange;
+        break;
+      case 'cancelled':
+        color = Colors.red;
+        break;
+      default:
+        color = Colors.blue;
+    }
     return Container(
-      padding: const EdgeInsets.symmetric(horizontal: 10, vertical: 4),
+      padding: const EdgeInsets.symmetric(horizontal: 8, vertical: 4),
       decoration: BoxDecoration(
         color: color.withOpacity(0.1),
-        borderRadius: BorderRadius.circular(10),
+        borderRadius: BorderRadius.circular(12),
       ),
       child: Text(
-        text,
+        status.toUpperCase(),
         style: TextStyle(
           color: color,
           fontSize: 12,
-          fontWeight: FontWeight.w600,
+          fontWeight: FontWeight.bold,
         ),
       ),
     );

@@ -46,7 +46,9 @@ class BannerAdminBloc extends Bloc<BannerAdminEvent, BannerAdminState> {
         targetId: event.targetId,
       );
       final banner = await bannerRepository.fetchBanners();
-      emit(state.copyWith(isLoading: true, banner: banner, errorMessage: null));
+      emit(
+        state.copyWith(isLoading: false, banner: banner, errorMessage: null),
+      );
     } catch (e) {
       emit(
         state.copyWith(

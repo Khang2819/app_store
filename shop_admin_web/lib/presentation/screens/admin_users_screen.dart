@@ -430,9 +430,7 @@ class UsersContext extends StatelessWidget {
         Expanded(
           flex: 1,
           child: Text(
-            user.role == 'admin'
-                ? 'N/A'
-                : '0', // Giả định: admin không có đơn hàng
+            user.role == 'admin' ? 'N/A' : '${user.orderCount}',
             style: TextStyle(color: Colors.grey[600]),
           ),
         ),

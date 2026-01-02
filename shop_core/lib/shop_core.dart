@@ -20,7 +20,7 @@ export 'repositories/order_repository.dart';
 
 // image
 
-export 'assets/app_vector.dart';
+export 'core/assets/app_vector.dart';
 // core
 export 'core/localization_utils.dart';
 export 'core/snackbar_utils.dart';

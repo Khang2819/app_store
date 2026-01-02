@@ -8,6 +8,7 @@ class UsersModels {
   final Timestamp? createdAt;
   final String? provider;
   final String role;
+  final int orderCount;
 
   UsersModels({
     required this.id,
@@ -17,6 +18,7 @@ class UsersModels {
     this.createdAt,
     this.provider,
     this.role = 'user',
+    this.orderCount = 0,
   });
 
   factory UsersModels.fromFirestore(DocumentSnapshot doc) {
@@ -29,6 +31,7 @@ class UsersModels {
       createdAt: data['createdAt'] as Timestamp?,
       provider: data['provider'] as String? ?? 'password',
       role: data['role'] as String? ?? 'user',
+      orderCount: (data['orderCount'] as num?)?.toInt() ?? 0,
     );
   }
   Map<String, dynamic> toMap() => {
@@ -38,5 +41,6 @@ class UsersModels {
     'createdAt': createdAt,
     'provider': provider,
     'role': role,
+    'orderCount': orderCount,
   };
 }

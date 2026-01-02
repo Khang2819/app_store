@@ -13,6 +13,8 @@ import 'presentation/bloc/auth/auth_admin_bloc.dart';
 import 'presentation/bloc/category/category_admin_event.dart';
 import 'presentation/bloc/dashboard/admin_dashboard_bloc.dart';
 import 'presentation/bloc/dashboard/admin_dashboard_event.dart';
+import 'presentation/bloc/order/orders_admin_bloc.dart';
+import 'presentation/bloc/order/orders_admin_event.dart';
 import 'presentation/bloc/products/products_admin_bloc.dart';
 import 'presentation/bloc/sidebar/sidebar_bloc.dart';
 import 'presentation/bloc/users/users_admin_bloc.dart';
@@ -69,6 +71,9 @@ class MyApp extends StatelessWidget {
                 (context) =>
                     CategoryAdminBloc(productRepository: productRepository)
                       ..add(LoadCategories()),
+          ),
+          BlocProvider(
+            create: (context) => OrdersAdminBloc()..add(LoadOrders()),
           ),
         ],
         child: MaterialApp.router(

@@ -217,4 +217,30 @@ class UserRepository {
       throw UserException("Lỗi khi thêm người dùng: ${e.toString()}");
     }
   }
+
+  Future<List<UsersModels>> fetchUsers() async {
+    final snapshot = await _firestore.collection('users').get();
+    List<UsersModels> users = [];
+
+    for (var doc in snapshot.docs) {
+      // Truy vấn số lượng đơn hàng trong sub-collection của từng user
+      final ordersSnapshot =
+          await _firestore
+              .collection('users')
+              .doc(doc.id)
+              .collection('orders')
+              .get();
+
+      int count = ordersSnapshot.docs.length;
+
+      // Tạo đối tượng user với số lượng đơn hàng thực tế
+      Map<String, dynamic> data = doc.data();
+      data['orderCount'] = count;
+
+      users.add(
+        UsersModels.fromFirestore(doc),
+      ); // Đảm bảo hàm fromFirestore đã cập nhật như bước 1
+    }
+    return users;
+  }
 }

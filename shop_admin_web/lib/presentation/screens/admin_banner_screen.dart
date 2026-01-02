@@ -5,6 +5,7 @@ import 'package:shop_core/shop_core.dart'; // Import BannerModel và SnackbarUti
 import '../bloc/banner/banner_admin_bloc.dart';
 import '../bloc/banner/banner_admin_event.dart';
 import '../bloc/banner/banner_admin_state.dart';
+import '../widgets/add_banner_dialog.dart';
 import '../widgets/admin_sidebar.dart';
 import '../widgets/banner_table_row.dart';
 import '../widgets/containerbox.dart';
@@ -93,7 +94,12 @@ class BannedContext extends StatelessWidget {
                   icon: Icons.sell,
                   buttonIcon: Icons.add_circle_outline,
                   buttonText: 'Thêm Banner Quảng cáo',
-                  onPressed: () {},
+                  onPressed: () {
+                    showDialog(
+                      context: context,
+                      builder: (context) => const AddBannerDialog(),
+                    );
+                  },
                 ),
                 const SizedBox(height: 20),
                 Row(

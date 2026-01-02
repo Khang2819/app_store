@@ -1,11 +1,15 @@
 import 'package:cloud_firestore/cloud_firestore.dart';
 
+import 'address_model.dart';
+
 class OrderModel {
   final String id;
   final List<OrderItem> items;
   final int totalAmount;
   final String status;
-  final Timestamp createdAt;
+  final DateTime createdAt;
+  final String userId;
+  final AddressModel address;
 
   OrderModel({
     required this.id,
@@ -13,19 +17,30 @@ class OrderModel {
     required this.totalAmount,
     required this.status,
     required this.createdAt,
+    required this.address, // THÊM DÒNG NÀY
+    required this.userId,
   });
 
   factory OrderModel.fromFirestore(DocumentSnapshot doc) {
     final data = doc.data() as Map<String, dynamic>;
     return OrderModel(
       id: doc.id,
-      totalAmount: data['totalAmount'] ?? 0,
+      userId: data['userId'] ?? '',
+      totalAmount: (data['totalAmount'] ?? 0).toInt(),
       status: data['status'] ?? 'pending',
-      createdAt: data['createdAt'] ?? Timestamp.now(),
+      // Chuyển đổi Timestamp sang DateTime an toàn
+      createdAt:
+          data['createdAt'] is Timestamp
+              ? (data['createdAt'] as Timestamp).toDate()
+              : DateTime.now(),
+      // Khởi tạo AddressModel từ Map
+      address: AddressModel.fromMap(data['address'] ?? {}),
+      // Map danh sách sản phẩm (nếu có)
       items:
-          (data['items'] as List)
-              .map((item) => OrderItem.fromMap(item))
-              .toList(),
+          (data['items'] as List?)
+              ?.map((item) => OrderItem.fromMap(item))
+              .toList() ??
+          [],
     );
   }
 }

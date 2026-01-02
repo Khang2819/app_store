@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
+import 'package:intl/intl.dart';
 import '../bloc/order/order_bloc.dart';
 import '../bloc/order/order_event.dart';
 import '../bloc/order/order_state.dart';
@@ -109,7 +110,7 @@ class OrderHistoryScreen extends StatelessWidget {
                       children: [
                         const SizedBox(height: 8),
                         Text(
-                          'Ngày: ${order.createdAt.toDate().toString().split('.')[0]}',
+                          'Ngày: ${DateFormat('dd/MM/yyyy HH:mm').format(order.createdAt)}',
                           style: const TextStyle(
                             fontSize: 13,
                             color: Colors.black87,

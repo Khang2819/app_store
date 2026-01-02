@@ -9,6 +9,16 @@ class AddressModel {
     required this.detailAddress,
   });
 
+  // Chuyển từ Map Firestore sang Model
+  factory AddressModel.fromMap(Map<String, dynamic> map) {
+    return AddressModel(
+      fullName: map['fullName'] ?? '',
+      phoneNumber: map['phoneNumber'] ?? '',
+      detailAddress: map['detailAddress'] ?? '',
+    );
+  }
+
+  // Chuyển từ Model sang Map để lưu lên Firestore
   Map<String, dynamic> toMap() => {
     'fullName': fullName,
     'phoneNumber': phoneNumber,
