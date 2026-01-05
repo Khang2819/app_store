@@ -6,7 +6,8 @@ import '../bloc/banner/banner_admin_event.dart';
 import 'custom_text_field.dart';
 
 class AddBannerDialog extends StatefulWidget {
-  const AddBannerDialog({super.key});
+  final BannerModel? banner; // Nhận banner nếu là chế độ chỉnh sửa
+  const AddBannerDialog({super.key, this.banner});
 
   @override
   State<AddBannerDialog> createState() => _AddBannerDialogState();
@@ -14,10 +15,26 @@ class AddBannerDialog extends StatefulWidget {
 
 class _AddBannerDialogState extends State<AddBannerDialog> {
   final _formKey = GlobalKey<FormState>();
-  final _imageUrlController = TextEditingController();
-  final _orderController = TextEditingController(text: '1');
-  final _targetIdController = TextEditingController();
+  late TextEditingController _imageUrlController;
+  late TextEditingController _orderController;
+  late TextEditingController _targetIdController;
   String _targetType = 'none';
+
+  @override
+  void initState() {
+    super.initState();
+    // Bước 1: Khởi tạo giá trị ban đầu dựa trên việc có banner truyền vào hay không
+    _imageUrlController = TextEditingController(
+      text: widget.banner?.imageUrl ?? '',
+    );
+    _orderController = TextEditingController(
+      text: widget.banner?.order.toString() ?? '1',
+    );
+    _targetIdController = TextEditingController(
+      text: widget.banner?.targetId ?? '',
+    );
+    _targetType = widget.banner?.targetType ?? 'none';
+  }
 
   @override
   void dispose() {
@@ -33,24 +50,46 @@ class _AddBannerDialogState extends State<AddBannerDialog> {
       return;
     }
 
-    // Gửi sự kiện AddBanner tới Bloc
-    context.read<BannerAdminBloc>().add(
-      AddBanner(
-        imageUrl: _imageUrlController.text.trim(),
-        order: int.tryParse(_orderController.text) ?? 0,
-        targetType: _targetType,
-        targetId: _targetIdController.text.trim(),
-      ),
-    );
+    final imageUrl = _imageUrlController.text.trim();
+    final order = int.tryParse(_orderController.text) ?? 0;
+    final targetId = _targetIdController.text.trim();
+
+    // Bước 2: Phân loại logic Thêm mới hoặc Cập nhật
+    if (widget.banner == null) {
+      // Gửi sự kiện AddBanner
+      context.read<BannerAdminBloc>().add(
+        AddBanner(
+          imageUrl: imageUrl,
+          order: order,
+          targetType: _targetType,
+          targetId: targetId,
+        ),
+      );
+      SnackbarUtils.showSuccess(context, 'Đang thêm banner...', null);
+    } else {
+      // Gửi sự kiện UpdateBanner
+      context.read<BannerAdminBloc>().add(
+        UpdateBanner(
+          bannerId: widget.banner!.id, // Lấy ID từ banner cũ
+          imageUrl: imageUrl,
+          order: order,
+          targetType: _targetType,
+          targetId: targetId,
+        ),
+      );
+      SnackbarUtils.showSuccess(context, 'Đang cập nhật banner...', null);
+    }
 
     Navigator.of(context).pop();
-    SnackbarUtils.showSuccess(context, 'Đang thêm banner...', null);
   }
 
   @override
   Widget build(BuildContext context) {
+    // Bước 3: Đổi tiêu đề linh hoạt
+    final isEdit = widget.banner != null;
+
     return AlertDialog(
-      title: const Text('Thêm Banner Quảng Cáo'),
+      title: Text(isEdit ? 'Chỉnh Sửa Banner' : 'Thêm Banner Quảng Cáo'),
       content: SizedBox(
         width: 500,
         child: SingleChildScrollView(
@@ -106,7 +145,10 @@ class _AddBannerDialogState extends State<AddBannerDialog> {
           onPressed: () => Navigator.pop(context),
           child: const Text('Hủy'),
         ),
-        ElevatedButton(onPressed: _submitForm, child: const Text('Xác nhận')),
+        ElevatedButton(
+          onPressed: _submitForm,
+          child: Text(isEdit ? 'Lưu thay đổi' : 'Xác nhận'),
+        ),
       ],
     );
   }

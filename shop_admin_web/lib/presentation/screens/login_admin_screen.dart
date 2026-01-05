@@ -167,17 +167,6 @@ class _LoginScreenState extends State<LoginAdminScreen> {
                 ),
               ),
               const SizedBox(height: 28),
-              Align(
-                alignment: Alignment.centerRight,
-                child: TextButton(
-                  onPressed: () {},
-                  child: Text(
-                    'Quên mật khẩu',
-                    style: TextStyle(color: Colors.blue),
-                  ),
-                ),
-              ),
-              const SizedBox(height: 28),
 
               // Button
               SizedBox(

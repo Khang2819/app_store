@@ -3,16 +3,10 @@ import 'package:flutter/material.dart';
 import 'package:shop_core/shop_core.dart';
 
 class BannerCarousel extends StatefulWidget {
-  // SỬA: Thay List<String> bằng List<BannerModel>
   final List<BannerModel> banners;
-  // THÊM: Callback khi nhấp vào Banner (để xử lý điều hướng ở HomeScreen)
   final Function(BannerModel banner)? onBannerTap;
 
-  const BannerCarousel({
-    super.key,
-    required this.banners, // <<< CẬP NHẬT CONSTRUCTOR
-    this.onBannerTap,
-  });
+  const BannerCarousel({super.key, required this.banners, this.onBannerTap});
 
   @override
   State<BannerCarousel> createState() => _BannerCarouselState();
@@ -23,18 +17,20 @@ class _BannerCarouselState extends State<BannerCarousel> {
   final CarouselSliderController _controller = CarouselSliderController();
   @override
   Widget build(BuildContext context) {
-    // Kiểm tra danh sách có rỗng không
     if (widget.banners.isEmpty) {
       return const SizedBox.shrink();
     }
-
-    final List<BannerModel> banners = widget.banners;
+    final List<BannerModel> activeBanners =
+        widget.banners.where((b) => b.order > 0).toList();
+    if (activeBanners.isEmpty) {
+      return const SizedBox.shrink();
+    }
 
     return Column(
       children: [
         CarouselSlider(
           items:
-              banners
+              activeBanners
                   .map(
                     (banner) => GestureDetector(
                       onTap: () => widget.onBannerTap?.call(banner),
@@ -68,7 +64,7 @@ class _BannerCarouselState extends State<BannerCarousel> {
         Row(
           mainAxisAlignment: MainAxisAlignment.center,
           children:
-              banners.asMap().entries.map((entry) {
+              activeBanners.asMap().entries.map((entry) {
                 return GestureDetector(
                   onTap: () => _controller.animateToPage(entry.key),
                   child: AnimatedContainer(

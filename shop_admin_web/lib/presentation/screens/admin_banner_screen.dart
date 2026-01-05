@@ -258,19 +258,34 @@ class BannedContext extends StatelessWidget {
     return Column(
       children: List.generate(state.banner.length, (index) {
         final banner = state.banner[index];
-        final isActive = banner.order > 0; // Giả định logic trạng thái
+        final isActive = banner.order > 0;
         return TableRowItem(
           index: index,
-          totalUsers: state.banner.length, // Tái sử dụng cho animation
+          totalUsers: state.banner.length,
           child: BannerTableRow(
             banner: banner,
             isActive: isActive,
             onEdit: () {
-              // TODO: Logic hiển thị dialog sửa banner
+              showDialog(
+                context: context,
+                builder:
+                    (context) => AddBannerDialog(
+                      banner: banner,
+                    ), // Truyền banner vào đây
+              );
             },
             onDelete: () => _confirmDelete(context, banner),
             onPause: () {
-              // TODO: Logic cập nhật trạng thái (isActive)
+              final newOrder = isActive ? 0 : 1;
+              context.read<BannerAdminBloc>().add(
+                UpdateBanner(
+                  bannerId: banner.id,
+                  imageUrl: banner.imageUrl,
+                  order: newOrder,
+                  targetType: banner.targetType,
+                  targetId: banner.targetId,
+                ),
+              );
             },
           ),
         );

@@ -23,10 +23,8 @@ class DashboardCharts extends StatelessWidget {
 
   // Pie chart data
   final List<_PieData> pieData = [
-    _PieData('Điện thoại', 100),
-    _PieData('Laptop', 30),
-    _PieData('Máy tính bảng', 15),
-    _PieData('Phụ kiện', 15),
+    _PieData('Cà phê', 100),
+    _PieData('Trà sữa', 30),
   ];
 
   @override

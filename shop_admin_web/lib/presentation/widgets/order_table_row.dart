@@ -51,13 +51,13 @@ class OrderTableRow extends StatelessWidget {
                         ),
                         Expanded(
                           child: Text(
-                            item.productName, // Hiển thị tên sản phẩm
+                            item.productName,
                             style: const TextStyle(fontSize: 14),
                           ),
                         ),
                         const SizedBox(width: 10),
                         Text(
-                          'x${item.quantity}', // Hiển thị số lượng
+                          'x${item.quantity}',
                           style: const TextStyle(color: Colors.grey),
                         ),
                       ],

@@ -11,6 +11,7 @@ class BannerAdminBloc extends Bloc<BannerAdminEvent, BannerAdminState> {
     on<LoadBanner>(_onLoadBanner);
     on<AddBanner>(_onAddBanner);
     on<DeleteBanner>(_onDeleteBanner);
+    on<UpdateBanner>(_onUpdateBanner);
   }
 
   Future<void> _onLoadBanner(
@@ -74,7 +75,31 @@ class BannerAdminBloc extends Bloc<BannerAdminEvent, BannerAdminState> {
       emit(
         state.copyWith(
           isLoading: false,
-          errorMessage: 'Không thể tải danh sách banner: ${e.toString()}',
+          errorMessage: 'Không thể tải xóa banner: ${e.toString()}',
+        ),
+      );
+    }
+  }
+
+  Future<void> _onUpdateBanner(
+    UpdateBanner event,
+    Emitter<BannerAdminState> emit,
+  ) async {
+    emit(state.copyWith(isLoading: true, errorMessage: null));
+    try {
+      await bannerRepository.fetchUpdateBanner(
+        bannerId: event.bannerId,
+        imageUrl: event.imageUrl,
+        order: event.order,
+        targetType: event.targetType,
+        targetId: event.targetId,
+      );
+      add(LoadBanner());
+    } catch (e) {
+      emit(
+        state.copyWith(
+          isLoading: false,
+          errorMessage: 'Không thể update banner',
         ),
       );
     }

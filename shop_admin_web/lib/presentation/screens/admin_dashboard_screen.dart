@@ -184,7 +184,7 @@ class DashboardContent extends StatelessWidget {
                       const Divider(height: 1),
                       _buildActionTile(
                         icon: Icons.analytics_outlined,
-                        title: 'Báo cáo & Phân tích',
+                        title: 'Thêm banner quảng cáo',
                         subtitle: 'Xem báo cáo chi tiết',
                         onTap: () {},
                       ),

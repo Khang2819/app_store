@@ -25,12 +25,11 @@ class BannerTableRow extends StatelessWidget {
 
     // Giả định tiêu đề và mô tả được lấy từ targetId và targetType
     final title =
-        (banner.targetType == 'product'
+        '${banner.targetType == 'product'
             ? 'Quảng cáo Sản phẩm'
             : banner.targetType == 'category'
             ? 'Quảng cáo Danh mục'
-            : 'Khuyến mãi đặc biệt') +
-        ' (Order: ${banner.order})';
+            : 'Khuyến mãi đặc biệt'} (Order: ${banner.order})';
     final linkText = 'Link: /${banner.targetType}/${banner.targetId}';
 
     return Row(
