@@ -16,10 +16,12 @@ class AdminDashboardState extends Equatable {
   final String totalOrders;
   final String totalRevenue;
   final String totalProducts;
+  final String userTrend;
+  final String orderTrend;
+  final String revenueTrend;
+  final String productTrend;
   final List<MonthlyDataPoint> monthlyRevenueData;
-  final List<MonthlyDataPoint> monthlyUserSignups;
-  final List<MonthlyDataPoint> monthlyOrderCounts;
-  final List<MonthlyDataPoint> monthlyProductAdditions;
+  final List<MonthlyDataPoint> categoryData;
   const AdminDashboardState({
     this.isLoading = true,
     this.errorMessage,
@@ -27,10 +29,12 @@ class AdminDashboardState extends Equatable {
     this.totalOrders = '...',
     this.totalRevenue = '...',
     this.totalProducts = '...',
+    this.userTrend = '0%',
+    this.orderTrend = '0%',
+    this.revenueTrend = '0%',
+    this.productTrend = '0%',
     this.monthlyRevenueData = const [],
-    this.monthlyUserSignups = const [],
-    this.monthlyOrderCounts = const [],
-    this.monthlyProductAdditions = const [],
+    this.categoryData = const [],
   });
   AdminDashboardState copyWith({
     bool? isLoading,
@@ -39,10 +43,12 @@ class AdminDashboardState extends Equatable {
     String? totalOrders,
     String? totalRevenue,
     String? totalProducts,
+    String? userTrend,
+    String? orderTrend,
+    String? revenueTrend,
+    String? productTrend,
     List<MonthlyDataPoint>? monthlyRevenueData,
-    List<MonthlyDataPoint>? monthlyUserSignups,
-    List<MonthlyDataPoint>? monthlyOrderCounts,
-    List<MonthlyDataPoint>? monthlyProductAdditions,
+    List<MonthlyDataPoint>? categoryData,
   }) {
     return AdminDashboardState(
       isLoading: isLoading ?? this.isLoading,
@@ -51,11 +57,12 @@ class AdminDashboardState extends Equatable {
       totalOrders: totalOrders ?? this.totalOrders,
       totalRevenue: totalRevenue ?? this.totalRevenue,
       totalProducts: totalProducts ?? this.totalProducts,
+      userTrend: userTrend ?? this.userTrend,
+      orderTrend: orderTrend ?? this.orderTrend,
+      revenueTrend: revenueTrend ?? this.revenueTrend,
+      productTrend: productTrend ?? this.productTrend,
       monthlyRevenueData: monthlyRevenueData ?? this.monthlyRevenueData,
-      monthlyUserSignups: monthlyUserSignups ?? this.monthlyUserSignups,
-      monthlyOrderCounts: monthlyOrderCounts ?? this.monthlyOrderCounts,
-      monthlyProductAdditions:
-          monthlyProductAdditions ?? this.monthlyProductAdditions,
+      categoryData: categoryData ?? this.categoryData,
     );
   }
 
@@ -67,9 +74,11 @@ class AdminDashboardState extends Equatable {
     totalOrders,
     totalRevenue,
     totalProducts,
+    userTrend,
+    orderTrend,
+    revenueTrend,
+    productTrend,
     monthlyRevenueData,
-    monthlyUserSignups,
-    monthlyOrderCounts,
-    monthlyProductAdditions,
+    categoryData,
   ];
 }

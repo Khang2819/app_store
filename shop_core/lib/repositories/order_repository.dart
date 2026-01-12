@@ -50,7 +50,7 @@ class OrderRepository {
               .toList(),
       'totalAmount': totalAmount,
       'address': address.toMap(),
-      'status': 'pending',
+      'status': 'đang chờ xử lý',
       'createdAt': FieldValue.serverTimestamp(),
     };
 
@@ -92,19 +92,12 @@ class OrderRepository {
     final user = _auth.currentUser;
     if (user == null) throw Exception('Người dùng chưa đăng nhập');
 
-    final batch = _firestore.batch();
-
-    final userOrderRef = _firestore
+    await _firestore
         .collection('users')
         .doc(user.uid)
         .collection('orders')
-        .doc(orderId);
-    batch.delete(userOrderRef);
-
-    final adminOrderRef = _firestore.collection('orders').doc(orderId);
-    batch.delete(adminOrderRef);
-
-    await batch.commit();
+        .doc(orderId)
+        .delete();
   }
 
   // Lấy tất cả đơn hàng cho Admin (Web)
@@ -138,5 +131,74 @@ class OrderRepository {
     batch.update(adminOrderRef, {'status': status});
 
     await batch.commit();
+  }
+
+  // Trong class OrderRepository
+  Future<List<Map<String, dynamic>>> getMonthlyRevenue() async {
+    final now = DateTime.now();
+    final currentYear = now.year;
+
+    // Lấy tất cả đơn hàng đã hoàn thành trong năm nay
+    // Lưu ý: Trong thực tế nên query theo range date để tối ưu, ở đây lấy hết để đơn giản
+    final snapshot =
+        await _firestore
+            .collection('orders')
+            .where(
+              'status',
+              isEqualTo: 'đã giao hàng',
+            ) // Chỉ tính đơn đã hoàn thành
+            .get();
+
+    // Khởi tạo map doanh thu cho 12 tháng
+    Map<int, double> monthlyRevenue = {for (var i = 1; i <= 12; i++) i: 0.0};
+
+    for (var doc in snapshot.docs) {
+      final data = doc.data();
+      final createdAt = (data['createdAt'] as Timestamp).toDate();
+      final amount = (data['totalAmount'] as num).toDouble();
+
+      if (createdAt.year == currentYear) {
+        monthlyRevenue[createdAt.month] =
+            (monthlyRevenue[createdAt.month] ?? 0) + amount;
+      }
+    }
+
+    // Chuyển đổi sang format List để Bloc sử dụng
+    List<Map<String, dynamic>> result = [];
+    monthlyRevenue.forEach((month, value) {
+      result.add({'month': 'T$month', 'value': value});
+    });
+
+    return result;
+  }
+
+  Future<List<OrderModel>> searchOrders(String query) async {
+    // 1. Lấy tất cả đơn hàng
+    // (Lưu ý: Với quy mô nhỏ, fetch hết rồi lọc ở client là ổn. Quy mô lớn nên dùng Algolia/Elasticsearch)
+    final snapshot =
+        await _firestore
+            .collection('orders')
+            .orderBy('createdAt', descending: true)
+            .get();
+
+    final allOrders =
+        snapshot.docs.map((doc) => OrderModel.fromFirestore(doc)).toList();
+
+    if (query.isEmpty) {
+      return allOrders;
+    }
+
+    final lowerQuery = query.toLowerCase().trim();
+
+    // 2. Lọc danh sách theo Tên người nhận, ID đơn hàng hoặc Số điện thoại
+    return allOrders.where((order) {
+      final idMatch = order.id.toLowerCase().contains(lowerQuery);
+      final nameMatch = order.address.fullName.toLowerCase().contains(
+        lowerQuery,
+      );
+      final phoneMatch = order.address.phoneNumber.contains(lowerQuery);
+
+      return idMatch || nameMatch || phoneMatch;
+    }).toList();
   }
 }

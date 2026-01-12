@@ -8,6 +8,7 @@ class AuthAdminBloc extends Bloc<AuthAdminEvent, AuthAdminState> {
   final AuthRepository authRepository;
   AuthAdminBloc(this.authRepository) : super(const AuthAdminState()) {
     on<LoginRequested>(_onLoginRequested);
+    on<LogoutRequested>(_onLogoutRequested);
   }
 
   Future<void> _onLoginRequested(
@@ -43,6 +44,19 @@ class AuthAdminBloc extends Bloc<AuthAdminEvent, AuthAdminState> {
       emit(state.copyWith(isLoading: false, errorMessage: e.message));
     } catch (e) {
       emit(state.copyWith(isLoading: false, errorMessage: e.toString()));
+    }
+  }
+
+  Future<void> _onLogoutRequested(
+    LogoutRequested event,
+    Emitter<AuthAdminState> emit,
+  ) async {
+    try {
+      // Gọi hàm đăng xuất từ repository nếu có (ví dụ: FirebaseAuth.instance.signOut())
+      await authRepository.signOut();
+      emit(const AuthAdminState()); // Reset về state ban đầu (unauthenticated)
+    } catch (e) {
+      emit(state.copyWith(errorMessage: e.toString()));
     }
   }
 }

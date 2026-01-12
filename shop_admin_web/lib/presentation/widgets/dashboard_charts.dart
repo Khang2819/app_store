@@ -1,35 +1,23 @@
 import 'package:flutter/material.dart';
 import 'package:syncfusion_flutter_charts/charts.dart';
+// Import State để lấy class MonthlyDataPoint
+import '../bloc/dashboard/admin_dashboard_state.dart';
 
 class DashboardCharts extends StatelessWidget {
   final bool isMobile;
-  DashboardCharts({super.key, this.isMobile = false});
+  // Thêm tham số nhận dữ liệu
+  final List<MonthlyDataPoint> revenueData;
+  final List<MonthlyDataPoint> pieData;
 
-  // Line chart data
-  final List<_ChartData> lineData = [
-    _ChartData('Tháng 1', 30),
-    _ChartData('Tháng 2', 45),
-    _ChartData('Tháng 3', 50),
-    _ChartData('Tháng 4', 70),
-    _ChartData('Tháng 5', 60),
-    _ChartData('Tháng 6', 90),
-    _ChartData('Tháng 7', 30),
-    _ChartData('Tháng 8', 45),
-    _ChartData('Tháng 9', 50),
-    _ChartData('Tháng 10', 70),
-    _ChartData('Tháng 11', 60),
-    _ChartData('Tháng 12', 90),
-  ];
-
-  // Pie chart data
-  final List<_PieData> pieData = [
-    _PieData('Cà phê', 100),
-    _PieData('Trà sữa', 30),
-  ];
+  const DashboardCharts({
+    super.key,
+    this.isMobile = false,
+    required this.revenueData, // Nhận data từ cha
+    required this.pieData, // Nhận data từ cha
+  });
 
   @override
   Widget build(BuildContext context) {
-    // Desktop: row, Mobile: column
     return isMobile
         ? Column(
           children: [
@@ -54,13 +42,13 @@ class DashboardCharts extends StatelessWidget {
         padding: const EdgeInsets.all(16),
         child: SfCartesianChart(
           primaryXAxis: CategoryAxis(),
-          title: ChartTitle(text: 'Doanh thu theo tháng (triệu ₫)'),
+          title: ChartTitle(text: 'Doanh thu năm nay (triệu ₫)'),
           tooltipBehavior: TooltipBehavior(enable: true),
           series: <CartesianSeries>[
-            LineSeries<_ChartData, String>(
-              dataSource: lineData,
-              xValueMapper: (_ChartData data, _) => data.x,
-              yValueMapper: (_ChartData data, _) => data.y,
+            LineSeries<MonthlyDataPoint, String>(
+              dataSource: revenueData, // Dùng dữ liệu thật
+              xValueMapper: (MonthlyDataPoint data, _) => data.month,
+              yValueMapper: (MonthlyDataPoint data, _) => data.value,
               name: 'Doanh thu',
               color: Colors.blue.shade600,
               markerSettings: const MarkerSettings(isVisible: true),
@@ -78,17 +66,21 @@ class DashboardCharts extends StatelessWidget {
       child: Padding(
         padding: const EdgeInsets.all(16),
         child: SfCircularChart(
-          title: ChartTitle(text: 'Tỷ lệ sản phẩm bán ra'),
+          title: ChartTitle(
+            text: 'Số lượng sản phẩm theo danh mục',
+          ), // Sửa tiêu đề cho đúng logic mới
           legend: Legend(
             isVisible: true,
             overflowMode: LegendItemOverflowMode.wrap,
           ),
           tooltipBehavior: TooltipBehavior(enable: true),
-          series: <PieSeries<_PieData, String>>[
-            PieSeries<_PieData, String>(
-              dataSource: pieData,
-              xValueMapper: (_PieData data, _) => data.category,
-              yValueMapper: (_PieData data, _) => data.value,
+          series: <PieSeries<MonthlyDataPoint, String>>[
+            PieSeries<MonthlyDataPoint, String>(
+              dataSource: pieData, // Dùng dữ liệu thật
+              xValueMapper:
+                  (MonthlyDataPoint data, _) =>
+                      data.month, // Lưu ý: 'month' ở đây đóng vai trò là tên Category
+              yValueMapper: (MonthlyDataPoint data, _) => data.value,
               dataLabelSettings: const DataLabelSettings(isVisible: true),
               explode: true,
               explodeIndex: 0,
@@ -98,17 +90,4 @@ class DashboardCharts extends StatelessWidget {
       ),
     );
   }
-}
-
-// ================= Data Models =================
-class _ChartData {
-  final String x;
-  final double y;
-  _ChartData(this.x, this.y);
-}
-
-class _PieData {
-  final String category;
-  final double value;
-  _PieData(this.category, this.value);
 }

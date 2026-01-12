@@ -1,14 +1,17 @@
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
+import 'package:shop_core/repositories/category_repository.dart';
 import 'package:shop_core/shop_core.dart';
 import 'home_event.dart';
 import 'home_state.dart';
 
 class HomeBloc extends Bloc<HomeEvent, HomeState> {
   final ProductRepository _repository;
+  final CategoryRepository _categoryRepository;
   final BannerRepository _bannerRepository;
 
-  HomeBloc(this._repository, this._bannerRepository) : super(HomeState()) {
+  HomeBloc(this._repository, this._bannerRepository, this._categoryRepository)
+    : super(HomeState()) {
     on<LoadHomeData>(_onLoadHomeData);
     on<ToggleFavorite>(_onToggleFavorite);
   }
@@ -21,7 +24,7 @@ class HomeBloc extends Bloc<HomeEvent, HomeState> {
     final user = FirebaseAuth.instance.currentUser;
     try {
       final products = await _repository.fetchProducts();
-      final categories = await _repository.fetchCategories();
+      final categories = await _categoryRepository.fetchCategories();
       final banners = await _bannerRepository.fetchBanners();
       List<String> favorites = [];
       if (user != null) {

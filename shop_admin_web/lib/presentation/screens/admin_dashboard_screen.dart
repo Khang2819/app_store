@@ -1,8 +1,11 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
+import 'package:go_router/go_router.dart';
 import 'package:shop_admin_web/presentation/bloc/dashboard/admin_dashboard_bloc.dart';
 import 'package:shop_admin_web/presentation/bloc/sidebar/sidebar_bloc.dart';
 import '../bloc/dashboard/admin_dashboard_state.dart';
+import '../bloc/order/orders_admin_bloc.dart';
+import '../bloc/order/orders_admin_state.dart';
 import '../bloc/sidebar/sidebar_state.dart';
 import '../widgets/admin_sidebar.dart';
 import '../widgets/dashboard_charts.dart';
@@ -54,7 +57,7 @@ class AdminLayoutScreen extends StatelessWidget {
   Widget _buildMobileLayout(BuildContext context) {
     return Scaffold(
       drawer: const Drawer(child: AdminSidebar(isExpanded: true)),
-      appBar: AppBar(title: const Text('Admin Dashboard')), // cái này
+      appBar: AppBar(title: const Text('Admin Dashboard')),
       body: BlocBuilder<SidebarBloc, SidebarState>(
         builder: (context, state) {
           return DashboardContent(isMobile: true);
@@ -93,8 +96,6 @@ class DashboardContent extends StatelessWidget {
               children: [
                 Wellcome(title: 'Chào mừng trở lại!', icon: Icons.waving_hand),
                 const SizedBox(height: 24),
-
-                // Statistics Cards
                 const Text(
                   'Thống kê tổng quan',
                   style: TextStyle(fontSize: 18, fontWeight: FontWeight.bold),
@@ -110,7 +111,7 @@ class DashboardContent extends StatelessWidget {
                         title: 'Người dùng',
                         value: state.totalUsers,
                         color: Colors.blue,
-                        trend: '+12%',
+                        trend: state.userTrend,
                       ),
                     ),
                     const SizedBox(width: 12),
@@ -120,7 +121,7 @@ class DashboardContent extends StatelessWidget {
                         title: 'Đơn hàng',
                         value: state.totalOrders,
                         color: Colors.green,
-                        trend: '+8%',
+                        trend: state.orderTrend,
                       ),
                     ),
                     const SizedBox(width: 12),
@@ -130,7 +131,7 @@ class DashboardContent extends StatelessWidget {
                         title: 'Doanh thu',
                         value: state.totalRevenue,
                         color: Colors.orange,
-                        trend: '+23%',
+                        trend: state.revenueTrend,
                       ),
                     ),
                     const SizedBox(width: 12),
@@ -140,17 +141,18 @@ class DashboardContent extends StatelessWidget {
                         title: 'Sản phẩm',
                         value: state.totalProducts,
                         color: Colors.purple,
-                        trend: '+5%',
+                        trend: state.productTrend,
                       ),
                     ),
                   ],
                 ),
-
                 const SizedBox(height: 24),
-
                 // Charts
-                DashboardCharts(isMobile: isMobile),
-
+                DashboardCharts(
+                  isMobile: isMobile,
+                  revenueData: state.monthlyRevenueData, // Lấy từ state Bloc
+                  pieData: state.categoryData,
+                ),
                 // Quick Actions
                 const Text(
                   'Thao tác nhanh',
@@ -165,28 +167,28 @@ class DashboardContent extends StatelessWidget {
                         icon: Icons.person_add_outlined,
                         title: 'Quản lý người dùng',
                         subtitle: 'Xem và quản lý tài khoản',
-                        onTap: () {},
+                        onTap: () => context.go('/users'),
                       ),
                       const Divider(height: 1),
                       _buildActionTile(
                         icon: Icons.add_box_outlined,
                         title: 'Thêm sản phẩm',
                         subtitle: 'Thêm sản phẩm mới vào kho',
-                        onTap: () {},
+                        onTap: () => context.go('/products'),
                       ),
                       const Divider(height: 1),
                       _buildActionTile(
                         icon: Icons.receipt_long_outlined,
                         title: 'Quản lý đơn hàng',
                         subtitle: 'Xem và xử lý đơn hàng',
-                        onTap: () {},
+                        onTap: () => context.go('/orders'),
                       ),
                       const Divider(height: 1),
                       _buildActionTile(
                         icon: Icons.analytics_outlined,
                         title: 'Thêm banner quảng cáo',
                         subtitle: 'Xem báo cáo chi tiết',
-                        onTap: () {},
+                        onTap: () => context.go('/banner'),
                       ),
                     ],
                   ),
@@ -201,17 +203,42 @@ class DashboardContent extends StatelessWidget {
                 const SizedBox(height: 12),
                 Card(
                   elevation: 2,
-                  child: ListView.separated(
-                    shrinkWrap: true,
-                    physics: const NeverScrollableScrollPhysics(),
-                    itemCount: 5,
-                    separatorBuilder:
-                        (context, index) => const Divider(height: 1),
-                    itemBuilder: (context, index) {
-                      return _buildActivityTile(
-                        icon: Icons.shopping_cart,
-                        title: 'Đơn hàng mới #${1000 + index}',
-                        time: '${index + 1} phút trước',
+                  child: BlocBuilder<OrdersAdminBloc, OrdersAdminState>(
+                    builder: (context, state) {
+                      if (state.isLoading) {
+                        return const Padding(
+                          padding: EdgeInsets.all(20.0),
+                          child: Center(child: CircularProgressIndicator()),
+                        );
+                      }
+
+                      final recentOrders = state.orders.take(5).toList();
+
+                      if (recentOrders.isEmpty) {
+                        return const ListTile(
+                          title: Text("Chưa có hoạt động nào"),
+                        );
+                      }
+
+                      return ListView.separated(
+                        shrinkWrap: true,
+                        physics: const NeverScrollableScrollPhysics(),
+                        itemCount: recentOrders.length,
+                        separatorBuilder:
+                            (context, index) => const Divider(height: 1),
+                        itemBuilder: (context, index) {
+                          final order = recentOrders[index];
+                          return _buildActivityTile(
+                            icon: Icons.shopping_cart_outlined,
+                            title:
+                                'Đơn hàng mới #${order.id.substring(0, 5).toUpperCase()}',
+                            subtitle:
+                                'Khách hàng: ${order.address.fullName} - ₫${order.totalAmount}',
+                            time: _formatTimestamp(
+                              order.createdAt,
+                            ), // Hàm tự viết để format ngày
+                          );
+                        },
                       );
                     },
                   ),
@@ -245,6 +272,7 @@ class DashboardContent extends StatelessWidget {
   Widget _buildActivityTile({
     required IconData icon,
     required String title,
+    required String subtitle,
     required String time,
   }) {
     return ListTile(
@@ -252,9 +280,27 @@ class DashboardContent extends StatelessWidget {
         backgroundColor: Colors.orange[50],
         child: Icon(icon, color: Colors.orange[700], size: 20),
       ),
-      title: Text(title),
-      subtitle: Text(time),
+      title: Text(title, style: const TextStyle(fontWeight: FontWeight.bold)),
+      subtitle: Text(subtitle),
+      trailing: Text(
+        time,
+        style: TextStyle(color: Colors.grey[500], fontSize: 12),
+      ),
       dense: true,
     );
+  }
+}
+
+String _formatTimestamp(DateTime? dateTime) {
+  if (dateTime == null) return '';
+  final now = DateTime.now();
+  final difference = now.difference(dateTime);
+
+  if (difference.inMinutes < 60) {
+    return '${difference.inMinutes} phút trước';
+  } else if (difference.inHours < 24) {
+    return '${difference.inHours} giờ trước';
+  } else {
+    return '${dateTime.day}/${dateTime.month}/${dateTime.year}';
   }
 }

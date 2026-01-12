@@ -8,10 +8,13 @@ class AdminDashboardBloc
     extends Bloc<AdminDashboardEvent, AdminDashboardState> {
   final ProductRepository productRepository;
   final UserRepository userRepository;
+  final OrderRepository orderRepository;
   final FirebaseFirestore _firestore = FirebaseFirestore.instance;
+
   AdminDashboardBloc({
     required this.productRepository,
     required this.userRepository,
+    required this.orderRepository,
   }) : super(const AdminDashboardState()) {
     on<LoadDashboardData>(_onLoadDashboardData);
   }
@@ -26,14 +29,31 @@ class AdminDashboardBloc
       final metrics = await userRepository.fetchDashboardMetrics();
       // tổng số sản phẩm
       final products = await _firestore.collection('products').count().get();
-      final newTotalProducts = products.count.toString();
+
+      // final recentOrders = await orderRepository.fetchAllOrdersForAdmin();
+      // final topRecentOrders = recentOrders.take(5).toList();
+      final revenueStats = await orderRepository.getMonthlyRevenue();
+      final categoryStats = await productRepository.getCategoryStats();
+
+      final revenueDataPoints =
+          revenueStats
+              .map((e) => MonthlyDataPoint(e['month'], e['value']))
+              .toList();
+
+      final categoryDataPoints =
+          categoryStats
+              .map((e) => MonthlyDataPoint(e['category'], e['value']))
+              .toList();
+
       emit(
         state.copyWith(
           isLoading: false,
           totalUsers: metrics['totalUsers'] ?? '...',
-          totalOrders: metrics['totalUsers'] ?? '...',
-          totalRevenue: metrics['totalRevenue'] ?? '...',
-          totalProducts: newTotalProducts,
+          totalOrders: metrics['totalOrders'] ?? '0',
+          totalRevenue: metrics['totalRevenue'] ?? '₫0',
+          totalProducts: products.count.toString(),
+          monthlyRevenueData: revenueDataPoints,
+          categoryData: categoryDataPoints,
           errorMessage: null,
         ),
       );

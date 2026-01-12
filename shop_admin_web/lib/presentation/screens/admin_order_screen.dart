@@ -143,8 +143,15 @@ class OrderContext extends StatelessWidget {
                     children: [
                       Row(
                         children: [
-                          const Expanded(
-                            child: SearchAdmin(text: 'Tìm kiếm theo tên'),
+                          Expanded(
+                            child: SearchAdmin(
+                              text: 'Tìm kiếm theo tên, mã đơn hàng',
+                              onChanged: (query) {
+                                context.read<OrdersAdminBloc>().add(
+                                  SearchOrders(query),
+                                );
+                              },
+                            ),
                           ),
                           const SizedBox(width: 12),
                           Container(

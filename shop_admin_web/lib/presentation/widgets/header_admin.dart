@@ -1,5 +1,10 @@
 import 'package:flutter/material.dart';
+import 'package:flutter_bloc/flutter_bloc.dart';
+import 'package:go_router/go_router.dart';
 import 'package:shop_core/shop_core.dart';
+
+import '../bloc/auth/auth_admin_bloc.dart';
+import '../bloc/auth/auth_admin_event.dart';
 
 class HeaderAdmin extends StatefulWidget {
   const HeaderAdmin({super.key});
@@ -510,7 +515,9 @@ class _HeaderAdminState extends State<HeaderAdmin> {
               ),
               ElevatedButton(
                 onPressed: () {
-                  Navigator.pop(context);
+                  context.read<AuthAdminBloc>().add(LogoutRequested());
+                  // Quay về màn hình đăng nhập
+                  context.go('/login');
                   ScaffoldMessenger.of(context).showSnackBar(
                     SnackBar(
                       content: const Text('Đã đăng xuất thành công'),

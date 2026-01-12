@@ -7,6 +7,7 @@ import 'package:shop_admin_web/presentation/bloc/banner/banner_admin_event.dart'
 import 'package:shop_admin_web/presentation/bloc/category/category_admin_bloc.dart';
 import 'package:shop_admin_web/presentation/bloc/products/products_admin_event.dart';
 import 'package:shop_admin_web/routes/web_router.dart';
+import 'package:shop_core/repositories/category_repository.dart';
 import 'package:shop_core/shop_core.dart';
 
 import 'presentation/bloc/auth/auth_admin_bloc.dart';
@@ -35,6 +36,7 @@ class MyApp extends StatelessWidget {
     final userRepository = UserRepository();
     final bannerRepository = BannerRepository();
     final orderRepository = OrderRepository();
+    final categoryRepository = CategoryRepository();
     return RepositoryProvider.value(
       value: authRepository,
 
@@ -47,6 +49,7 @@ class MyApp extends StatelessWidget {
                 (context) => AdminDashboardBloc(
                   productRepository: productRepository,
                   userRepository: userRepository,
+                  orderRepository: orderRepository,
                 )..add(LoadDashboardData()),
           ),
           BlocProvider(
@@ -70,7 +73,7 @@ class MyApp extends StatelessWidget {
           BlocProvider(
             create:
                 (context) =>
-                    CategoryAdminBloc(productRepository: productRepository)
+                    CategoryAdminBloc(categoryRepository: categoryRepository)
                       ..add(LoadCategories()),
           ),
           BlocProvider(

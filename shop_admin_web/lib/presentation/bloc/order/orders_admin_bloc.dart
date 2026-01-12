@@ -10,6 +10,7 @@ class OrdersAdminBloc extends Bloc<OrdersAdminEvent, OrdersAdminState> {
     : super(const OrdersAdminState()) {
     on<LoadOrders>(_onLoadOrders);
     on<UpdateOrderStatus>(_onUpdateOrderStatus);
+    on<SearchOrders>(_onSearchOrders);
   }
 
   Future<void> _onLoadOrders(
@@ -40,6 +41,31 @@ class OrdersAdminBloc extends Bloc<OrdersAdminEvent, OrdersAdminState> {
       add(LoadOrders()); // Tải lại danh sách sau khi cập nhật thành công
     } catch (e) {
       emit(state.copyWith(errorMessage: e.toString()));
+    }
+  }
+
+  Future<void> _onSearchOrders(
+    SearchOrders event,
+    Emitter<OrdersAdminState> emit,
+  ) async {
+    // Bật trạng thái loading nhẹ (nếu muốn) hoặc giữ nguyên UI cũ
+    emit(state.copyWith(isLoading: true, errorMessage: null));
+
+    try {
+      // Gọi hàm searchOrders vừa viết ở Repository
+      final results = await orderRepository.searchOrders(event.query);
+
+      // Cập nhật danh sách orders mới vào state
+      emit(
+        state.copyWith(isLoading: false, orders: results, errorMessage: null),
+      );
+    } catch (e) {
+      emit(
+        state.copyWith(
+          isLoading: false,
+          errorMessage: 'Lỗi khi tìm kiếm đơn hàng: ${e.toString()}',
+        ),
+      );
     }
   }
 }

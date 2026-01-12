@@ -3,6 +3,7 @@ import 'package:bloc_app/presentation/bloc/navigation/navigation_bloc.dart';
 import 'package:bloc_app/presentation/bloc/profile/profile_bloc.dart';
 import 'package:firebase_core/firebase_core.dart';
 import 'package:loader_overlay/loader_overlay.dart';
+import 'package:shop_core/repositories/category_repository.dart';
 import 'package:shop_core/shop_core.dart';
 import 'firebase_options.dart';
 import 'package:shop_core/l10n/app_localizations.dart';
@@ -43,7 +44,11 @@ class MyApp extends StatelessWidget {
         ),
         BlocProvider(
           create:
-              (context) => HomeBloc(ProductRepository(), BannerRepository()),
+              (context) => HomeBloc(
+                ProductRepository(),
+                BannerRepository(),
+                CategoryRepository(),
+              ),
         ),
       ],
       child: BlocBuilder<ThemeCubit, ThemeMode>(

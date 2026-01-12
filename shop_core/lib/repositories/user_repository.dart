@@ -2,6 +2,7 @@ import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:firebase_storage/firebase_storage.dart';
 import 'package:image_picker/image_picker.dart';
+import 'package:intl/intl.dart';
 
 import '../models/users_model.dart';
 
@@ -91,15 +92,76 @@ class UserRepository {
   }
 
   Future<Map<String, dynamic>> fetchDashboardMetrics() async {
-    final metrics = <String, dynamic>{};
-    try {
-      final userSnapshot = await _firestore.collection('users').count().get();
-      metrics['totalUsers'] = userSnapshot.count.toString();
-    } catch (e) {
-      metrics['totalUsers'] = 'Lỗi';
+    final now = DateTime.now();
+    final firstDayCurrentMonth = DateTime(now.year, now.month, 1);
+    final firstDayLastMonth = DateTime(now.year, now.month - 1, 1);
+
+    // --- 1. XỬ LÝ NGƯỜI DÙNG ---
+    final totalUsers = await _firestore.collection('users').count().get();
+    final lastMonthUsers =
+        await _firestore
+            .collection('users')
+            .where('createdAt', isGreaterThanOrEqualTo: firstDayLastMonth)
+            .where('createdAt', isLessThan: firstDayCurrentMonth)
+            .count()
+            .get();
+
+    // --- 2. XỬ LÝ ĐƠN HÀNG ---
+    final totalOrders = await _firestore.collection('orders').count().get();
+    final lastMonthOrders =
+        await _firestore
+            .collection('orders')
+            .where('createdAt', isGreaterThanOrEqualTo: firstDayLastMonth)
+            .where('createdAt', isLessThan: firstDayCurrentMonth)
+            .count()
+            .get();
+
+    // --- 3. XỬ LÝ DOANH THU ---
+    final revenueSnapshot =
+        await _firestore
+            .collection('orders')
+            .where(
+              'status',
+              isEqualTo: 'đã giao hàng',
+            ) // Tạm comment dòng này để test xem có lấy được tiền không
+            .get();
+
+    double totalRev = 0;
+    double lastMonthRev = 0;
+
+    for (var doc in revenueSnapshot.docs) {
+      final data = doc.data();
+      // Thêm kiểm tra null để tránh lỗi
+      final amount = (data['totalAmount'] as num?)?.toDouble() ?? 0.0;
+      // Chỉ cộng tiền nếu đơn hàng KHÔNG bị hủy (Logic thực tế)
+      final status = data['status'] as String? ?? '';
+
+      if (status != 'đã hủy') {
+        final date = (data['createdAt'] as Timestamp?)?.toDate();
+
+        totalRev += amount;
+        if (date != null &&
+            date.isAfter(firstDayLastMonth) &&
+            date.isBefore(firstDayCurrentMonth)) {
+          lastMonthRev += amount;
+        }
+      }
     }
-    metrics['totalRevenue'] = '₫45M';
-    return metrics;
+
+    // Format tiền Việt Nam
+    final formatter = NumberFormat("#,###", "vi_VN");
+
+    return {
+      'totalUsers': totalUsers.count.toString(),
+      'userTrend': calculateTrend(totalUsers.count!, lastMonthUsers.count!),
+      'totalOrders': totalOrders.count.toString(),
+      'orderTrend': calculateTrend(totalOrders.count!, lastMonthOrders.count!),
+
+      // SỬA: Hiển thị số tiền đầy đủ thay vì chia cho 1 triệu
+      'totalRevenue': '${formatter.format(totalRev)} ₫',
+
+      'revenueTrend': calculateTrend(totalRev, lastMonthRev),
+    };
   }
 
   Future<List<UsersModels>> fetchAllUsers() async {
@@ -242,5 +304,18 @@ class UserRepository {
       ); // Đảm bảo hàm fromFirestore đã cập nhật như bước 1
     }
     return users;
+  }
+
+  /// Tính toán xu hướng phần trăm giữa giá trị hiện tại và giá trị kỳ trước
+  String calculateTrend(num currentValue, num previousValue) {
+    if (previousValue == 0) {
+      return currentValue > 0 ? '+100%' : '0%';
+    }
+    final trendPercentage = ((currentValue - previousValue) /
+            previousValue *
+            100)
+        .toStringAsFixed(1);
+    final sign = currentValue >= previousValue ? '+' : '';
+    return '$sign$trendPercentage%';
   }
 }

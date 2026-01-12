@@ -1,6 +1,5 @@
 import 'package:cloud_firestore/cloud_firestore.dart';
 
-import '../models/category_model.dart';
 import '../models/product_model.dart';
 import '../models/review_model.dart';
 
@@ -11,12 +10,6 @@ class ProductRepository {
     final snapshot = await _firestore.collection('products').get();
     // Trả về một List<Product> thay vì List<Map>
     return snapshot.docs.map((doc) => Product.fromFirestore(doc)).toList();
-  }
-
-  Future<List<Category>> fetchCategories() async {
-    final snapshot = await _firestore.collection('categories').get();
-    // Trả về một List<Product> thay vì List<Map>
-    return snapshot.docs.map((doc) => Category.fromFirestore(doc)).toList();
   }
 
   // Lấy chi tiết một sản phẩm
@@ -297,5 +290,29 @@ class ProductRepository {
     } catch (e) {
       throw Expando('Lỗi xóa sản phẩm $e');
     }
+  }
+
+  // Trong class ProductRepository
+  Future<List<Map<String, dynamic>>> getCategoryStats() async {
+    final products = await fetchProducts(); // Hàm này bạn đã có sẵn
+    final Map<String, int> categoryCounts = {};
+
+    // Giả sử bạn muốn hiện tên danh mục, bạn cần map ID sang Name.
+    // Để đơn giản, ta nhóm theo categoryId trước.
+    for (var product in products) {
+      // categoryId lấy từ product model
+      final catId = product.categoryId.isEmpty ? 'Khác' : product.categoryId;
+      categoryCounts[catId] = (categoryCounts[catId] ?? 0) + 1;
+    }
+
+    return categoryCounts.entries
+        .map(
+          (e) => {
+            'category':
+                e.key, // Ở đây đang là ID, bạn có thể join với CategoryRepo để lấy tên
+            'value': e.value.toDouble(),
+          },
+        )
+        .toList();
   }
 }

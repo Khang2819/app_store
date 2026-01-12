@@ -1,11 +1,17 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
+import 'package:shop_core/models/category_model.dart';
 
 import '../bloc/category/category_admin_bloc.dart';
+import '../bloc/category/category_admin_event.dart';
 import '../bloc/category/category_admin_state.dart';
+import '../widgets/add_category_dialog.dart';
 import '../widgets/admin_sidebar.dart';
+import '../widgets/category_table_row.dart';
 import '../widgets/containerbox.dart';
+import '../widgets/edit_category_dialog.dart';
 import '../widgets/header_admin.dart';
+import '../widgets/tablerow.dart';
 import '../widgets/wellcome.dart';
 
 class AdminCategoryScreen extends StatelessWidget {
@@ -77,7 +83,12 @@ class CategoryContext extends StatelessWidget {
                   icon: Icons.category,
                   buttonIcon: Icons.add_circle_outline,
                   buttonText: 'Thêm Doanh mục',
-                  onPressed: () {},
+                  onPressed: () {
+                    showDialog(
+                      context: context,
+                      builder: (context) => const AddCategoryDialog(),
+                    );
+                  },
                 ),
                 const SizedBox(height: 20),
                 Row(
@@ -85,7 +96,7 @@ class CategoryContext extends StatelessWidget {
                     Expanded(
                       child: Containerbox(
                         title: 'Tổng doang mục',
-                        count: 5,
+                        count: state.categories.length,
                         color: Colors.blue,
                         icon: Icons.photo_library,
                       ),
@@ -94,18 +105,9 @@ class CategoryContext extends StatelessWidget {
                     Expanded(
                       child: Containerbox(
                         title: 'Đang hoạt động',
-                        count: 5,
+                        count: state.categories.length,
                         color: Colors.green,
                         icon: Icons.check_circle,
-                      ),
-                    ),
-                    const SizedBox(width: 16),
-                    Expanded(
-                      child: Containerbox(
-                        title: 'Tạm dừng',
-                        count: 5,
-                        color: Colors.orange,
-                        icon: Icons.pause_circle,
                       ),
                     ),
                   ],
@@ -171,6 +173,7 @@ class CategoryContext extends StatelessWidget {
                           ],
                         ),
                       ),
+                      _buildCategoryList(context, state),
                     ],
                   ),
                 ),
@@ -196,6 +199,80 @@ class CategoryContext extends StatelessWidget {
           ),
         ),
       ],
+    );
+  }
+
+  Widget _buildCategoryList(BuildContext context, CategoryAdminState state) {
+    if (state.isLoading) {
+      return const Center(
+        child: Padding(
+          padding: EdgeInsets.all(32.0),
+          child: CircularProgressIndicator(),
+        ),
+      );
+    }
+
+    if (state.categories.isEmpty) {
+      return const Center(
+        child: Padding(
+          padding: EdgeInsets.all(32.0),
+          child: Text('Không có danh mục nào.'),
+        ),
+      );
+    }
+
+    return Column(
+      children: List.generate(state.categories.length, (index) {
+        final category = state.categories[index];
+        return TableRowItem(
+          index: index,
+          totalUsers: state.categories.length,
+          child: CategoryTableRow(
+            category: category,
+            onEdit: () {
+              _showEditDialog(context, category);
+            },
+            onDelete: () {
+              _confirmDelete(context, category);
+            },
+          ),
+        );
+      }),
+    );
+  }
+
+  void _showEditDialog(BuildContext context, Category category) {
+    showDialog(
+      context: context,
+      builder: (_) => EditCategoryDialog(category: category),
+    );
+  }
+
+  void _confirmDelete(BuildContext context, Category category) {
+    showDialog(
+      context: context,
+      builder:
+          (context) => AlertDialog(
+            title: const Text('Xác nhận xóa'),
+            content: Text(
+              'Bạn có chắc muốn xóa danh mục "${category.name['vi']}"?',
+            ),
+            actions: [
+              TextButton(
+                onPressed: () => Navigator.pop(context),
+                child: const Text('Hủy'),
+              ),
+              ElevatedButton(
+                onPressed: () {
+                  context.read<CategoryAdminBloc>().add(
+                    DeleteCategory(category.id),
+                  );
+                  Navigator.pop(context);
+                },
+                child: const Text('Xóa'),
+              ),
+            ],
+          ),
     );
   }
 }
