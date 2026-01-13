@@ -62,6 +62,14 @@ class ProductsContext extends StatelessWidget {
   Widget build(BuildContext context) {
     return BlocBuilder<ProductsAdminBloc, ProductsAdminState>(
       builder: (context, state) {
+        final sourceList =
+            state.allProducts.isNotEmpty ? state.allProducts : state.products;
+
+        final totalCount = sourceList.length;
+        final inStockCount =
+            sourceList.where((p) => (100 - p.soldCount) > 0).length;
+        final outStockCount =
+            sourceList.where((p) => (100 - p.soldCount) <= 0).length;
         return Container(
           decoration: BoxDecoration(
             gradient: LinearGradient(
@@ -96,28 +104,34 @@ class ProductsContext extends StatelessWidget {
                   children: [
                     Expanded(
                       child: Containerbox(
-                        title: 'Tổng số sản phẩm',
-                        count: 36,
+                        title: 'Tổng sản phẩm',
+                        count: totalCount,
                         color: Colors.blue,
                         icon: Icons.inventory_2,
                       ),
                     ),
                     const SizedBox(width: 16),
+
+                    // Ô 2: Còn hàng
                     Expanded(
                       child: Containerbox(
-                        title: 'Tổng số sản phẩm',
-                        count: 36,
+                        title: 'Còn hàng',
+                        count: inStockCount,
                         color: Colors.green,
                         icon: Icons.check_circle,
                       ),
                     ),
                     const SizedBox(width: 16),
+
+                    // Ô 3: Hết hàng
                     Expanded(
                       child: Containerbox(
-                        title: 'Tổng số sản phẩm',
-                        count: 36,
-                        color: Colors.orange,
-                        icon: Icons.check_circle,
+                        title: 'Hết hàng',
+                        count: outStockCount,
+                        color:
+                            Colors.red, // Đổi màu đỏ cho dễ nhận biết báo động
+                        icon:
+                            Icons.remove_shopping_cart, // Đổi icon hợp ngữ cảnh
                       ),
                     ),
                   ],
@@ -151,61 +165,56 @@ class ProductsContext extends StatelessWidget {
                               },
                             ),
                           ),
-                          const SizedBox(width: 12),
-                          Container(
-                            padding: const EdgeInsets.symmetric(horizontal: 16),
-                            decoration: BoxDecoration(
-                              color: Colors.grey[50],
-                              borderRadius: BorderRadius.circular(12),
-                              border: Border.all(color: Colors.grey[200]!),
-                            ),
-                            child: DropdownButton<int>(
-                              value: 10,
-                              underline: const SizedBox(),
-                              icon: Icon(
-                                Icons.arrow_drop_down,
-                                color: Colors.grey[600],
-                              ),
-                              items:
-                                  [10, 25, 50, 100].map((value) {
-                                    return DropdownMenuItem(
-                                      value: value,
-                                      child: Text('$value / trang'),
-                                    );
-                                  }).toList(),
-                              onChanged: (value) {},
-                            ),
-                          ),
                         ],
                       ),
                       const SizedBox(height: 16),
-                      const Wrap(
+                      Wrap(
                         spacing: 10,
                         runSpacing: 10,
                         children: [
                           Fiterchip(
                             title: 'Tất cả',
                             value: 'all',
-                            currentValue: 'all',
+                            currentValue: state.filterStatus,
                             icon: Icons.apps,
+                            onTap: () {
+                              context.read<ProductsAdminBloc>().add(
+                                const FilterProducts('all'),
+                              );
+                            },
                           ),
                           Fiterchip(
-                            title: 'Người dùng',
-                            value: 'active',
-                            currentValue: 'active',
+                            title: 'Còn hàng',
+                            value: 'in_stock',
+                            currentValue: state.filterStatus,
                             icon: Icons.check_circle,
+                            onTap: () {
+                              context.read<ProductsAdminBloc>().add(
+                                const FilterProducts('in_stock'),
+                              );
+                            },
                           ),
                           Fiterchip(
-                            title: 'Quản trị viên',
-                            value: 'inactive',
-                            currentValue: 'inactive',
-                            icon: Icons.access_time,
+                            title: 'Hết hàng',
+                            value: 'out_of_stock',
+                            currentValue: state.filterStatus,
+                            icon: Icons.remove_shopping_cart,
+                            onTap: () {
+                              context.read<ProductsAdminBloc>().add(
+                                const FilterProducts('out_of_stock'),
+                              );
+                            },
                           ),
                           Fiterchip(
-                            title: 'Bị cấm',
-                            value: 'banned',
-                            currentValue: 'banned',
+                            title: 'Bán chạy',
+                            value: 'best_seller',
+                            currentValue: state.filterStatus,
                             icon: Icons.block,
+                            onTap: () {
+                              context.read<ProductsAdminBloc>().add(
+                                const FilterProducts('best_seller'),
+                              );
+                            },
                           ),
                         ],
                       ),

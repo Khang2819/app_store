@@ -9,6 +9,8 @@ class UsersAdminState extends Equatable {
   final int totalCount;
   final int adminCount;
   final int bannedCount;
+  final List<UsersModels> allUsers;
+  final String filterStatus;
 
   const UsersAdminState({
     this.isLoading = true,
@@ -18,24 +20,30 @@ class UsersAdminState extends Equatable {
     this.totalCount = 0, // Mặc định là 0
     this.adminCount = 0,
     this.bannedCount = 0,
+    this.allUsers = const [],
+    this.filterStatus = 'all',
   });
   UsersAdminState copyWith({
     bool? isLoading,
     String? errorMessage,
     List<UsersModels>? users,
+    List<UsersModels>? allUsers,
     bool? isActionLoading,
     int? totalCount,
     int? adminCount,
     int? bannedCount,
+    String? filterStatus,
   }) {
     return UsersAdminState(
       isLoading: isLoading ?? this.isLoading,
       errorMessage: errorMessage,
       users: users ?? this.users,
+      allUsers: allUsers ?? this.allUsers,
       isActionLoading: isActionLoading ?? this.isActionLoading,
       totalCount: totalCount ?? this.totalCount,
       adminCount: adminCount ?? this.adminCount,
       bannedCount: bannedCount ?? this.bannedCount,
+      filterStatus: filterStatus ?? this.filterStatus,
     );
   }
 
@@ -44,9 +52,11 @@ class UsersAdminState extends Equatable {
     isLoading,
     errorMessage,
     users,
+    allUsers,
     isActionLoading,
     totalCount,
     adminCount,
     bannedCount,
+    filterStatus,
   ];
 }

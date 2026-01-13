@@ -100,6 +100,26 @@ class OrderRepository {
         .delete();
   }
 
+  Future<void> deleteOrderAdmin(String orderId, String userId) async {
+    final batch = _firestore.batch();
+
+    // Xóa trong danh sách tổng của Admin (Mất doanh thu từ đơn này)
+    final adminOrderRef = _firestore.collection('orders').doc(orderId);
+    batch.delete(adminOrderRef);
+
+    // Xóa luôn trong lịch sử User để đồng bộ
+    if (userId.isNotEmpty) {
+      final userOrderRef = _firestore
+          .collection('users')
+          .doc(userId)
+          .collection('orders')
+          .doc(orderId);
+      batch.delete(userOrderRef);
+    }
+
+    await batch.commit();
+  }
+
   // Lấy tất cả đơn hàng cho Admin (Web)
   Future<List<OrderModel>> fetchAllOrdersForAdmin() async {
     final snapshot =

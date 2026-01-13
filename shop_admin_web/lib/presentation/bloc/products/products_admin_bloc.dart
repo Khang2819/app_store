@@ -13,6 +13,7 @@ class ProductsAdminBloc extends Bloc<ProductsAdminEvent, ProductsAdminState> {
     on<DeleteProducts>(_onDeleteProducts);
     on<AddProduct>(_onAddProduct);
     on<SearchProducts>(_onSearchProducts);
+    on<FilterProducts>(_onFilterProducts);
   }
 
   Future<void> _onLoadProducts(
@@ -26,7 +27,9 @@ class ProductsAdminBloc extends Bloc<ProductsAdminEvent, ProductsAdminState> {
         state.copyWith(
           isLoading: false,
           products: products,
+          allProducts: products,
           errorMessage: null,
+          filterStatus: 'all',
         ),
       );
     } catch (e) {
@@ -37,6 +40,42 @@ class ProductsAdminBloc extends Bloc<ProductsAdminEvent, ProductsAdminState> {
         ),
       );
     }
+  }
+
+  void _onFilterProducts(
+    FilterProducts event,
+    Emitter<ProductsAdminState> emit,
+  ) {
+    List<Product> filteredList = List.from(state.allProducts);
+
+    switch (event.filterType) {
+      case 'in_stock':
+        // Logic: Tồn kho = 100 - soldCount. Lấy cái > 0
+        filteredList =
+            filteredList.where((p) => (100 - p.soldCount) > 0).toList();
+        break;
+
+      case 'out_of_stock':
+        // Logic: Tồn kho <= 0
+        filteredList =
+            filteredList.where((p) => (100 - p.soldCount) <= 0).toList();
+        break;
+
+      case 'best_seller':
+        // Sắp xếp bán chạy nhất lên đầu
+        filteredList.sort((a, b) => b.soldCount.compareTo(a.soldCount));
+        break;
+
+      case 'all':
+      default:
+        // Giữ nguyên list gốc (nhưng có thể cần sort lại theo ngày tạo nếu muốn)
+        filteredList = state.allProducts;
+        break;
+    }
+
+    emit(
+      state.copyWith(products: filteredList, filterStatus: event.filterType),
+    );
   }
 
   Future<void> _onUpdateProducts(

@@ -176,6 +176,13 @@ class OrderTableRow extends StatelessWidget {
                     onPressed: onEdit,
                   ),
                 ),
+                Tooltip(
+                  message: 'Chỉnh sửa',
+                  child: IconButton(
+                    icon: Icon(Icons.delete_forever, color: Colors.red[600]),
+                    onPressed: onDelete,
+                  ),
+                ),
               ],
             ),
           ),

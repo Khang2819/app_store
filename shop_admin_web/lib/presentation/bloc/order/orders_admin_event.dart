@@ -33,3 +33,20 @@ class SearchOrders extends OrdersAdminEvent {
   @override
   List<Object?> get props => [query];
 }
+
+class FilterOrders extends OrdersAdminEvent {
+  final String status; // 'all', 'pending', 'shipping', 'delivered', 'cancelled'
+  const FilterOrders(this.status);
+
+  @override
+  List<Object?> get props => [status];
+}
+
+class DeleteOrder extends OrdersAdminEvent {
+  final String orderId;
+  final String userId;
+  const DeleteOrder(this.orderId, this.userId);
+
+  @override
+  List<Object?> get props => [orderId];
+}

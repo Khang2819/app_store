@@ -163,61 +163,60 @@ class UsersContext extends StatelessWidget {
                               },
                             ),
                           ),
-                          const SizedBox(width: 12),
-                          Container(
-                            padding: const EdgeInsets.symmetric(horizontal: 16),
-                            decoration: BoxDecoration(
-                              color: Colors.grey[50],
-                              borderRadius: BorderRadius.circular(12),
-                              border: Border.all(color: Colors.grey[200]!),
-                            ),
-                            child: DropdownButton<int>(
-                              value: 10,
-                              underline: const SizedBox(),
-                              icon: Icon(
-                                Icons.arrow_drop_down,
-                                color: Colors.grey[600],
-                              ),
-                              items:
-                                  [10, 25, 50, 100].map((value) {
-                                    return DropdownMenuItem(
-                                      value: value,
-                                      child: Text('$value / trang'),
-                                    );
-                                  }).toList(),
-                              onChanged: (value) {},
-                            ),
-                          ),
                         ],
                       ),
                       const SizedBox(height: 16),
-                      const Wrap(
+                      Wrap(
                         spacing: 10,
                         runSpacing: 10,
                         children: [
                           Fiterchip(
                             title: 'Tất cả',
                             value: 'all',
-                            currentValue: 'all',
+                            currentValue: state.filterStatus,
                             icon: Icons.apps,
+                            onTap: () {
+                              // Gọi sự kiện lọc trong BLoC
+                              context.read<UsersAdminBloc>().add(
+                                FilterUsers('all'),
+                              );
+                            },
                           ),
                           Fiterchip(
                             title: 'Người dùng',
-                            value: 'active',
-                            currentValue: 'active',
+                            value: 'user',
+                            currentValue: state.filterStatus,
                             icon: Icons.check_circle,
+                            onTap: () {
+                              // THÊM: Gọi sự kiện lọc
+                              context.read<UsersAdminBloc>().add(
+                                const FilterUsers('user'),
+                              );
+                            },
                           ),
                           Fiterchip(
                             title: 'Quản trị viên',
-                            value: 'inactive',
-                            currentValue: 'inactive',
+                            value: 'admin',
+                            currentValue: state.filterStatus,
                             icon: Icons.access_time,
+                            onTap: () {
+                              // THÊM: Gọi sự kiện lọc
+                              context.read<UsersAdminBloc>().add(
+                                const FilterUsers('admin'),
+                              );
+                            },
                           ),
                           Fiterchip(
                             title: 'Bị cấm',
                             value: 'banned',
-                            currentValue: 'banned',
+                            currentValue: state.filterStatus,
                             icon: Icons.block,
+                            onTap: () {
+                              // THÊM: Gọi sự kiện lọc
+                              context.read<UsersAdminBloc>().add(
+                                const FilterUsers('banned'),
+                              );
+                            },
                           ),
                         ],
                       ),

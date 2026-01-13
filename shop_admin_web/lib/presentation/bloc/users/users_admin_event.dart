@@ -46,3 +46,11 @@ class AddUser extends UsersAdminEvent {
   @override
   List<Object> get props => [name, email, role, password];
 }
+
+class FilterUsers extends UsersAdminEvent {
+  final String status; // 'all', 'user', 'admin', 'banned'
+  const FilterUsers(this.status);
+
+  @override
+  List<Object> get props => [status];
+}

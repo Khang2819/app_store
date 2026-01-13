@@ -66,3 +66,11 @@ class AddProduct extends ProductsAdminEvent {
   @override
   List<Object> get props => [names, imageUrl, price, descriptions, categoryId];
 }
+
+class FilterProducts extends ProductsAdminEvent {
+  final String filterType;
+  const FilterProducts(this.filterType);
+
+  @override
+  List<Object> get props => [filterType];
+}

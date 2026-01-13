@@ -5,24 +5,35 @@ class Fiterchip extends StatelessWidget {
   final String value;
   final IconData icon;
   final String currentValue;
+  final VoidCallback? onTap;
   const Fiterchip({
     super.key,
     required this.title,
     required this.value,
     required this.icon,
     required this.currentValue,
+    this.onTap,
   });
 
   @override
   Widget build(BuildContext context) {
     final isSelected = currentValue == value;
     Color color = Colors.grey;
-    if (value == 'active') color = Colors.green;
-    if (value == 'inactive') color = Colors.orange;
+    if (value == 'user') color = Colors.green;
+    if (value == 'admin') color = Colors.orange;
     if (value == 'banned') color = Colors.red;
     if (value == 'all') color = Colors.blue;
+
+    if (value == 'in_stock') color = Colors.green; // Còn hàng -> Xanh
+    if (value == 'out_of_stock') color = Colors.red; // Hết hàng -> Đỏ
+    if (value == 'best_seller') color = Colors.purple;
+
+    if (value == 'pending') color = Colors.orange; // Chờ xử lý -> Cam
+    if (value == 'shipping') color = Colors.cyan; // Đang giao -> Xanh lơ
+    if (value == 'delivered') color = Colors.green; // Hoàn thành -> Xanh lá
+    if (value == 'cancelled') color = Colors.red;
     return InkWell(
-      onTap: () {},
+      onTap: onTap,
       borderRadius: BorderRadius.circular(25),
       child: Container(
         padding: const EdgeInsets.symmetric(horizontal: 16, vertical: 10),

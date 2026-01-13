@@ -13,6 +13,7 @@ class UsersAdminBloc extends Bloc<UsersAdminEvent, UsersAdminState> {
     on<DeleteUsers>(_onDeleteUsers);
     on<SearchUsers>(_onSearchUsers);
     on<AddUser>(_onAddUser);
+    on<FilterUsers>(_onFilterUsers);
   }
 
   Future<void> _onLoadUsers(
@@ -28,11 +29,13 @@ class UsersAdminBloc extends Bloc<UsersAdminEvent, UsersAdminState> {
       emit(
         state.copyWith(
           isLoading: false,
+          allUsers: users,
           users: users,
           totalCount: total,
           adminCount: admins,
           bannedCount: banned,
           errorMessage: null,
+          filterStatus: 'all',
         ),
       );
     } catch (e) {
@@ -43,6 +46,20 @@ class UsersAdminBloc extends Bloc<UsersAdminEvent, UsersAdminState> {
         ),
       );
     }
+  }
+
+  void _onFilterUsers(FilterUsers event, Emitter<UsersAdminState> emit) {
+    final status = event.status;
+    List<UsersModels> filteredList;
+
+    if (status == 'all') {
+      filteredList = state.allUsers;
+    } else {
+      // Lọc theo role khớp với status ('user', 'admin', 'banned')
+      filteredList = state.allUsers.where((u) => u.role == status).toList();
+    }
+
+    emit(state.copyWith(users: filteredList, filterStatus: status));
   }
 
   Future<void> _onUpdateUsers(

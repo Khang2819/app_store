@@ -60,6 +60,25 @@ class OrderContext extends StatelessWidget {
   Widget build(BuildContext context) {
     return BlocBuilder<OrdersAdminBloc, OrdersAdminState>(
       builder: (context, state) {
+        final sourceList =
+            state.allOrders.isNotEmpty ? state.allOrders : state.orders;
+
+        final totalCount = sourceList.length;
+        final pendingCount =
+            sourceList.where((o) {
+              final s = o.status.toLowerCase();
+              return s.contains('chờ') || s.contains('đang xử lý');
+            }).length;
+
+        final shippingCount =
+            sourceList
+                .where((o) => o.status.toLowerCase().contains('vận chuyển'))
+                .length;
+
+        final completedCount =
+            sourceList
+                .where((o) => o.status.toLowerCase() == 'đã giao hàng')
+                .length;
         return Container(
           decoration: BoxDecoration(
             gradient: LinearGradient(
@@ -90,7 +109,7 @@ class OrderContext extends StatelessWidget {
                     Expanded(
                       child: Containerbox(
                         title: 'Tổng số đơn hàng',
-                        count: 36,
+                        count: totalCount,
                         color: Color(0xFF667eea),
                         icon: Icons.shopping_bag_rounded,
                       ),
@@ -99,7 +118,7 @@ class OrderContext extends StatelessWidget {
                     Expanded(
                       child: Containerbox(
                         title: 'Chờ xử lý',
-                        count: 36,
+                        count: pendingCount,
                         color: Color(0xFFFF9800),
                         icon: Icons.pending_actions_rounded,
                       ),
@@ -108,7 +127,7 @@ class OrderContext extends StatelessWidget {
                     Expanded(
                       child: Containerbox(
                         title: 'Đang giao',
-                        count: 36,
+                        count: shippingCount,
                         color: Color(0xFF00BCD4),
                         icon: Icons.local_shipping_rounded,
                       ),
@@ -117,7 +136,7 @@ class OrderContext extends StatelessWidget {
                     Expanded(
                       child: Containerbox(
                         title: 'Hoàn thành',
-                        count: 36,
+                        count: completedCount,
                         color: Colors.green,
                         icon: Icons.check_circle,
                       ),
@@ -153,61 +172,62 @@ class OrderContext extends StatelessWidget {
                               },
                             ),
                           ),
-                          const SizedBox(width: 12),
-                          Container(
-                            padding: const EdgeInsets.symmetric(horizontal: 16),
-                            decoration: BoxDecoration(
-                              color: Colors.grey[50],
-                              borderRadius: BorderRadius.circular(12),
-                              border: Border.all(color: Colors.grey[200]!),
-                            ),
-                            child: DropdownButton<int>(
-                              value: 10,
-                              underline: const SizedBox(),
-                              icon: Icon(
-                                Icons.arrow_drop_down,
-                                color: Colors.grey[600],
-                              ),
-                              items:
-                                  [10, 25, 50, 100].map((value) {
-                                    return DropdownMenuItem(
-                                      value: value,
-                                      child: Text('$value / trang'),
-                                    );
-                                  }).toList(),
-                              onChanged: (value) {},
-                            ),
-                          ),
                         ],
                       ),
                       const SizedBox(height: 16),
-                      const Wrap(
+                      Wrap(
                         spacing: 10,
                         runSpacing: 10,
                         children: [
                           Fiterchip(
                             title: 'Tất cả',
                             value: 'all',
-                            currentValue: 'all',
+                            currentValue: state.filterStatus,
                             icon: Icons.apps,
+                            onTap:
+                                () => context.read<OrdersAdminBloc>().add(
+                                  const FilterOrders('all'),
+                                ),
                           ),
                           Fiterchip(
-                            title: 'Người dùng',
-                            value: 'active',
-                            currentValue: 'active',
+                            title: 'Chờ xử lý',
+                            value: 'pending',
+                            currentValue: state.filterStatus,
+                            icon: Icons.hourglass_empty,
+                            onTap:
+                                () => context.read<OrdersAdminBloc>().add(
+                                  const FilterOrders('pending'),
+                                ),
+                          ),
+                          Fiterchip(
+                            title: 'Đang giao',
+                            value: 'shipping',
+                            currentValue: state.filterStatus,
+                            icon: Icons.local_shipping,
+                            onTap:
+                                () => context.read<OrdersAdminBloc>().add(
+                                  const FilterOrders('shipping'),
+                                ),
+                          ),
+                          Fiterchip(
+                            title: 'Hoàn thành',
+                            value: 'delivered',
+                            currentValue: state.filterStatus,
                             icon: Icons.check_circle,
-                          ),
-                          Fiterchip(
-                            title: 'Đã giao',
-                            value: 'inactive',
-                            currentValue: 'inactive',
-                            icon: Icons.done_all,
+                            onTap:
+                                () => context.read<OrdersAdminBloc>().add(
+                                  const FilterOrders('delivered'),
+                                ),
                           ),
                           Fiterchip(
                             title: 'Đã hủy',
-                            value: 'banned',
-                            currentValue: 'banned',
-                            icon: Icons.block,
+                            value: 'cancelled',
+                            currentValue: state.filterStatus,
+                            icon: Icons.cancel,
+                            onTap:
+                                () => context.read<OrdersAdminBloc>().add(
+                                  const FilterOrders('cancelled'),
+                                ),
                           ),
                         ],
                       ),
@@ -346,27 +366,6 @@ class OrderContext extends StatelessWidget {
         ),
       );
     }
-
-    // return ListView.separated(
-    //   shrinkWrap: true,
-    //   physics: const NeverScrollableScrollPhysics(),
-    //   itemCount: state.orders.length,
-    //   separatorBuilder: (_, __) => const Divider(height: 1),
-    //   itemBuilder: (context, index) {
-    //     final order = state.orders[index];
-
-    //     return TableRowItem(
-    //       index: index,
-    //       totalUsers: state.orders.length,
-    //       child: OrderTableRow(
-    //         order: order,
-    //         onEdit: () => _showStatusPicker(context, order),
-    //         onDelete: () {},
-    //       ),
-    //     );
-    //   },
-    // );
-
     return Column(
       children: List.generate(state.orders.length, (index) {
         final order = state.orders[index];
@@ -376,7 +375,7 @@ class OrderContext extends StatelessWidget {
           child: OrderTableRow(
             order: order,
             onEdit: () => _showStatusPicker(context, order),
-            onDelete: () {},
+            onDelete: () => _confirmDelete(context, order),
           ),
         );
       }),
@@ -429,6 +428,63 @@ class OrderContext extends StatelessWidget {
               ),
             ],
           ),
+        );
+      },
+    );
+  }
+
+  void _confirmDelete(BuildContext context, OrderModel order) {
+    showDialog(
+      context: context,
+      builder: (BuildContext dialogContext) {
+        return AlertDialog(
+          title: const Text('Xác nhận xóa đơn hàng'),
+          content: RichText(
+            text: TextSpan(
+              style: const TextStyle(color: Colors.black),
+              children: [
+                const TextSpan(text: 'Bạn có chắc muốn xóa đơn hàng '),
+                TextSpan(
+                  text: '#${order.id.substring(0, 8).toUpperCase()}',
+                  style: const TextStyle(fontWeight: FontWeight.bold),
+                ),
+                const TextSpan(
+                  text: ' không?\nHành động này không thể hoàn tác.',
+                ),
+              ],
+            ),
+          ),
+          actions: [
+            TextButton(
+              onPressed: () => Navigator.pop(dialogContext), // Đóng dialog
+              child: const Text('Hủy'),
+            ),
+            ElevatedButton(
+              style: ElevatedButton.styleFrom(
+                backgroundColor: Colors.red,
+                foregroundColor: Colors.white,
+              ),
+              onPressed: () {
+                // Gọi sự kiện DeleteOrder trong Bloc
+                context.read<OrdersAdminBloc>().add(
+                  DeleteOrder(order.id, order.userId),
+                );
+
+                // Đóng dialog
+                Navigator.pop(dialogContext);
+
+                // Hiển thị thông báo
+                ScaffoldMessenger.of(context).showSnackBar(
+                  const SnackBar(
+                    content: Text('Đang xóa đơn hàng...'),
+                    backgroundColor: Colors.orange,
+                    duration: Duration(seconds: 1),
+                  ),
+                );
+              },
+              child: const Text('Xóa vĩnh viễn'),
+            ),
+          ],
         );
       },
     );
