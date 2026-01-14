@@ -5,7 +5,7 @@ import 'package:go_router/go_router.dart';
 import 'package:shop_core/shop_core.dart';
 
 import '../bloc/sidebar/sidebar_bloc.dart';
-import '../bloc/sidebar/sidebar_event.dart';
+
 import '../bloc/sidebar/sidebar_state.dart';
 
 class AdminSidebar extends StatelessWidget {
@@ -18,7 +18,6 @@ class AdminSidebar extends StatelessWidget {
     this.isDesktop = true,
   });
 
-  // Tối ưu: chỉ tạo 1 lần
   static const List<Map<String, dynamic>> menuItems = [
     {
       'title': 'Dashboard',
@@ -38,12 +37,12 @@ class AdminSidebar extends StatelessWidget {
     },
     {'title': 'Quảng cáo', 'icon': Icons.sell, 'route': '/banner'},
     {'title': 'Doanh mục', 'icon': Icons.category, 'route': '/category'},
-    {
-      'title': 'Thông báo',
-      'icon': Icons.notifications,
-      'route': '/notification',
-    },
-    {'title': 'Cài đặt', 'icon': Icons.settings_outlined, 'route': '/settings'},
+    // {
+    //   'title': 'Thông báo',
+    //   'icon': Icons.notifications,
+    //   'route': '/notification',
+    // },
+    // {'title': 'Cài đặt', 'icon': Icons.settings_outlined, 'route': '/settings'},
   ];
 
   @override
@@ -51,8 +50,10 @@ class AdminSidebar extends StatelessWidget {
     const double condensedWidth = 70;
     const double expandedWidth = 250;
 
-    // Gọn hơn — không cần else
     final double currentWidth = isExpanded ? expandedWidth : condensedWidth;
+
+    // Lấy URL hiện tại từ GoRouter
+    final String currentLocation = GoRouterState.of(context).uri.path;
 
     return BlocBuilder<SidebarBloc, SidebarState>(
       builder: (context, state) {
@@ -71,13 +72,24 @@ class AdminSidebar extends StatelessWidget {
                     itemCount: menuItems.length,
                     itemBuilder: (context, index) {
                       final item = menuItems[index];
+
+                      // 1. Tính toán logic highlight dựa trên URL
+                      bool isSelected = false;
+                      if (item['route'] == '/dashboard') {
+                        isSelected = currentLocation == '/dashboard';
+                      } else {
+                        // Dùng startsWith để các trang con (VD: /products/add) vẫn sáng mục cha
+                        isSelected = currentLocation.startsWith(item['route']);
+                      }
+
                       return _buildMenuItem(
                         context,
                         index: index,
                         title: item['title']!,
                         icon: item['icon']!,
                         route: item['route']!,
-                        isSelected: state.tabIndex == index,
+                        // 2. SỬA LỖI Ở ĐÂY: Dùng biến isSelected vừa tính, KHÔNG dùng state.tabIndex
+                        isSelected: isSelected,
                       );
                     },
                   ),
@@ -89,6 +101,8 @@ class AdminSidebar extends StatelessWidget {
       },
     );
   }
+
+  // ... (Giữ nguyên phần _buildHeader và _buildMenuItem như cũ)
 
   // ---------------- HEADER ----------------
   Widget _buildHeader() {
@@ -153,7 +167,9 @@ class AdminSidebar extends StatelessWidget {
         child: InkWell(
           borderRadius: BorderRadius.circular(8),
           onTap: () {
-            context.read<SidebarBloc>().add(SelectPage(index));
+            // Không nhất thiết phải gọi event Bloc nữa vì UI giờ dựa theo URL
+            // context.read<SidebarBloc>().add(SelectPage(index));
+
             context.go(route);
             if (!isDesktop) Navigator.of(context).pop();
           },

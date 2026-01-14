@@ -41,7 +41,9 @@ class OrderRepository {
                 (item) => {
                   'productId': item.product.id,
                   'productName':
-                      item.product.name['vi'] ?? item.product.name['en'],
+                      item.product.name['vi'] ??
+                      item.product.name['en'] ??
+                      item.product.name['ja'],
                   'quantity': item.quantity,
                   'price': item.product.price,
                   'imageUrl': item.product.imageUrl,
@@ -193,8 +195,6 @@ class OrderRepository {
   }
 
   Future<List<OrderModel>> searchOrders(String query) async {
-    // 1. Lấy tất cả đơn hàng
-    // (Lưu ý: Với quy mô nhỏ, fetch hết rồi lọc ở client là ổn. Quy mô lớn nên dùng Algolia/Elasticsearch)
     final snapshot =
         await _firestore
             .collection('orders')
@@ -210,7 +210,6 @@ class OrderRepository {
 
     final lowerQuery = query.toLowerCase().trim();
 
-    // 2. Lọc danh sách theo Tên người nhận, ID đơn hàng hoặc Số điện thoại
     return allOrders.where((order) {
       final idMatch = order.id.toLowerCase().contains(lowerQuery);
       final nameMatch = order.address.fullName.toLowerCase().contains(

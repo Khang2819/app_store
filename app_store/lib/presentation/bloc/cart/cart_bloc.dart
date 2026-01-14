@@ -115,7 +115,6 @@ class CartBloc extends Bloc<CartEvent, CartState> {
   }
 
   Future<void> _onClearCart(ClearCart event, Emitter<CartState> emit) async {
-    // Chỉ cần phát ra trạng thái giỏ hàng trống
     emit(CartEmpty());
   }
 
@@ -129,14 +128,13 @@ class CartBloc extends Bloc<CartEvent, CartState> {
     try {
       emit(CartLoading());
 
-      // Gọi logic từ Repository thay vì viết trực tiếp ở đây
       await _orderRepository.createOrder(
         items: currentState.items,
         totalAmount: event.totalAmount,
         address: event.address,
       );
 
-      emit(CartSuccess()); // Hoặc emit(CartEmpty()) tùy bạn xử lý UI
+      emit(CartSuccess());
     } catch (e) {
       emit(CartError(e.toString()));
     }
