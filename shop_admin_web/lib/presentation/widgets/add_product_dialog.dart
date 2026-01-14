@@ -7,6 +7,10 @@ import 'package:shop_admin_web/presentation/widgets/custom_text_field.dart';
 
 import '../bloc/products/products_admin_bloc.dart';
 import '../bloc/products/products_admin_event.dart';
+// [IMPORT MỚI] Import Bloc và Event của Category
+import '../bloc/category/category_admin_bloc.dart';
+import '../bloc/category/category_admin_state.dart';
+import '../bloc/category/category_admin_event.dart';
 
 class AddProductDialog extends StatefulWidget {
   const AddProductDialog({super.key});
@@ -20,22 +24,29 @@ class _AddProductDialogState extends State<AddProductDialog> {
 
   final _nameViController = TextEditingController();
   final _nameEnController = TextEditingController();
-  final _nameJaController =
-      TextEditingController(); // THÊM MỚI: Controller tiếng Nhật
+  final _nameJaController = TextEditingController();
   final _descViController = TextEditingController();
   final _descEnController = TextEditingController();
   final _descJaController = TextEditingController();
   final _priceController = TextEditingController();
   final _imageUrlController = TextEditingController();
 
-  // Tạm thời hardcode Category ID vì chưa có Bloc quản lý Category
-  String? _selectedCategoryId = 'placeholder_category_1';
+  // [SỬA ĐỔI] Khởi tạo null để bắt buộc người dùng chọn
+  String? _selectedCategoryId;
+
+  @override
+  void initState() {
+    super.initState();
+    // [THÊM MỚI] Tải danh sách danh mục ngay khi mở Dialog
+    // Đảm bảo CategoryAdminBloc đã được provide ở màn hình cha (hoặc main.dart)
+    context.read<CategoryAdminBloc>().add(LoadCategories());
+  }
 
   @override
   void dispose() {
     _nameViController.dispose();
     _nameEnController.dispose();
-    _nameJaController.dispose(); // THÊM MỚI
+    _nameJaController.dispose();
     _descViController.dispose();
     _descEnController.dispose();
     _descJaController.dispose();
@@ -45,7 +56,12 @@ class _AddProductDialogState extends State<AddProductDialog> {
   }
 
   void _submitForm() {
-    // Vài logic kiểm tra đơn giản, bạn nên sử dụng validator trong CustomTextField
+    // Validate form
+    if (_formKey.currentState?.validate() != true) {
+      return;
+    }
+
+    // Kiểm tra thủ công nếu validator của TextField chưa đủ
     if (_nameViController.text.isEmpty || _priceController.text.isEmpty) {
       SnackbarUtils.showError(
         context,
@@ -55,10 +71,15 @@ class _AddProductDialogState extends State<AddProductDialog> {
       return;
     }
 
+    if (_selectedCategoryId == null) {
+      SnackbarUtils.showError(context, 'Vui lòng chọn danh mục.', null);
+      return;
+    }
+
     final names = {
       'vi': _nameViController.text.trim(),
       'en': _nameEnController.text.trim(),
-      'ja': _nameJaController.text.trim(), // ĐÃ THÊM: Tiếng Nhật
+      'ja': _nameJaController.text.trim(),
     };
     final descriptions = {
       'vi': _descViController.text.trim(),
@@ -68,17 +89,13 @@ class _AddProductDialogState extends State<AddProductDialog> {
 
     final price = int.tryParse(_priceController.text.trim()) ?? 0;
 
-    if (_selectedCategoryId == null) {
-      SnackbarUtils.showError(context, 'Vui lòng chọn danh mục.', null);
-      return;
-    }
-
     context.read<ProductsAdminBloc>().add(
       AddProduct(
         names: names,
         imageUrl: _imageUrlController.text.trim(),
         price: price,
         descriptions: descriptions,
+        // [SỬA ĐỔI] Truyền ID thật của danh mục đã chọn
         categoryId: _selectedCategoryId!,
       ),
     );
@@ -92,35 +109,57 @@ class _AddProductDialogState extends State<AddProductDialog> {
     return AlertDialog(
       title: const Text('Thêm Sản Phẩm Mới'),
       content: SizedBox(
-        width: 600, // Cố định chiều rộng cho form desktop
+        width: 600,
         child: SingleChildScrollView(
           child: Form(
             key: _formKey,
             child: Column(
               mainAxisSize: MainAxisSize.min,
               children: [
-                // Category Dropdown - Hardcoded categories (Cần thay bằng fetchCategories() thực tế)
-                DropdownButtonFormField<String>(
-                  value: _selectedCategoryId,
-                  decoration: const InputDecoration(
-                    labelText: 'Danh mục (Placeholder)',
-                  ),
-                  items: const [
-                    DropdownMenuItem(
-                      value: 'placeholder_category_1',
-                      child: Text('Đồ ăn'),
-                    ),
-                    DropdownMenuItem(
-                      value: 'placeholder_category_2',
-                      child: Text('Đồ uống'),
-                    ),
-                  ],
-                  onChanged: (value) {
-                    setState(() {
-                      _selectedCategoryId = value;
-                    });
+                // [THAY THẾ] DropdownButtonFormField bằng BlocBuilder để lấy dữ liệu thật
+                BlocBuilder<CategoryAdminBloc, CategoryAdminState>(
+                  builder: (context, state) {
+                    // Nếu đang tải danh mục
+                    if (state.isLoading && state.categories.isEmpty) {
+                      return const Center(child: CircularProgressIndicator());
+                    }
+
+                    // Map danh sách danh mục từ Bloc ra DropdownMenuItem
+                    final categoryItems =
+                        state.categories.map((category) {
+                          // Lấy tên tiếng Việt, nếu không có thì lấy tên đầu tiên hoặc báo lỗi
+                          final name = category.name['vi'] ?? 'Chưa có tên';
+                          return DropdownMenuItem<String>(
+                            value:
+                                category.id, // Giá trị là ID thật từ Firestore
+                            child: Text(name),
+                          );
+                        }).toList();
+
+                    return DropdownButtonFormField<String>(
+                      value: _selectedCategoryId,
+                      decoration: const InputDecoration(
+                        labelText: 'Danh mục (*)',
+                        border: OutlineInputBorder(),
+                        prefixIcon: Icon(Icons.category),
+                      ),
+                      items: categoryItems,
+                      onChanged: (value) {
+                        setState(() {
+                          _selectedCategoryId = value;
+                        });
+                      },
+                      validator: (value) {
+                        if (value == null || value.isEmpty) {
+                          return 'Vui lòng chọn danh mục';
+                        }
+                        return null;
+                      },
+                      hint: const Text('Chọn danh mục sản phẩm'),
+                    );
                   },
                 ),
+
                 const SizedBox(height: 16),
 
                 // Tên sản phẩm đa ngôn ngữ
@@ -141,7 +180,6 @@ class _AddProductDialogState extends State<AddProductDialog> {
                 ),
                 const SizedBox(height: 8),
                 CustomTextField(
-                  // ĐÃ THÊM: Tiếng Nhật
                   controller: _nameJaController,
                   labelText: 'Tiếng Nhật',
                   icon: const Icon(Icons.flag_circle_outlined),
@@ -182,7 +220,7 @@ class _AddProductDialogState extends State<AddProductDialog> {
                 const SizedBox(height: 8),
                 CustomTextField(
                   controller: _descJaController,
-                  labelText: 'Description (Janpan)',
+                  labelText: 'Description (Japan)',
                   icon: const Icon(Icons.description_outlined),
                 ),
               ],
